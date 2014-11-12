@@ -13,7 +13,7 @@ import com.jme3.scene.shape.Box;
  * @author Umit Aksu
  * Umit Test shit
  * Jacco test shit
- * Jacco push test
+ * Umit 
  */
 public class Main extends SimpleApplication {
 
