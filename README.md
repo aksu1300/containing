@@ -1,2 +1,2 @@
-Project-leider: Umit \n
+Project-leider: Umit <br>
 Notulist: Hidde
