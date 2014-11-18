@@ -1,0 +1,6 @@
+Hidde: Notulen, <3Diets>.
+Umit: Projectleider, <xml>, Hibernate, <3Diets>.
+Mark: Train class, Truck class.
+Kenneth: Scene, <3Diets>.
+Jacco: <3Diets>, ?pathfinding?.
+Dylan: [?].
