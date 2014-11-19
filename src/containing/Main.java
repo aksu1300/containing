@@ -2,8 +2,11 @@ package containing;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Spatial;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.shape.Box;
 
 /**
  * test
@@ -21,14 +24,14 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        
-        // Import the model 
-        Spatial container = assetManager.loadModel("Models/container/container.j3o");
-        Material mat_default = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
-        container.setMaterial(mat_default);
-        
-        rootNode.attachChild(container);
-        
+        Box b = new Box(Vector3f.ZERO, 1, 1, 1);
+        Geometry geom = new Geometry("Box", b);
+
+        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        mat.setColor("Color", ColorRGBA.Blue);
+        geom.setMaterial(mat);
+
+        rootNode.attachChild(geom);
     }
 
     @Override
