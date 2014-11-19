@@ -1,12 +1,10 @@
 package containing;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.material.Material;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Box;
 
 /**
  * test
@@ -17,21 +15,30 @@ import com.jme3.scene.shape.Box;
  */
 public class Main extends SimpleApplication {
 
+    private BulletAppState bulletAppState;
+    
     public static void main(String[] args) {
         Main app = new Main();
+        
+        
         app.start();
+        
     }
 
     @Override
     public void simpleInitApp() {
-        Box b = new Box(Vector3f.ZERO, 1, 1, 1);
-        Geometry geom = new Geometry("Box", b);
-
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
-        geom.setMaterial(mat);
-
-        rootNode.attachChild(geom);
+        // PhysicsManager
+        bulletAppState = new BulletAppState();
+        stateManager.attach(bulletAppState);
+        // CamSetup
+        Vector3f camVector = new Vector3f(0, 40, 0);
+        cam.setLocation(camVector);
+        // Background Color
+        viewPort.setBackgroundColor(ColorRGBA.Blue);
+        // Create platform
+        Platform platform = new Platform(assetManager, bulletAppState);
+        rootNode.attachChild(platform);
+        
     }
 
     @Override
