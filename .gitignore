@@ -1,5 +1,10 @@
 /nbproject/
+<<<<<<< HEAD
 nbproject
 build.*
 nbproject.*
 /build/
+=======
+nbproject.dir
+nbproject.*
+>>>>>>> 4014fc1de46bc725618356fd07f5527222c9cf15
