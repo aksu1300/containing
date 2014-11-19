@@ -1,10 +1,20 @@
 /nbproject/
-<<<<<<< HEAD
+
 nbproject
+
 build.*
+
 nbproject.*
+
 /build/
-=======
 nbproject.dir
-nbproject.*
->>>>>>> 4014fc1de46bc725618356fd07f5527222c9cf15
+build.dir
+
+lwjgl64.dll
+
+OpenAL64.dll
+lwjgl64.dll
+lwjgl64.dll
+OpenAL64.dll
+OpenAL64.dll
+lwjgl64.dll
