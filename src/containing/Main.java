@@ -22,8 +22,8 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        Container container = new Container(assetManager,0.4f);
-        rootNode.attachChild(container);
+        Ship ship = new Ship(assetManager,0.01f);
+        rootNode.attachChild(ship);
     }
     
     @Override
