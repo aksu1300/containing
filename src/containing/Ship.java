@@ -4,6 +4,8 @@
  */
 package containing;
 
+import com.jme3.scene.Node;
+
 /**
  *
  * @author account
