@@ -15,7 +15,6 @@ public class Main extends SimpleApplication {
 
     private BulletAppState bulletAppState;
     
-    
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
@@ -23,9 +22,8 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        Container container = new Container(assetManager,5);
+        Container container = new Container(assetManager,0.4f);
         rootNode.attachChild(container);
-
     }
     
     @Override

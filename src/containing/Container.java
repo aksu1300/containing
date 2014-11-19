@@ -38,8 +38,7 @@ public class Container extends Node{
         
         // Init material of the container
         initMaterials();
-        
-
+       
         // Attach to the root node
         this.attachChild(container);
     }
@@ -54,6 +53,7 @@ public class Container extends Node{
     private void initContainer() {
         // Load the container
         container = assetManager.loadModel("Models/high/container/container.j3o");
+        container.scale(size);
     }
 
 
