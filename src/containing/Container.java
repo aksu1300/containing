@@ -5,16 +5,12 @@
 package containing;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.asset.TextureKey;
-import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Sphere;
-import com.jme3.texture.Texture;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -29,6 +25,7 @@ public class Container extends Node{
     
     public Geometry geometry;
 
+    
     public Container(AssetManager _assetManager, float _size) {
         this.assetManager = _assetManager;
         this.size = _size;
@@ -55,6 +52,5 @@ public class Container extends Node{
         container = assetManager.loadModel("Models/high/container/container.j3o");
         container.scale(size);
     }
-
-
+   
 }

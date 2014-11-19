@@ -15,6 +15,9 @@ public class Main extends SimpleApplication {
 
     private BulletAppState bulletAppState;
     
+    Ship ship;
+        
+    
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
@@ -22,13 +25,26 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        Ship ship = new Ship(assetManager,0.01f);
+        
+        // Create a new ship 
+        ship = new Ship(assetManager,0.01f);
+        
+        // Adding a container to a ship
+        Container container = new Container(assetManager,0.01f);
+        ship.addContainer(container);
+        ship.addContainer(new Container(assetManager,0.01f));
+        ship.addContainer(new Container(assetManager,0.01f));
+        
+        ship.setLocalTranslation(0, 0, 6f);
+        
+        // Add the ship to the rootNode
         rootNode.attachChild(ship);
     }
     
     @Override
     public void simpleUpdate(float tpf) {
         //TODO: add update code
+        rootNode.getChild(ship.getSpatial().getName()).setLocalTranslation(0, tpf, 2*tpf);
     }
 
     @Override

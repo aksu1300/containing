@@ -12,6 +12,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -29,6 +31,9 @@ public class Ship extends Node {
     
     //public RigidBodyControl ballPhy;
     public Vector3f lastLocation;
+   
+    // A ship has a list of container 
+    public List<Container> containers = new ArrayList<Container>();
     
     
     public Ship(AssetManager assetManager, float size){
@@ -40,8 +45,7 @@ public class Ship extends Node {
         
         // Init material of the ship
         initMaterial();
-        
-        
+      
         // Attach the model to the 
         this.attachChild(ship);
     }
@@ -58,4 +62,42 @@ public class Ship extends Node {
         material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
         ship.setMaterial(material);
     }
+    
+    
+    // Add a container to the ship
+    public void addContainer(Container container){
+        // Adding a container to a ship
+        this.containers.add(container);
+
+        // Now move the new container to a specific place 
+        // But first check how many there are and use this to for the place
+        // on the ship
+        // DEBUGGGING
+        int size = this.containers.size();
+        container.setLocalTranslation(0, (size/2)+0.1f, 0);
+        
+                
+        // Atach the container to the ship node
+        this.attachChild(container);
+        
+    }
+    
+    // Get a container from the boot
+    public Container getContainer(int id){
+        // first deattach the container from the ship
+        this.detachChild(this.containers.get(id));
+        
+        // Get the container from the list of containers of the ship
+        // Give the deattached container from the ship back to the caller of the 
+        // Method 
+        return this.containers.get(id);
+          
+    }
+    
+    // Get the spatial
+    public Spatial getSpatial(){
+        return this.ship;
+    }
+
+    
 }
