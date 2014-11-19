@@ -31,6 +31,7 @@ public class Main extends SimpleApplication {
         mat2.setColor("Color", ColorRGBA.Red);
         AGV agv = new AGV("AAA", mat2, assetManager );
         rootNode.attachChild(agv);
+        
     }
 
     @Override
