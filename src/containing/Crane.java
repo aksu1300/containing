@@ -47,7 +47,7 @@ public class Crane extends Node {
     public void move() {
     }
 
-    void initModel(Spatial crane, Spatial grabGear, Spatial grabGearHolder, Spatial hookLeft, Spatial hookRight) {
+    void initModel(Spatial model) {
 
         crane.setMaterial(material);
         model.scale(0.5f);

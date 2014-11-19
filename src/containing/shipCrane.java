@@ -20,7 +20,7 @@ public class shipCrane extends Crane {
         grabGearHolder = assetManager.loadModel("Models/high/crane/dockingcrane/grabbingGearHolder.j3o");
         hookLeft = assetManager.loadModel("Models/high/crane/dockingcrane/hookLeft.j3o");
         hookRight = assetManager.loadModel("Models/high/crane/dockingcrane/hookRight.j3o");
-        initModel(crane, grabGear, grabGearHolder, hookLeft, hookRight);
+        initModel(crane);
         
         
         
