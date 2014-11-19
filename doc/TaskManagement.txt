@@ -1,0 +1,6 @@
+Hidde: Notulen, AGV, Boat, Crane.
+Umit: Projectleider, <xml>, Hibernate, Container, Freighter.
+Mark: Train class, Truck class.
+Kenneth: Scene, GUI.
+Jacco: Pathfinding.
+Dylan: Sim-Game connnection, Config.
