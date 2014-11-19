@@ -20,6 +20,7 @@ public class Main extends SimpleApplication {
 
     AGV agv;
     Spatial cargo;
+    shipCrane shCrane;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -29,34 +30,37 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleInitApp() {
 
+        
         Material mat2 = new Material(assetManager,
                 "Common/MatDefs/Misc/Unshaded.j3md");
         mat2.setColor("Color", ColorRGBA.Red);
         agv = new AGV("AAA", mat2, assetManager, new Vector3f(0, 0, 0));
         rootNode.attachChild(agv);
 
+        
         Material mat = new Material(assetManager,
                 "Common/MatDefs/Misc/Unshaded.j3md");
         mat2.setColor("Color", ColorRGBA.Blue);
         cargo = assetManager.loadModel("Models/high/container/container.j3o");
         cargo.setMaterial(mat);
         cargo.scale(0.5f);
-
+        
+        
+        Material mat3 = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md");
+        mat2.setColor("Color", ColorRGBA.Blue);
+        shCrane = new shipCrane("AAA", mat3, assetManager);
+        rootNode.attachChild(shCrane);
+        
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        try {
-            Thread.sleep(500);
-            if (agv.cargo == null){
-                agv.setContainer(cargo);
-            }
-            else 
-            {
-                agv.removeContainer();
-            }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        if (tpf < 200){
+            agv.setContainer(cargo);
+        }
+        else {
+            agv.removeContainer();
         }
     }
 

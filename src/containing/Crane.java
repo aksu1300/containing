@@ -15,35 +15,43 @@ import com.jme3.scene.Spatial;
  * @author Driving Ghost
  */
 public class Crane extends Node {
-    
+
     Vector3f loc;
     Material material;
-    Spatial model;
+    Spatial crane;
+    Spatial grabGear;
+    Spatial grabGearHolder;
+    Spatial hookLeft;
+    Spatial hookRight;
     AssetManager assetManager;
     float speed;
     String id;
-    
-    public Crane(String id, Material strmaterial, AssetManager assetManager){
+
+    public Crane(String id, Material strmaterial, AssetManager assetManager) {
         this.id = id;
         this.material = strmaterial;
         this.assetManager = assetManager;
-        
+
     }
-    
-    public void updateSpeed(float uSpeed){
+
+    public void updateSpeed(float uSpeed) {
         this.speed *= uSpeed;
     }
-    
-    public void oppakken(){
-        
+
+    public void grab() {
     }
-    
-    public void neerleggen(){
-        
+
+    public void drop() {
     }
-    
-    public void move(){
-        
+
+    public void move() {
     }
-    
+
+    void initModel(Spatial crane, Spatial grabGear, Spatial grabGearHolder, Spatial hookLeft, Spatial hookRight) {
+
+        crane.setMaterial(material);
+        model.scale(0.5f);
+        this.attachChild(model);
+        this.setLocalTranslation(0, 1, 1);
+    }
 }
