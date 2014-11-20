@@ -10,9 +10,13 @@ public class Truck {
     private AssetManager assetmanager;
     private Material material;
     private Spatial model;
-    
-    
+
     public Truck() {
         
-    }    
+    }
+    
+    private void initPhysics() {
+        
+    }
+    
 }
