@@ -11,11 +11,7 @@ import com.jme3.scene.shape.Box;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * test
- *
- * @author Umit Aksu Umit Test shit Jacco test shit Umit branch test AGV
- */
+
 public class Main extends SimpleApplication {
 
     AGV agv;
