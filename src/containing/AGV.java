@@ -48,6 +48,10 @@ public class AGV extends Node {
         
     }
     
+    public Spatial getContainer(){
+        return cargo;
+    }
+    
     public void removeContainer(){
         this.detachChild(cargo);
         this.cargo = null;
