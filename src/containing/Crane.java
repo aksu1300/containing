@@ -19,35 +19,21 @@ public class Crane extends Node {
     Vector3f loc;
     Material material;
     Spatial crane;
+    Spatial grabbingGear;
+    Spatial grabbingGearHolder;
+    Spatial hookLeft;
+    Spatial hookRight;
     AssetManager assetManager;
     float speed;
     String id;
+    float size;
 
-    public Crane(String id, Material strmaterial, AssetManager assetManager) {
+   public Crane(String id, AssetManager assetManager) {
         this.id = id;
-        this.material = strmaterial;
         this.assetManager = assetManager;
-
+       
+        // Attach to the root node
+        this.attachChild(crane);
     }
 
-    public void updateSpeed(float uSpeed) {
-        this.speed *= uSpeed;
-    }
-
-    public void grab() {
-    }
-
-    public void drop() {
-    }
-
-    public void move() {
-    }
-
-    void initModel(Spatial model) {
-
-        crane.setMaterial(material);
-        model.scale(0.5f);
-        this.attachChild(model);
-        this.setLocalTranslation(0, 1, 1);
-    }
 }

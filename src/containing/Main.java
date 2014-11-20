@@ -5,6 +5,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -29,6 +30,7 @@ public class Main extends SimpleApplication {
     Spatial cargo;
     shipCrane shCrane;
 
+    shipCrane crane;
     
     Ship ship;
         
@@ -47,7 +49,7 @@ public class Main extends SimpleApplication {
         stateManager.attach(bulletAppState); 
         Harbor harbor = new Harbor(bulletAppState, assetManager);
         
-        //right camera position
+//        //right camera position
         cam.setLocation(new Vector3f(200, 150, 150));
         cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
         
@@ -126,11 +128,21 @@ public class Main extends SimpleApplication {
         
         
         rootNode.attachChild(ship);
+        
+        
+        // Adding a shipCrane to the harbor
+        crane = new shipCrane(assetManager,1.5f);
+        crane.rotate(0, FastMath.PI, 0);
+        crane.setLocalTranslation(speed, speed, speed);
+        rootNode.attachChild(crane);
+        
+        
     }
     
     @Override
     public void simpleUpdate(float tpf) {
         //ship.move(0, 0, (tpf*50) *-1);
+        crane.pullGrabber(tpf);
     }
 
     @Override
