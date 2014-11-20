@@ -2,6 +2,7 @@ package containing;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
@@ -19,6 +20,15 @@ public class Main extends SimpleApplication {
     private float initialWaterHeight = 0.8f; 
     private Vector3f lightDir = new Vector3f(-4.9f, -1.3f, 5.9f);
 
+    AGV agv;
+    Spatial cargo;
+    shipCrane shCrane;
+
+    private BulletAppState bulletAppState;
+    
+    Ship ship;
+        
+    
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
@@ -48,9 +58,15 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(harbor);
         
     }
-
+    
     @Override
     public void simpleUpdate(float tpf) {
+        if (tpf < 200){
+            agv.setContainer(cargo);
+        }
+        else {
+            agv.removeContainer();
+        }
     }
 
     @Override
