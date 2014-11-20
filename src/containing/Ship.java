@@ -8,6 +8,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -55,6 +56,7 @@ public class Ship extends Node {
     public void initShip(){
         shipSpatial = assetManager.loadModel("Models/high/ship/seaship.j3o");
         shipSpatial.scale(size);
+        shipSpatial.rotate(0, -(FastMath.PI / 2), 0);
     }
     
     public void initMaterial(){
