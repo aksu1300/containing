@@ -38,7 +38,7 @@ public class Harbor extends Node{
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager){
         
         // Platform
-        Box b = new Box(150, 5, 350);
+        Box b = new Box(150, 10, 350);
         Geometry geom = new Geometry("Box", b);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.LightGray);

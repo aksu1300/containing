@@ -18,9 +18,7 @@ public class shipCrane extends Crane {
         crane = assetManager.loadModel("Models/high/crane/dockingcrane/crane.j3o");
 
         initModel(crane);
-        
-        
-        
+    
         
     }
     
