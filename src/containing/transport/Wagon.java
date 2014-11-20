@@ -6,41 +6,25 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
 
-public class Train extends Node {
-    
+public class Wagon extends Node {
     Vector3f loc;
     Spatial model;
-    Spatial cargo; 
+    Spatial cargo;
     float speed;
     String id;
     ArrayList carts;
     
-    public Train(String id,Vector3f loc ,float speed , AssetManager assetManager) {
+    public Wagon(String id,Vector3f loc ,float speed , AssetManager assetManager) {
         this.id = id;
-        this.loc = loc; 
+        this.loc = loc;
         this.cargo = null;
         this.speed = speed;
-        model = assetManager.loadModel("Models/high/train/train.j3o");
+        model = assetManager.loadModel("Models/high/train/wagon.j3o");
         model.scale(0.5f); //NEEDS REWORK!!
         this.attachChild(model);
-    }
-    
-    public Train(String id, Vector3f loc,float speed , AssetManager assetManager, ArrayList carts) {
-        this.id = id;
-        this.loc = loc; 
-        this.cargo = null;
-        this.speed = speed;
-        model = assetManager.loadModel("Models/high/train/train.j3o");
-        model.scale(0.5f); //NEEDS REWORK!!
-        this.attachChild(model);
-        //ADDS CARTS TO TRAIN
     }
     
     public void updateSpeed(float uSpeed) {this.speed = uSpeed;}
-    
-    public void depart() {
-        
-    }
     
     private void initPhysics() {
         
