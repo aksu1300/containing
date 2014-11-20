@@ -48,9 +48,11 @@ public class Main extends SimpleApplication {
         Harbor harbor = new Harbor(bulletAppState, assetManager);
         
         //right camera position
-        cam.setLocation(new Vector3f(200, 150, 150));
-        cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
-        
+        //cam.setLocation(new Vector3f(200, 150, 150));
+        //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
+        flyCam.setEnabled(true);
+        flyCam.setMoveSpeed(100);
+        cam.setLocation(new Vector3f(30, 100, 30));
         // load water
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         WaterFilter water = new WaterFilter(rootNode, lightDir);
@@ -71,58 +73,20 @@ public class Main extends SimpleApplication {
         
         ship.addContainer(new Container(assetManager,1f));
         
-        
-        // The ship will follow the path 
-        motionPath = new MotionPath();
-        motionPath.addWayPoint(new Vector3f(300,9,1));
-        motionPath.addWayPoint(new Vector3f(250,9,100));
-        motionPath.addWayPoint(new Vector3f(200,9,200));
-        motionPath.addWayPoint(new Vector3f(170,9,300));
-        
-        // The ship will follow the path 1
-        motionPath1 = new MotionPath();
-        motionPath1.addWayPoint(new Vector3f(170,9,300));
-        motionPath1.addWayPoint(new Vector3f(200,9,200));
-        motionPath1.addWayPoint(new Vector3f(250,9,100));
-        motionPath1.addWayPoint(new Vector3f(700,9,1));
-        
-        
-        MotionEvent motionControl = new MotionEvent(ship,motionPath);
+       
+        MotionEvent motionControl = new MotionEvent(ship,harbor.Getdockingroute());
         motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
         motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
         motionControl.setInitialDuration(10f);
         motionControl.setSpeed(2f);
-        
-        
-       motionControl.play();
-        
-        
-        motionPath.addListener(new MotionPathListener() {
 
-            public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-                if(motionPath.getNbWayPoints() == wayPointIndex + 1)
-                {
-                    System.out.println("Finished");
-                    motionControl = new MotionEvent(ship,motionPath1);
-                    motionControl.play();
-                }
-            }
-        });
-        
-        
-        motionPath1.addListener(new MotionPathListener() {
+        motionControl.play();
 
-            public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-                if(motionPath1.getNbWayPoints() == wayPointIndex + 1)
-                {
-                    System.out.println("Finished");
-                    motionControl = new MotionEvent(ship,motionPath);
-                    motionControl.play();
-                }
-            }
-            
-        });
+
         
+        
+        
+
         
         
         rootNode.attachChild(ship);
