@@ -22,7 +22,7 @@ import java.util.List;
 public class Ship extends Node {
     
     private AssetManager assetManager;
-    private Spatial ship;
+    private Spatial shipSpatial;
     //private BulletAppState bulletAppState;
     //public Geometry ballGeo;
     private float size;
@@ -30,10 +30,10 @@ public class Ship extends Node {
     private Vector3f loc;
     
     //public RigidBodyControl ballPhy;
-    public Vector3f lastLocation;
+    private Vector3f lastLocation;
    
-    // A ship has a list of container 
-    public List<Container> containers = new ArrayList<Container>();
+    // A ship has a list of containers 
+    private List<Container> containers = new ArrayList<Container>();
     
     
     public Ship(AssetManager assetManager, float size){
@@ -47,24 +47,28 @@ public class Ship extends Node {
         initMaterial();
       
         // Attach the model to the 
-        this.attachChild(ship);
+        this.attachChild(shipSpatial);
     }
     
     
     //  Init container
     public void initShip(){
-        ship = assetManager.loadModel("Models/high/ship/seaship.j3o");
-        ship.scale(size);
+        shipSpatial = assetManager.loadModel("Models/high/ship/seaship.j3o");
+        shipSpatial.scale(size);
     }
     
     public void initMaterial(){
         // Load the container
         material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
-        ship.setMaterial(material);
+        shipSpatial.setMaterial(material);
     }
     
     
     // Add a container to the ship
+    /**
+     * 
+     * @param container 
+     */
     public void addContainer(Container container){
         // Adding a container to a ship
         this.containers.add(container);
@@ -72,7 +76,7 @@ public class Ship extends Node {
         // Now move the new container to a specific place 
         // But first check how many there are and use this to for the place
         // on the ship
-        // DEBUGGGING
+        // DEBUGGGING1
         int size = this.containers.size();
         container.setLocalTranslation(0, (size/2)+0.1f, 0);
         
@@ -96,7 +100,7 @@ public class Ship extends Node {
     
     // Get the spatial
     public Spatial getSpatial(){
-        return this.ship;
+        return this.shipSpatial;
     }
 
     

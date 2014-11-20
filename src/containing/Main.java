@@ -2,6 +2,7 @@ package containing;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.cinematic.MotionPath;
 import com.jme3.renderer.RenderManager;
 
 /**
@@ -37,14 +38,23 @@ public class Main extends SimpleApplication {
         
         ship.setLocalTranslation(0, 0, 6f);
         
+        // Als we een ship.getContainer doen dan geeft de schip de container vrij
+        // en verwijder deze uit zij lijst 
+        // en de container als een node kan nu aan een andere node als child worden 
+        // gettached dus als creane nu crane.attachChild(ship.getContainer(0))
+        rootNode.attachChild(ship.getContainer(0));
+        rootNode.attachChild(ship.getContainer(0));
+        
         // Add the ship to the rootNode
         rootNode.attachChild(ship);
+        
+        
     }
     
     @Override
     public void simpleUpdate(float tpf) {
         //TODO: add update code
-        rootNode.getChild(ship.getSpatial().getName()).setLocalTranslation(0, tpf, 2*tpf);
+        ship.move(0, 0, tpf);
     }
 
     @Override
