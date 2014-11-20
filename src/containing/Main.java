@@ -7,7 +7,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 
-
 public class Main extends SimpleApplication {
 
     AGV agv;
