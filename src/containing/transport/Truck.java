@@ -15,6 +15,7 @@ public class Truck {
     }
     
     private void initPhysics() {
+
         
     }
 }
