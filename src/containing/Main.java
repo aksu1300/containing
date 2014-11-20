@@ -8,13 +8,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 
-/**
- * test
- * @author Umit Aksu
- * Umit Test shit
- * Jacco test shit
- * Umit 
- */
 public class Main extends SimpleApplication {
 
     public static void main(String[] args) {
