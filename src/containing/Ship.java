@@ -76,7 +76,7 @@ public class Ship extends Node {
         // Now move the new container to a specific place 
         // But first check how many there are and use this to for the place
         // on the ship
-        // DEBUGGGING1
+        // DEBUGGGING
         int size = this.containers.size();
         container.setLocalTranslation(0, (size/2)+0.1f, 0);
         
