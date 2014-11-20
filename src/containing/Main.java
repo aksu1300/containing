@@ -5,8 +5,9 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Spatial;
+import com.jme3.water.WaterFilter;
 
 /**
  * test
@@ -14,6 +15,10 @@ import com.jme3.scene.Spatial;
  * @author Umit Aksu Umit Test shit Jacco test shit Umit branch test AGV
  */
 public class Main extends SimpleApplication {
+
+    BulletAppState bulletAppState;
+    private float initialWaterHeight = 0.8f; 
+    private Vector3f lightDir = new Vector3f(-4.9f, -1.3f, 5.9f);
 
     AGV agv;
     Spatial cargo;
@@ -31,28 +36,26 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-
+        bulletAppState = new BulletAppState();
+        stateManager.attach(bulletAppState); 
+        Harbor harbor = new Harbor(bulletAppState, assetManager);
         
-        Material mat2 = new Material(assetManager,
-                "Common/MatDefs/Misc/Unshaded.j3md");
-        mat2.setColor("Color", ColorRGBA.Red);
-        agv = new AGV("AAA", mat2, assetManager, new Vector3f(0, 0, 0));
-        rootNode.attachChild(agv);
-
+        //right camera position
+        cam.setLocation(new Vector3f(200, 150, 150));
+        cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
         
-        Material mat = new Material(assetManager,
-                "Common/MatDefs/Misc/Unshaded.j3md");
-        mat2.setColor("Color", ColorRGBA.Blue);
-        cargo = assetManager.loadModel("Models/high/container/container.j3o");
-        cargo.setMaterial(mat);
-        cargo.scale(0.5f);
+        // load water
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        WaterFilter water = new WaterFilter(rootNode, lightDir);
+        water.setWaterHeight(initialWaterHeight);
+    
+        fpp.addFilter(water);
+        viewPort.addProcessor(fpp);
         
+        viewPort.setBackgroundColor(ColorRGBA.Blue);
         
-        Material mat3 = new Material(assetManager,
-                "Common/MatDefs/Misc/Unshaded.j3md");
-        mat2.setColor("Color", ColorRGBA.Blue);
-        shCrane = new shipCrane("AAA", mat3, assetManager);
-        rootNode.attachChild(shCrane);
+        //Attach Platform to rootnode
+        rootNode.attachChild(harbor);
         
     }
     
