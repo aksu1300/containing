@@ -19,10 +19,6 @@ public class Crane extends Node {
     Vector3f loc;
     Material material;
     Spatial crane;
-    Spatial grabGear;
-    Spatial grabGearHolder;
-    Spatial hookLeft;
-    Spatial hookRight;
     AssetManager assetManager;
     float speed;
     String id;
