@@ -2,17 +2,22 @@ package containing;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.cinematic.MotionPath;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
+import com.jme3.scene.Spatial;
 
 /**
  * test
- * @author Umit Aksu
- * Umit Test shit
- * Jacco test shit
- * Umit 
+ *
+ * @author Umit Aksu Umit Test shit Jacco test shit Umit branch test AGV
  */
 public class Main extends SimpleApplication {
+
+    AGV agv;
+    Spatial cargo;
+    shipCrane shCrane;
 
     private BulletAppState bulletAppState;
     
@@ -26,35 +31,39 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
+
         
-        // Create a new ship 
-        ship = new Ship(assetManager,0.01f);
+        Material mat2 = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md");
+        mat2.setColor("Color", ColorRGBA.Red);
+        agv = new AGV("AAA", mat2, assetManager, new Vector3f(0, 0, 0));
+        rootNode.attachChild(agv);
+
         
-        // Adding a container to a ship
-        Container container = new Container(assetManager,0.01f);
-        ship.addContainer(container);
-        ship.addContainer(new Container(assetManager,0.01f));
-        ship.addContainer(new Container(assetManager,0.01f));
+        Material mat = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md");
+        mat2.setColor("Color", ColorRGBA.Blue);
+        cargo = assetManager.loadModel("Models/high/container/container.j3o");
+        cargo.setMaterial(mat);
+        cargo.scale(0.5f);
         
-        ship.setLocalTranslation(0, 0, 6f);
         
-        // Als we een ship.getContainer doen dan geeft de schip de container vrij
-        // en verwijder deze uit zij lijst 
-        // en de container als een node kan nu aan een andere node als child worden 
-        // gettached dus als creane nu crane.attachChild(ship.getContainer(0))
-        rootNode.attachChild(ship.getContainer(0));
-        rootNode.attachChild(ship.getContainer(0));
-        
-        // Add the ship to the rootNode
-        rootNode.attachChild(ship);
-        
+        Material mat3 = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md");
+        mat2.setColor("Color", ColorRGBA.Blue);
+        shCrane = new shipCrane("AAA", mat3, assetManager);
+        rootNode.attachChild(shCrane);
         
     }
     
     @Override
     public void simpleUpdate(float tpf) {
-        //TODO: add update code
-        ship.move(0, 0, tpf);
+        if (tpf < 200){
+            agv.setContainer(cargo);
+        }
+        else {
+            agv.removeContainer();
+        }
     }
 
     @Override

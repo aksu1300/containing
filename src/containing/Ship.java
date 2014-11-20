@@ -95,7 +95,6 @@ public class Ship extends Node {
         // Give the deattached container from the ship back to the caller of the 
         // Method 
         return this.containers.get(id);
-          
     }
     
     // Get the spatial
