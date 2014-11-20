@@ -48,6 +48,10 @@ public class AGV extends Node {
         
     }
     
+    public void setLocation(Vector3f newloc){
+        this.loc = newloc;
+    }
+    
     public Spatial getContainer(){
         return cargo;
     }
