@@ -5,12 +5,12 @@
 package containing;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
@@ -102,6 +102,15 @@ public class Ship extends Node {
     // Get the spatial
     public Spatial getSpatial(){
         return this.shipSpatial;
+    }
+    
+    public void Move(MotionPath route, float speed){
+        MotionEvent motionControl = new MotionEvent(this, route);
+        motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
+        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
+        motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(speed);
+        motionControl.play();
     }
 
     

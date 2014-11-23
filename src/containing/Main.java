@@ -72,32 +72,13 @@ public class Main extends SimpleApplication {
         // Adding a ship to the scene
         ship = new Ship(assetManager,0.5f);
         ship.setLocalTranslation(150, 0, 4);
-        
         ship.addContainer(new Container(assetManager,1f));
-        
-       
-        MotionEvent motionControl = new MotionEvent(ship,harbor.Getdockingroute());
-        motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
-        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
-        motionControl.setInitialDuration(10f);
-        motionControl.setSpeed(2f);
-
-        motionControl.play();
-
-
-        
-        
-        
-
-        
-        
+        ship.Move(harbor.Getdockingroute(), 0.3f);
         rootNode.attachChild(ship);
-        
-        
         // Adding a shipCrane to the harbor
         crane = new shipCrane(assetManager,1.5f);
         crane.rotate(0, FastMath.PI, 0);
-        crane.setLocalTranslation(speed, speed, speed);
+        //crane.setLocalTranslation(speed, speed, speed);
         rootNode.attachChild(crane);
         
         
