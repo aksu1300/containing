@@ -12,7 +12,10 @@ import com.jme3.asset.AssetManager;
  */
 public class Freighter extends Ship {
     
+    String id;
+    
     public Freighter(AssetManager assetmanager, float size){
         super(assetmanager, size/2);
+        this.id = "F01";
     }
 }
