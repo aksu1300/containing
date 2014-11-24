@@ -68,18 +68,22 @@ public class Ship extends Node {
     }
 
     public void initHold() {
-        for (int x = 0; x < 3; x++) {
-            this.containers.add(new Container(assetManager, 1.5f));
-        }
-        for (int y = 0; y < 3; y++){
-            
-        }
+        //eerst aantal decks
+        //dan aantal op niv1
+        //dan aantal op niv2
+        //dan aantal op niv3
+        for (int i = 0; i < 9; i++) {
 
-        for (int i = 0; i < 3; i++) {
-            Container x = containers.get(i);
-            x.rotate(0, -(FastMath.PI / 2), 0);
-            x.setLocalTranslation(0, size / 2 + 0.1f, -10 + (i * 5));
-            this.attachChild(x);
+            for (int y = 0; y < 3; y++) {
+                for (int z = 0; z < 5; z++) {
+                    Container x = new Container(assetManager, 1.5f);
+                    x.rotate(0, -(FastMath.PI / 2), 0);
+                    x.setLocalTranslation(60-(i*24), size / 2 + 0.1f + (y*4.25f), -10 + (z * 5));
+                    this.attachChild(x);
+                    
+                }
+
+            }
         }
 
     }
@@ -128,20 +132,19 @@ public class Ship extends Node {
         motionControl.setInitialDuration(10f);
         motionControl.setSpeed(speed);
         motionControl.play();
-        
-        route.addListener(new MotionPathListener() {
 
+        route.addListener(new MotionPathListener() {
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 if (route.getNbWayPoints() == wayPointIndex + 1) {
                     setDocked();
-                    
+
                 } else {
                     System.out.println("nope");
                 }
-               
+
             }
         });
-        
+
     }
 
     public boolean getDocked() {

@@ -113,7 +113,7 @@ public shipCrane(AssetManager _assetManager, float _size) {
             this.getChild(4).move(0,tpf*-1,0);
         }
         else{
-            this.container = new Container(assetManager, 1);
+            this.container = new Container(assetManager, 1.5f);
             container.setLocalTranslation(new Vector3f(this.getChild(3).getLocalTranslation()).setY(this.getChild(3).getLocalTranslation().getY()+11.5f));
             this.attachChild(container);
         }
