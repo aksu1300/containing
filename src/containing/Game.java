@@ -9,7 +9,6 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
@@ -64,21 +63,22 @@ public class Game extends SimpleApplication {
         // Adding a ship to the scene
         ship = new Ship(assetManager, 0.5f);
         ship.addContainer(new Container(assetManager, 1f));
-        ship.Move(harbor.getDockingroute(), 0.3f);
+        ship.Move(harbor.getDockingroute(), 0.5f);
         rootNode.attachChild(ship);
 
         //Adding freighter to the harbor
         freighter = new Freighter(assetManager, 0.5f);
         freighter.addContainer(new Container(assetManager,1f));
-        freighter.Move(harbor.getFreighterDock(), 0.35f);
+        freighter.Move(harbor.getFreighterDock(), 0.3f);
         rootNode.attachChild(freighter);
 
-
         // Adding a shipCrane to the harbor
+        for (int i = 0; i < 6; i++){
         crane = new shipCrane(assetManager, 1.5f);
         crane.rotate(0, FastMath.PI, 0);
-        //crane.setLocalTranslation(speed, speed, speed);
+        crane.setLocalTranslation(170, 10.5f, -120+(i*40));
         rootNode.attachChild(crane);
+        }
     }
 
     @Override

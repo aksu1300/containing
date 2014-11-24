@@ -28,7 +28,7 @@ public class Harbor extends Node{
     
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager){
         initPlatform(assetManager, bulletAppState);
-        //initSky(assetManager);
+        initSky(assetManager);
         initContainerlines(assetManager, bulletAppState, amountlines);
     }
     
