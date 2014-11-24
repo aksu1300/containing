@@ -7,6 +7,8 @@ package containing;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.MotionPathListener;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -29,7 +31,8 @@ public class Game extends SimpleApplication {
     shipCrane shCrane;
     shipCrane crane;
     Freighter freighter;
-    Ship ship;
+    Boat ship;
+    Harbor harbor;
     MotionPath motionPath;
     MotionPath motionPath1;
 
@@ -37,7 +40,7 @@ public class Game extends SimpleApplication {
     public void simpleInitApp() {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        Harbor harbor = new Harbor(bulletAppState, assetManager);
+        harbor = new Harbor(bulletAppState, assetManager);
 
         //right camera position
         //cam.setLocation(new Vector3f(200, 150, 150));
@@ -47,6 +50,7 @@ public class Game extends SimpleApplication {
         cam.setLocation(new Vector3f(30, 100, 30));
         cam.setFrustumFar(9000);
         cam.onFrameChange();
+        
         // load water
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         WaterFilter water = new WaterFilter(rootNode, lightDir);
@@ -61,30 +65,37 @@ public class Game extends SimpleApplication {
         rootNode.attachChild(harbor);
 
         // Adding a ship to the scene
-        ship = new Ship(assetManager, 0.5f);
-        ship.addContainer(new Container(assetManager, 1f));
-        ship.Move(harbor.getDockingroute(), 0.5f);
+        ship = new Boat(assetManager, 0.5f);
+        //ship.addContainer(new Container(assetManager, 1f));
+        ship.Move(harbor.getDockingroute(), 1.2f);
         rootNode.attachChild(ship);
 
         //Adding freighter to the harbor
         freighter = new Freighter(assetManager, 0.5f);
-        freighter.addContainer(new Container(assetManager,1f));
+        //freighter.addContainer(new Container(assetManager,1f));
         freighter.Move(harbor.getFreighterDock(), 0.3f);
+        
         rootNode.attachChild(freighter);
-
-        // Adding a shipCrane to the harbor
-        for (int i = 0; i < 6; i++){
-        crane = new shipCrane(assetManager, 1.5f);
-        crane.rotate(0, FastMath.PI, 0);
-        crane.setLocalTranslation(170, 10.5f, -120+(i*40));
-        rootNode.attachChild(crane);
-        }
     }
 
     @Override
     public void simpleUpdate(float tpf) {
         //ship.move(0, 0, (tpf*50) *-1);
-        crane.pullGrabber(tpf);
+        
+        if(ship.getDocked())
+            for (shipCrane sc : harbor.shCranes) {
+                if (sc.container == null){
+                    sc.pushGrabber(tpf);
+                }
+                else{
+                    sc.pullGrabber(tpf);
+                }
+                
+            }
+        
+        
+        
+
         System.out.println(cam.getLocation().x);
         System.out.println(cam.getLocation().y);
         System.out.println(cam.getLocation().z);

@@ -17,6 +17,7 @@ import com.jme3.scene.Spatial;
 public class shipCrane extends Node {
     
     Vector3f loc;
+    Container container;
     Material material;
     Spatial crane;
     Spatial grabbingGear;
@@ -61,7 +62,6 @@ public shipCrane(AssetManager _assetManager, float _size) {
         
         hookRight.setMaterial(material);
         
-        
     }
 
     // init Container 
@@ -89,27 +89,35 @@ public shipCrane(AssetManager _assetManager, float _size) {
      */
     public void pullGrabber(float tpf){
         System.out.println("Y  : " + this.getChild(1).getLocalTranslation().y);
-        if(this.getChild(1).getLocalTranslation().y <= 15f)
+        
+        if(this.getChild(1).getLocalTranslation().y <= 9.5f)
         {
             this.getChild(1).move(0,tpf,0);
             this.getChild(2).move(0,tpf,0);
             this.getChild(3).move(0,tpf,0);
             this.getChild(4).move(0,tpf,0);
+            this.getChild(5).move(0,tpf, 0);
         }
     }
     
          /**
-     * Grabbing a container
+     * Taking a container
      */
     public void pushGrabber(float tpf){
         System.out.println("Y  : " + this.getChild(1).getLocalTranslation().y);
-        if(this.getChild(1).getLocalTranslation().y >= 5f)
+        if(this.getChild(1).getLocalTranslation().y >= -10f)
         {
             this.getChild(1).move(0,tpf*-1,0);
             this.getChild(2).move(0,tpf*-1,0);
             this.getChild(3).move(0,tpf*-1,0);
             this.getChild(4).move(0,tpf*-1,0);
         }
+        else{
+            this.container = new Container(assetManager, 1);
+            container.setLocalTranslation(new Vector3f(this.getChild(3).getLocalTranslation()).setY(this.getChild(3).getLocalTranslation().getY()+11.5f));
+            this.attachChild(container);
+        }
+        
     }
     
     /**
