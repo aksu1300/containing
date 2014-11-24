@@ -54,17 +54,14 @@ public class Main extends SimpleApplication {
         //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(100);
-        cam.setLocation(new Vector3f(30, 100, 30));
+        cam.setLocation(new Vector3f(0, 0, 0));
         // load water
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         WaterFilter water = new WaterFilter(rootNode, lightDir);
         water.setWaterHeight(initialWaterHeight);
-    
         fpp.addFilter(water);
         viewPort.addProcessor(fpp);
-        
         viewPort.setBackgroundColor(ColorRGBA.Blue);
-        
         //Attach Platform to rootnode
         rootNode.attachChild(harbor);
         
@@ -78,7 +75,7 @@ public class Main extends SimpleApplication {
         // Adding a shipCrane to the harbor
         crane = new shipCrane(assetManager,1.5f);
         crane.rotate(0, FastMath.PI, 0);
-        //crane.setLocalTranslation(speed, speed, speed);
+        crane.setLocalTranslation(170, 0, 0);
         rootNode.attachChild(crane);
         
         
