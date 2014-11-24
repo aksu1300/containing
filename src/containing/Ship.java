@@ -67,15 +67,14 @@ public class Ship extends Node {
         shipSpatial.setMaterial(material);
     }
 
+    /**
+     * initHold zet de containers op hun plaats op het deck. 
+     */
     public void initHold() {
-        //eerst aantal decks
-        //dan aantal op niv1
-        //dan aantal op niv2
-        //dan aantal op niv3
-        for (int i = 0; i < 9; i++) {
 
-            for (int y = 0; y < 3; y++) {
-                for (int z = 0; z < 5; z++) {
+        for (int i = 0; i < 9; i++) { //aantal decks
+            for (int y = 0; y < 3; y++) { //aantal niveaus
+                for (int z = 0; z < 5; z++) { //aantal per niveau
                     Container x = new Container(assetManager, 1.5f);
                     x.rotate(0, -(FastMath.PI / 2), 0);
                     x.setLocalTranslation(60-(i*24), size / 2 + 0.1f + (y*4.25f), -10 + (z * 5));
