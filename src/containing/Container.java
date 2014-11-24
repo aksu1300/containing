@@ -6,11 +6,10 @@ package containing;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
+import com.jme3.math.FastMath;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -36,6 +35,7 @@ public class Container extends Node{
         
         // Init material of the container
         initMaterials();
+        
        
         // Attach to the root node
         this.attachChild(container);
@@ -51,6 +51,7 @@ public class Container extends Node{
     private void initContainer() {
         // Load the container
         container = assetManager.loadModel("Models/high/container/container.j3o");
+        container.rotate(0, FastMath.PI / 2, 0);
         container.scale(size);
     }
     

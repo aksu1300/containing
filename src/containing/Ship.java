@@ -55,8 +55,8 @@ public class Ship extends Node {
     //  Init container
     public void initShip(){
         shipSpatial = assetManager.loadModel("Models/high/ship/seaship.j3o");
+        shipSpatial.rotate(0, FastMath.PI, 0);
         shipSpatial.scale(size);
-        shipSpatial.rotate(0, -(FastMath.PI / 2), 0);
     }
     
     public void initMaterial(){
@@ -106,7 +106,7 @@ public class Ship extends Node {
     
     public void Move(MotionPath route, float speed){
         MotionEvent motionControl = new MotionEvent(this, route);
-        motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
+        motionControl.setDirectionType(MotionEvent.Direction.Path);
         motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
         motionControl.setInitialDuration(10f);
         motionControl.setSpeed(speed);

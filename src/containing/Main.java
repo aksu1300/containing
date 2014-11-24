@@ -11,9 +11,5 @@ public class Main {
         Simulation s = new Simulation();
         s.startSimulation();
         
-    }    
-
-    void start() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

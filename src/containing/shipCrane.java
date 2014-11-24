@@ -16,7 +16,6 @@ import com.jme3.scene.Spatial;
  */
 public class shipCrane extends Node {
     
-    Vector3f loc;
     Material material;
     Spatial crane;
     Spatial grabbingGear;
@@ -24,13 +23,15 @@ public class shipCrane extends Node {
     Spatial hookLeft;
     Spatial hookRight;
     AssetManager assetManager;
+    Vector3f location;
     float speed;
     String id;
     float size;
 
-public shipCrane(AssetManager _assetManager, float _size) {
+public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.assetManager = _assetManager;
         this.size = _size;
+        this.location = location;
 
         //Init Sphere
         initContainer();
@@ -87,6 +88,10 @@ public shipCrane(AssetManager _assetManager, float _size) {
      /**
      * Grabbing a container
      */
+    public Vector3f getLocation(){
+        return this.location;
+    }
+    
     public void pullGrabber(float tpf){
         System.out.println("Y  : " + this.getChild(1).getLocalTranslation().y);
         if(this.getChild(1).getLocalTranslation().y <= 15f)
