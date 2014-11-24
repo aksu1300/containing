@@ -1,7 +1,11 @@
 package containing;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -19,17 +23,16 @@ public class AGV extends Node {
     Vector3f loc;
     Material material;
     Spatial model;
-    Spatial cargo; 
+    Container cargo; 
     float speed;
     String id;
 
-    public AGV(String id, Material material, AssetManager assetManager, Vector3f loc) {
+    public AGV(String id, Material material, AssetManager assetManager) {
         this.id = id;
         this.material = material;
-        this.loc = loc; 
         model = assetManager.loadModel("Models/high/agv/agv.j3o");
         model.setMaterial(material);
-        model.scale(0.5f);
+        model.scale(1.5f);
         this.attachChild(model);
     }
 
@@ -41,7 +44,12 @@ public class AGV extends Node {
         
     }
     
-    public void setContainer(Spatial cargo){
+    public Vector3f getCurrentloc(){
+        return this.getLocalTranslation();
+    }
+        
+    
+    public void setContainer(Container cargo){
         this.cargo = cargo; 
         this.cargo.setLocalTranslation(0,0.6f,0);
         this.attachChild(this.cargo);
@@ -59,6 +67,15 @@ public class AGV extends Node {
     public void removeContainer(){
         this.detachChild(cargo);
         this.cargo = null;
+    }
+    
+    public void Move(MotionPath route, float speed){
+        MotionEvent motionControl = new MotionEvent(this, route);
+        motionControl.setDirectionType(MotionEvent.Direction.Path);
+        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
+        motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(speed);
+        motionControl.play();
     }
     
 }

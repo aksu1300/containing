@@ -7,6 +7,7 @@ package containing;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -27,7 +28,8 @@ public class Game extends SimpleApplication {
     AGV agv;
     Spatial cargo;
     shipCrane shCrane;
-    shipCrane crane;
+    
+    
     Freighter freighter;
     Ship ship;
     MotionPath motionPath;
@@ -72,19 +74,23 @@ public class Game extends SimpleApplication {
         freighter.Move(harbor.getFreighterDock(), 0.3f);
         rootNode.attachChild(freighter);
 
-        // Adding a shipCrane to the harbor
-        for (int i = 0; i < 6; i++){
-        crane = new shipCrane(assetManager, 1.5f);
-        crane.rotate(0, FastMath.PI, 0);
-        crane.setLocalTranslation(170, 10.5f, -120+(i*40));
-        rootNode.attachChild(crane);
-        }
+       
+        
+        // Adding a AGV to the harbor
+        Material material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        agv = new AGV("1", material, assetManager);
+        agv.rotate(0, FastMath.PI, 0);
+        agv.setLocalTranslation(0, 10.5f, 0);
+        agv.Move(harbor.fromcranepaths.get(2), 1f);
+        harbor.fromcranepaths.get(2).enableDebugShape(assetManager, rootNode);
+        rootNode.attachChild(agv);
+        
     }
 
     @Override
     public void simpleUpdate(float tpf) {
         //ship.move(0, 0, (tpf*50) *-1);
-        crane.pullGrabber(tpf);
+        //crane.pullGrabber(tpf);
         System.out.println(cam.getLocation().x);
         System.out.println(cam.getLocation().y);
         System.out.println(cam.getLocation().z);
