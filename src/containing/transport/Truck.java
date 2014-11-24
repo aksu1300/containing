@@ -29,7 +29,7 @@ public class Truck extends Node {
     
     public void setContainer(Spatial cargo){
         this.cargo = cargo; 
-        this.cargo.setLocalTranslation(0,0.6f,0);
+        this.cargo.setLocalTranslation(0,0.6f,0); //NEEDS WORK!
         this.attachChild(this.cargo);
     }
     
