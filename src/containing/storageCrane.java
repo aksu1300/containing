@@ -14,7 +14,7 @@ import com.jme3.material.Material;
 public class storageCrane extends Crane {
     
     storageCrane(String id, Material mat, AssetManager assetManager){
-        super(id, mat, assetManager);
+        super(id, assetManager);
         
     }
     
