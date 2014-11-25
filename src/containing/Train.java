@@ -16,29 +16,50 @@ public class Train extends Node {
     private ArrayList cargo;
     private ArrayList wagons;
     
+    /**
+     * Train that gets the containers out of the harbor.
+     * @param id String ex:C10064
+     * @param loc Vector3f location ex:new Vector3f(0, 6f, 0)
+     * @param speed float Speed ex:6f
+     * @param assetManager AssetManager for the train ex:new AssetManager
+     * @param wagons Wagons that can be added to the train ex:new Wagon
+     */
     public Train(String id, Vector3f loc,float speed , AssetManager assetManager, ArrayList wagons) {
         this.id = id;
         this.loc = loc; 
         this.cargo = null;
         this.speed = speed;
         model = assetManager.loadModel("Models/high/train/train.j3o");
-        model.scale(0.5f);
+        model.scale(1.5f);
         this.attachChild(model);
         this.wagons = wagons;
     }
     
+    /**
+     * Train leaves the station and goes out of the harbor area.
+     */
     public void depart() {
-        Vector3f pointA = new Vector3f(0, 6f, 6f);
-        Vector3f pointB = new Vector3f(0, 6f, 14f);
+        Vector3f station = new Vector3f(0, 6f, 14f);
+        Vector3f exit = new Vector3f(0, 6f, 6f);
         MotionPath path = new MotionPath();
-        path.addWayPoint(pointA);
-        path.addWayPoint(pointB);
+        path.addWayPoint(station);
+        path.addWayPoint(exit);
     }
     
+    /**
+     * Train enters the harbor area and stops at the station. 
+     */
     public void arrive() {
-        //moveEvent to het station.
+        Vector3f entry = new Vector3f(0, 6f, 6f);
+        Vector3f station = new Vector3f(0, 6f, 14f);
+        MotionPath path = new MotionPath();
+        path.addWayPoint(entry);
+        path.addWayPoint(station);
     }
     
+    /**
+     * Add physics (gravity) to the train.
+     */
     private void initPhysics() {
         //adds gravity effects.
     }

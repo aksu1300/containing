@@ -18,7 +18,7 @@ public class Wagon extends Node {
         this.cargo = null;
         this.speed = speed;
         model = assetManager.loadModel("Models/high/train/wagon.j3o");
-        model.scale(0.5f);
+        model.scale(1.5f);
         this.attachChild(model);
     }
     
