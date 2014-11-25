@@ -170,7 +170,7 @@ public class Game extends SimpleApplication {
                         image(new ImageBuilder() {
                             {
                                 childLayoutVertical();
-                                filename("Interface/top-left1.png");
+                                filename("Interface/top-left2.png");
                                 alignLeft();
                             }
                         });
@@ -228,6 +228,51 @@ public class Game extends SimpleApplication {
                                         image(new ImageBuilder() {
                                             {
                                                 filename("Interface/stop-button.png");
+                                                valignCenter();
+                                                interactOnClick("stopSimulatie()");
+                                            }
+                                        });
+                                    }
+                                });
+                                panel(new PanelBuilder("panel_top_right5") {
+                                    {
+                                        childLayoutCenter();
+                                        alignLeft();
+                                        padding("220px,00px,0px,10px");
+
+                                        image(new ImageBuilder() {
+                                            {
+                                                filename("Interface/ffw1.png");
+                                                valignCenter();
+                                                interactOnClick("stopSimulatie()");
+                                            }
+                                        });
+                                    }
+                                });
+                                panel(new PanelBuilder("panel_top_right6") {
+                                    {
+                                        childLayoutCenter();
+                                        alignLeft();
+                                        padding("330px,00px,0px,10px");
+
+                                        image(new ImageBuilder() {
+                                            {
+                                                filename("Interface/ffw2.png");
+                                                valignCenter();
+                                                interactOnClick("stopSimulatie()");
+                                            }
+                                        });
+                                    }
+                                });
+                                panel(new PanelBuilder("panel_top_right7") {
+                                    {
+                                        childLayoutCenter();
+                                        alignLeft();
+                                        padding("440px,00px,0px,10px");
+
+                                        image(new ImageBuilder() {
+                                            {
+                                                filename("Interface/ffw3.png");
                                                 valignCenter();
                                                 interactOnClick("stopSimulatie()");
                                             }
