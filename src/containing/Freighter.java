@@ -18,4 +18,10 @@ public class Freighter extends Ship {
         super(assetmanager, size/2);
         this.id = "F01";
     }
+    
+    @Override
+    public void initHold(){
+        
+    }
+    
 }
