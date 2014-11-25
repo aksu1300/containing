@@ -1,6 +1,9 @@
 package containing;
 
+
+
 import com.jme3.asset.AssetManager;
+import com.jme3.cinematic.MotionPath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -13,9 +16,10 @@ public class Train extends Node {
     private ArrayList cargo; 
     private float speed;
     private String id;
-    private ArrayList carts;
+    private ArrayList wagons;
     
-    public Train(String id, Vector3f loc,float speed , AssetManager assetManager, ArrayList carts) {
+    
+    public Train(String id, Vector3f loc,float speed , AssetManager assetManager, ArrayList wagons) {
         this.id = id;
         this.loc = loc; 
         this.cargo = null;
@@ -23,11 +27,15 @@ public class Train extends Node {
         model = assetManager.loadModel("Models/high/train/train.j3o");
         model.scale(0.5f);
         this.attachChild(model);
-        this.carts = carts;
+        this.wagons = wagons;
     }
     
     public void depart() {
-        //moveEvent to edge of map.
+        Vector3f pointA = new Vector3f(0, 6f, 6f);
+        Vector3f pointB = new Vector3f(0, 6f, 14f);
+        MotionPath path = new MotionPath();
+        path.addWayPoint(pointA);
+        path.addWayPoint(pointB);
     }
     
     public void arrive() {
@@ -42,11 +50,11 @@ public class Train extends Node {
     
     public ArrayList getContainers(){return this.cargo;}
     
-    public int getCartCount() {return this.carts.size();}
+    public int getCartCount() {return this.wagons.size();}
     
-    public ArrayList getCarts() {return this.carts;}
+    public ArrayList getCarts() {return this.wagons;}
     
-    public void setCargo(Container container, Wagon wagon) {wagon.setContainer(container);}
+    //public void setCargo(Container container, Wagon wagon) {this.wagons.setContainer(container);}
     
     public void updateSpeed(float uSpeed) {this.speed = uSpeed;}
     

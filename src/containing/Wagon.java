@@ -4,7 +4,6 @@ import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import java.util.ArrayList;
 
 public class Wagon extends Node {
     private Vector3f loc;
@@ -12,7 +11,6 @@ public class Wagon extends Node {
     private Container cargo;
     private float speed;
     private String id;
-    private ArrayList carts;
     
     public Wagon(String id,Vector3f loc ,float speed , AssetManager assetManager) {
         this.id = id;
@@ -30,15 +28,19 @@ public class Wagon extends Node {
     
     // <editor-fold defaultstate="collapsed" desc="Get & Set">
     
-    public void setContainer(Container cargo){
-        this.cargo = cargo; 
-        this.cargo.setLocalTranslation(0,0.6f,0); //NEEDS WORK.
-        this.attachChild(this.cargo);
+    public void setCargo(Container cargo){
+        if (cargo == null) {
+            this.cargo = cargo; 
+            this.cargo.setLocalTranslation(0,0.6f,0);
+            this.attachChild(this.cargo);
+        }
     }
     
     public Container getContainer(){return cargo;}
     
-    public void updateSpeed(float uSpeed) {this.speed = uSpeed;}
+    public void updateSpeed(float uSpeed){this.speed = uSpeed;}
+    
+}
     
     // </editor-fold>
-}
+
