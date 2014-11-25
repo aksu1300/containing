@@ -38,9 +38,7 @@ public class Wagon extends Node {
     
     public Container getContainer(){return cargo;}
     
-    public void updateSpeed(float uSpeed){this.speed = uSpeed;}
-    
-}
+    public void updateSpeed(float uSpeed) {this.speed = uSpeed;}
     
     // </editor-fold>
-
+}
