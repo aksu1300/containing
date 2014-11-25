@@ -27,14 +27,17 @@ public class shipCrane extends Node {
     Spatial hookLeft;
     Spatial hookRight;
     AssetManager assetManager;
+    Vector3f location;
     float speed;
     String id;
     float size;
-    BoundingVolume boundGrab;
+    boolean status = false; // flase is up, true is down
+    
 
-    public shipCrane(AssetManager _assetManager, float _size) {
+public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.assetManager = _assetManager;
         this.size = _size;
+        this.location = location;
 
 
 
@@ -90,7 +93,57 @@ public class shipCrane extends Node {
         hookRight.scale(size);
 
     }
-
+    
+     /**
+     * Grabbing a container
+     */
+    public Vector3f getLocation(){
+        return this.location;
+    }
+    
+    public boolean pullGrabber(float tpf){  
+        if(this.getChild(1).getLocalTranslation().y <= 9.5f)
+        {
+            System.out.print("FUCK JACCO");
+            tpf = tpf * 4;
+            for (int i = 1; i < this.children.size(); i++)
+               this.getChild(i).move(0, tpf, 0);
+            return false; // Grabber is still moving
+        }
+        else
+            return true; // Grabber reached top  
+    }
+    
+    public boolean inGrabber(float tpf){
+        if (this.getChild(1).getLocalTranslation().x < 20) 
+        {
+            tpf = tpf * 4;
+            for (int i = 1; i < this.children.size(); i++)
+               this.getChild(i).move(tpf, 0, 0);
+            return false; // Still moving grabber in.
+        }
+        else
+            return true; // Max in,
+        
+        
+    }
+    
+         /**
+     * Taking a container
+     */
+    public boolean pushGrabber(float tpf){
+        if(this.getChild(1).getLocalTranslation().y >= -10f)
+        {
+            tpf = tpf * 4;
+            for (int i = 1; i < this.children.size(); i++) 
+               this.getChild(i).move(0,  tpf *- 1, 0);
+            return false; // still pushing.
+        }
+        else
+            return true; // max pushed.
+        
+        
+    }
     /**
      * Grabbing a container
      */

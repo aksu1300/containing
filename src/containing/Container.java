@@ -16,6 +16,7 @@ import com.jme3.scene.Spatial;
  */
 public class Container extends Node{
 
+    private String id;
     private AssetManager assetManager;
     private Spatial container;
     private float size;
@@ -52,6 +53,8 @@ public class Container extends Node{
         container = assetManager.loadModel("Models/high/container/container.j3o");
         container.scale(size);
     }
+    
+    public String getId() {return this.id;}
    
     private void initBounding(){
         geometry = this.container.getWorldBound();

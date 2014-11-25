@@ -26,12 +26,22 @@ public class Game extends SimpleApplication {
     AGV agv;
     Spatial cargo;
     shipCrane shCrane;
-    shipCrane crane;
+    
+    
     Freighter freighter;
     Boat ship;
     Harbor harbor;
     MotionPath motionPath;
     MotionPath motionPath1;
+    
+    boolean pushedtoship = false; //check if grabber is pushed to ship
+    boolean pulledfromship = false; //check if grabber is pulled from ship
+    boolean grabberin = false; // check if grabber is in
+    boolean pushedtoagv = false; // check if grabber is pushed to agv
+    boolean agvgo = false; // check if grabber is pulled from agv
+    boolean pulledfromagv = false;
+    boolean sequence = true; // true means incomplete.
+    boolean agvatc = true;
 
     @Override
     public void simpleInitApp() {
@@ -73,6 +83,16 @@ public class Game extends SimpleApplication {
         freighter.Move(harbor.getFreighterDock(), 0.3f);
 
         rootNode.attachChild(freighter);
+
+       
+        
+        // Adding a AGV to the harbor
+        Material material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        agv = new AGV("1", material, assetManager);
+        agv.rotate(0, FastMath.PI, 0);
+        agv.setLocalTranslation(0, 10.5f, 0);
+        rootNode.attachChild(agv);
+        
     }
 
     @Override
@@ -98,7 +118,7 @@ public class Game extends SimpleApplication {
         
         System.out.println(cam.getLocation().x);
         System.out.println(cam.getLocation().y);
-        System.out.println(cam.getLocation().z);
+        System.out.println(cam.getLocation().z); 
     }
 
     @Override

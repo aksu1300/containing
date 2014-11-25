@@ -17,8 +17,7 @@ public class Storage extends Node{
     
     public Storage(AssetManager assetManager){
         
-        this.assetManager = assetManager;
-        
+        this.assetManager = assetManager; 
     }
     
 }
