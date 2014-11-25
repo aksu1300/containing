@@ -7,8 +7,7 @@ package containing;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
-import com.jme3.cinematic.MotionPathListener;
-import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -36,6 +35,15 @@ public class Game extends SimpleApplication {
     Harbor harbor;
     MotionPath motionPath;
     MotionPath motionPath1;
+    
+    boolean pushedtoship = false; //check if grabber is pushed to ship
+    boolean pulledfromship = false; //check if grabber is pulled from ship
+    boolean grabberin = false; // check if grabber is in
+    boolean pushedtoagv = false; // check if grabber is pushed to agv
+    boolean agvgo = false; // check if grabber is pulled from agv
+    boolean pulledfromagv = false;
+    boolean sequence = true; // true means incomplete.
+    boolean agvatc = true;
 
     @Override
     public void simpleInitApp() {
@@ -75,7 +83,6 @@ public class Game extends SimpleApplication {
         freighter = new Freighter(assetManager, 0.5f);
         //freighter.addContainer(new Container(assetManager,1f));
         freighter.Move(harbor.getFreighterDock(), 0.3f);
-        
         rootNode.attachChild(freighter);
 
        
@@ -85,33 +92,49 @@ public class Game extends SimpleApplication {
         agv = new AGV("1", material, assetManager);
         agv.rotate(0, FastMath.PI, 0);
         agv.setLocalTranslation(0, 10.5f, 0);
-        agv.Move(harbor.fromcranepaths.get(2), 1f);
-        harbor.fromcranepaths.get(2).enableDebugShape(assetManager, rootNode);
         rootNode.attachChild(agv);
         
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        //ship.move(0, 0, (tpf*50) *-1);
-        
-        if(ship.getDocked())
-            for (shipCrane sc : harbor.shCranes) {
-                if (sc.container == null){
-                    sc.pushGrabber(tpf);
-                }
-                else{
-                    sc.pullGrabber(tpf);
-                }
-                
-            }
-        
-        
-        
+        if(ship.getDocked()){
+            for (shipCrane sc : harbor.shCranes){
+                if(pushedtoship == false){ // Grabber not down
+                   pushedtoship = sc.pushGrabber(tpf);}  // Gettting grabber down   
 
+                if (pushedtoship && sc.container == null){ //adding a set of container
+                   sc.container = new Container(assetManager, 1);
+                   sc.container.setLocalTranslation(new Vector3f(sc.getChild(3).getLocalTranslation()).setY(sc.getChild(3).getLocalTranslation().getY()+11.5f));
+                   sc.attachChild(sc.container); 
+                }
+
+                if(pulledfromship == false && pushedtoship){ // Grabber not up but down
+                    pulledfromship = sc.pullGrabber(tpf);} // Getting grabber up
+
+                if(pulledfromship && grabberin == false){ // Grabber not in
+                    grabberin = sc.inGrabber(tpf);} // Bringing grabber in
+
+                if(grabberin && pushedtoagv == false){ // Grabber not down to agv
+                    pushedtoagv = sc.pushGrabber(tpf);} // Getting grabber down to agv
+
+                if(pushedtoagv && agvgo == false){
+                    agv.setContainer(sc.container); // the container is attached to the agv.
+                    agvgo = true;}
+                
+                if(agvgo && pulledfromagv == false){
+                    pulledfromagv = sc.pullGrabber(tpf);}
+                    
+                if(agvatc && agvgo && pulledfromagv){
+                    agv.Move(harbor.fromcranepaths.get(0), 1f); // the agv will move away from the crane
+                    agvatc = false;
+                }
+                    
+            }
+        }   
         System.out.println(cam.getLocation().x);
         System.out.println(cam.getLocation().y);
-        System.out.println(cam.getLocation().z);
+        System.out.println(cam.getLocation().z); 
     }
 
     @Override

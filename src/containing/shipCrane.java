@@ -29,6 +29,8 @@ public class shipCrane extends Node {
     float speed;
     String id;
     float size;
+    boolean status = false; // flase is up, true is down
+    
 
 public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.assetManager = _assetManager;
@@ -93,39 +95,49 @@ public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         return this.location;
     }
     
-    public void pullGrabber(float tpf){
-        System.out.println("Y  : " + this.getChild(1).getLocalTranslation().y);
-        
+    public boolean pullGrabber(float tpf){  
         if(this.getChild(1).getLocalTranslation().y <= 9.5f)
         {
-            this.getChild(1).move(0,tpf,0);
-            this.getChild(2).move(0,tpf,0);
-            this.getChild(3).move(0,tpf,0);
-            this.getChild(4).move(0,tpf,0);
-            this.getChild(5).move(0,tpf, 0);
+            System.out.print("FUCK JACCO");
+            tpf = tpf * 4;
+            for (int i = 1; i < this.children.size(); i++)
+               this.getChild(i).move(0, tpf, 0);
+            return false; // Grabber is still moving
         }
+        else
+            return true; // Grabber reached top  
+    }
+    
+    public boolean inGrabber(float tpf){
+        if (this.getChild(1).getLocalTranslation().x < 20) 
+        {
+            tpf = tpf * 4;
+            for (int i = 1; i < this.children.size(); i++)
+               this.getChild(i).move(tpf, 0, 0);
+            return false; // Still moving grabber in.
+        }
+        else
+            return true; // Max in,
+        
+        
     }
     
          /**
      * Taking a container
      */
-    public void pushGrabber(float tpf){
-        System.out.println("Y  : " + this.getChild(1).getLocalTranslation().y);
+    public boolean pushGrabber(float tpf){
         if(this.getChild(1).getLocalTranslation().y >= -10f)
         {
-            this.getChild(1).move(0,tpf*-1,0);
-            this.getChild(2).move(0,tpf*-1,0);
-            this.getChild(3).move(0,tpf*-1,0);
-            this.getChild(4).move(0,tpf*-1,0);
+            tpf = tpf * 4;
+            for (int i = 1; i < this.children.size(); i++) 
+               this.getChild(i).move(0,  tpf *- 1, 0);
+            return false; // still pushing.
         }
-        else{
-            this.container = new Container(assetManager, 1);
-            container.setLocalTranslation(new Vector3f(this.getChild(3).getLocalTranslation()).setY(this.getChild(3).getLocalTranslation().getY()+11.5f));
-            this.attachChild(container);
-        }
+        else
+            return true; // max pushed.
+        
         
     }
-    
     /**
      * Grabbing a container
      */

@@ -42,7 +42,6 @@ public class Harbor extends Node{
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
         shCranes = new ArrayList<shipCrane>();
         this.assetmanager = assetManager;
-        initCranes();
         initPlatform(assetManager, bulletAppState);
         initSky(assetManager);
         initContainerlines(assetManager, bulletAppState, amountlines);
@@ -72,25 +71,13 @@ public class Harbor extends Node{
     public void initShipcranes(AssetManager assetManager){
      // Adding a shipCrane to the harbor
         for (int i = 0; i < 6; i++){
-        shipCrane crane = new shipCrane(assetManager, 1.5f, new Vector3f(170, 10.5f, -120+(i*40)));
+        shipCrane crane = new shipCrane(assetManager, 1f, new Vector3f(160, 10.5f, -120 +(i*30)));
         crane.rotate(0, FastMath.PI, 0);
         crane.setLocalTranslation(crane.getLocation());
         initTocranemotionpath(crane, i);
         initFromcranemotionpath(crane, i);
+        shCranes.add(crane);
         this.attachChild(crane);
-        }
-    }
-
-    public void initCranes() {
-
-        for (int i = 0; i < 6; i++) {
-            this.shCranes.add(new shipCrane(assetmanager, 1));
-        }
-        for (int i = 0; i < shCranes.size(); i++) {
-            shipCrane sc = shCranes.get(i);
-            sc.rotate(0, FastMath.PI, 0);
-            sc.setLocalTranslation(160, 10.5f, -120 + (i * 30));
-            this.attachChild(sc);
         }
     }
 

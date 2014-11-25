@@ -50,7 +50,6 @@ public class Container extends Node{
     private void initContainer() {
         // Load the container
         container = assetManager.loadModel("Models/high/container/container.j3o");
-        container.rotate(0, FastMath.PI / 2, 0);
         container.scale(size);
     }
    

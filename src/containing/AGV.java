@@ -70,6 +70,7 @@ public class AGV extends Node {
     }
     
     public void Move(MotionPath route, float speed){
+        System.out.print("IK BEN HIERRRRRRR");
         MotionEvent motionControl = new MotionEvent(this, route);
         motionControl.setDirectionType(MotionEvent.Direction.Path);
         motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));

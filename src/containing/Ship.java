@@ -71,13 +71,8 @@ public class Ship extends Node {
         for (int x = 0; x < 3; x++) {
             this.containers.add(new Container(assetManager, 1.5f));
         }
-        for (int y = 0; y < 3; y++){
-            
-        }
-
         for (int i = 0; i < 3; i++) {
             Container x = containers.get(i);
-            x.rotate(0, -(FastMath.PI / 2), 0);
             x.setLocalTranslation(0, size / 2 + 0.1f, -10 + (i * 5));
             this.attachChild(x);
         }
@@ -133,8 +128,7 @@ public class Ship extends Node {
 
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 if (route.getNbWayPoints() == wayPointIndex + 1) {
-                    setDocked();
-                    
+                    setDocked(); 
                 } else {
                     System.out.println("nope");
                 }
