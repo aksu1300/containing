@@ -5,8 +5,8 @@
 package containing;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.material.Material;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
@@ -20,8 +20,8 @@ public class Container extends Node{
     private Spatial container;
     private float size;
     private Material material;
-    
-    public Geometry geometry;
+
+    public BoundingVolume geometry;
 
     
     public Container(AssetManager _assetManager, float _size) {
@@ -33,6 +33,8 @@ public class Container extends Node{
         
         // Init material of the container
         initMaterials();
+        
+        initBounding();
        
         // Attach to the root node
         this.attachChild(container);
@@ -51,4 +53,8 @@ public class Container extends Node{
         container.scale(size);
     }
    
+    private void initBounding(){
+        geometry = this.container.getWorldBound();
+    }
+    
 }

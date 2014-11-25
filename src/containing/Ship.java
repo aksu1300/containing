@@ -34,7 +34,7 @@ public class Ship extends Node {
     //public RigidBodyControl ballPhy;
     private Vector3f lastLocation;
     // A ship has a list of containers 
-    private List<Container> containers;
+    public List<Container> containers;
 
     public Ship(AssetManager assetManager, float size) {
         this.assetManager = assetManager;
@@ -79,35 +79,13 @@ public class Ship extends Node {
                     x.rotate(0, -(FastMath.PI / 2), 0);
                     x.setLocalTranslation(60-(i*24), size / 2 + 0.1f + (y*4.25f), -10 + (z * 5));
                     this.attachChild(x);
-                    
+                    containers.add(x);
                 }
-
             }
         }
-
     }
 
-    /**
-     * Add a container to the ship
-     *
-     * @param container
-     */
-//    public void addContainer(Container container){
-//        // Adding a container to a ship
-//        this.containers.add(container);
-//
-//        // Now move the new container to a specific place 
-//        // But first check how many there are and use this to for the place
-//        // on the ship
-//        // DEBUGGGING
-////        int size = this.containers.size();
-////        container.setLocalTranslation(0, (size/2)+0.1f, 0);
-//        
-//                
-//        // Atach the container to the ship node
-//        this.attachChild(container);
-//        
-//    }
+    
     // Get a container from the boot
     public Container getContainer(int id) {
         // first deattach the container from the ship

@@ -7,10 +7,7 @@ package containing;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
-import com.jme3.cinematic.MotionPathListener;
-import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
@@ -50,7 +47,7 @@ public class Game extends SimpleApplication {
         cam.setLocation(new Vector3f(30, 100, 30));
         cam.setFrustumFar(9000);
         cam.onFrameChange();
-        
+
         // load water
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         WaterFilter water = new WaterFilter(rootNode, lightDir);
@@ -67,35 +64,38 @@ public class Game extends SimpleApplication {
         // Adding a ship to the scene
         ship = new Boat(assetManager, 0.5f);
         //ship.addContainer(new Container(assetManager, 1f));
-        ship.Move(harbor.getDockingroute(), 1.2f);
+        ship.Move(harbor.getDockingroute(), 4f);
         rootNode.attachChild(ship);
 
         //Adding freighter to the harbor
         freighter = new Freighter(assetManager, 0.5f);
         //freighter.addContainer(new Container(assetManager,1f));
         freighter.Move(harbor.getFreighterDock(), 0.3f);
-        
+
         rootNode.attachChild(freighter);
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        //ship.move(0, 0, (tpf*50) *-1);
-        
-        if(ship.getDocked())
+
+        if (ship.getDocked()) //ship.detachChild(ship.containers.get(89));
+        {
+            System.out.println("Ship has docked!");
             for (shipCrane sc : harbor.shCranes) {
-                if (sc.container == null){
+                if(sc.container == null) {
+                    System.out.println("no container!");
                     sc.pushGrabber(tpf);
+                    if (sc.boundGrab.intersects(ship.containers.get(89).geometry)) {
+                        System.out.println("it has hit!");
+                        sc.grabContainer(ship.containers.get(89));
+                    }
                 }
                 else{
-                    sc.pullGrabber(tpf);
+                sc.pullGrabber(tpf);
                 }
-                
             }
+        }
         
-        
-        
-
         System.out.println(cam.getLocation().x);
         System.out.println(cam.getLocation().y);
         System.out.println(cam.getLocation().z);
