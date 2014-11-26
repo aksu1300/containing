@@ -2,19 +2,20 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package containing;
+package containing.storage;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import containing.Container;
 
 /**
  *
  * @author Driving Ghost
  */
-public class storageCrane extends Node {
+public class StorageCrane extends Node {
     
     Vector3f loc;
     Container container;
@@ -30,7 +31,7 @@ public class storageCrane extends Node {
     String id;
     float size;
     
-    storageCrane(AssetManager _assetManager, float _size, Vector3f location){
+    StorageCrane(AssetManager _assetManager, float _size, Vector3f location){
          this.assetManager = _assetManager;
          this.size = _size;
          this.location = location;
