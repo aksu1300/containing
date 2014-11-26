@@ -86,6 +86,11 @@ public class Game extends SimpleApplication {
         //Attach Platform to rootnode
         rootNode.attachChild(harbor);
 
+        // Adding a ship to the scene
+        ship = new Boat(assetManager, 0.5f);
+        //ship.addContainer(new Container(assetManager, 1f));
+        ship.Move(harbor.getDockingroute(), 1.2f);
+        rootNode.attachChild(ship);
         //Adding freighter to the harbor
         freighter = new Freighter(assetManager, 0.5f);
         //freighter.addContainer(new Container(assetManager,1f));
@@ -100,7 +105,7 @@ public class Game extends SimpleApplication {
         Material material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
         agv = new AGV("1", material, assetManager);
         agv.rotate(0, FastMath.PI, 0);
-        agv.setLocalTranslation(0, 10.5f, 0);
+        agv.setLocalTranslation(0, 10.5f, 40);
         rootNode.attachChild(agv);
     }
     
@@ -154,6 +159,9 @@ public class Game extends SimpleApplication {
             System.out.println(cam.getLocation().x);
             System.out.println(cam.getLocation().y);
             System.out.println(cam.getLocation().z);
+            //System.out.println(cam.getLocation().x);
+            //System.out.println(cam.getLocation().y);
+            //System.out.println(cam.getLocation().z);
         }
     }
 

@@ -21,8 +21,8 @@ public class Simulation {
         G = new Game();
         config = new ArrayList<String>();
     }
-
-    /**
+    
+     /**
      * startSimulation methode start de 3D simulatie van de haven.
      *
      */

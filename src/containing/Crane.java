@@ -33,7 +33,7 @@ public class Crane extends Node {
         this.assetManager = assetManager;
        
         // Attach to the root node
-        this.attachChild(crane);
+        //this.attachChild(crane);
     }
 
 }
