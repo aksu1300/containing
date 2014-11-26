@@ -16,10 +16,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
 
-/**
- *
- * @author Driving Ghost
- */
 public class Game extends SimpleApplication {
 
     private BulletAppState bulletAppState;
@@ -28,6 +24,8 @@ public class Game extends SimpleApplication {
     AGV agv;
     Spatial cargo;
     shipCrane shCrane;
+    Train train;
+    Truck truck;
     
     
     Freighter freighter;
