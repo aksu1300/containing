@@ -55,8 +55,8 @@ public class Harbor extends Node{
             Vector3f locminus = new Vector3f(0, 10.5f, i * -11);
             Vector3f locplus2 = new Vector3f(0, 11f, i * + 11);
             Vector3f locminus2 = new Vector3f(0, 11f, i * -11);
-            storagelines.add(new Storage(assetManager, new StorageCrane(assetManager, 0.5f, locminus2), locminus, bulletAppState)); // beide kanten op.
-            storagelines.add(new Storage(assetManager, new StorageCrane(assetManager, 0.5f, locplus2), locplus, bulletAppState));
+            //storagelines.add(new Storage(assetManager, new StorageCrane(assetManager, 0.5f, locminus2), locminus, bulletAppState)); // beide kanten op.
+            //storagelines.add(new Storage(assetManager, new StorageCrane(assetManager, 0.5f, locplus2), locplus, bulletAppState));
         }
         for(Storage sl : storagelines){
             this.attachChild(sl);

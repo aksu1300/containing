@@ -5,23 +5,22 @@
 package containing;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 
 /**
  *
  * @author Driving Ghost
  */
-public class Freighter extends Ship {
+public class Freighter extends Node {
     
-    String id;
+    private String id;
+    private Vector3f loc;
+    private float speed;
+    private AssetManager assetmanager;
     
-    public Freighter(AssetManager assetmanager, float size){
-        super(assetmanager, size/2);
+    public Freighter(AssetManager assetmanager){
+        this.assetmanager = assetmanager;//hardcode the scale!
         this.id = "F01";
     }
-    
-    @Override
-    public void initHold(){
-        
-    }
-    
 }

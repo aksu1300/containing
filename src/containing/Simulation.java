@@ -59,6 +59,10 @@ public class Simulation extends SimpleApplication {
         config = new ArrayList<String>();
     }
     
+    public void startSimulation() {
+        
+    }
+    
     @Override
     public void simpleInitApp() {
         initHud();
