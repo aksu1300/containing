@@ -32,22 +32,21 @@ public class shipCrane extends Node {
     String id;
     float size;
     boolean status = false; // flase is up, true is down
-    
+    BoundingVolume boundGrab;
+    boolean up = true;
+    boolean in = false;
+    boolean done = false;
 
-public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
+    public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.assetManager = _assetManager;
         this.size = _size;
         this.location = location;
-
-
 
         //Init Sphere
         initContainer();
 
         // Init material of the container
         initMaterials();
-
-
 
         // Attach to the root node
         this.attachChild(crane);
@@ -57,6 +56,7 @@ public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.attachChild(hookLeft);
         this.attachChild(hookRight);
         initBounding();
+
     }
 
     // init Materials
@@ -93,57 +93,26 @@ public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         hookRight.scale(size);
 
     }
-    
-     /**
+
+    /**
      * Grabbing a container
      */
-    public Vector3f getLocation(){
+    public Vector3f getLocation() {
         return this.location;
     }
-    
-    public boolean pullGrabber(float tpf){  
-        if(this.getChild(1).getLocalTranslation().y <= 9.5f)
-        {
-            System.out.print("FUCK JACCO");
+
+    public void inGrabber(float tpf) {
+        if (this.getChild(1).getLocalTranslation().x < 20) {
+            this.in = false;
             tpf = tpf * 4;
-            for (int i = 1; i < this.children.size(); i++)
-               this.getChild(i).move(0, tpf, 0);
-            return false; // Grabber is still moving
+            for (int i = 1; i < this.children.size(); i++) {
+                this.getChild(i).move(tpf, 0, 0);
+            }
+        } else {
+            this.in = true;
         }
-        else
-            return true; // Grabber reached top  
     }
-    
-    public boolean inGrabber(float tpf){
-        if (this.getChild(1).getLocalTranslation().x < 20) 
-        {
-            tpf = tpf * 4;
-            for (int i = 1; i < this.children.size(); i++)
-               this.getChild(i).move(tpf, 0, 0);
-            return false; // Still moving grabber in.
-        }
-        else
-            return true; // Max in,
-        
-        
-    }
-    
-         /**
-     * Taking a container
-     */
-    public boolean pushGrabber(float tpf){
-        if(this.getChild(1).getLocalTranslation().y >= -10f)
-        {
-            tpf = tpf * 4;
-            for (int i = 1; i < this.children.size(); i++) 
-               this.getChild(i).move(0,  tpf *- 1, 0);
-            return false; // still pushing.
-        }
-        else
-            return true; // max pushed.
-        
-        
-    }
+
     /**
      * Grabbing a container
      */
@@ -156,6 +125,8 @@ public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
             if (this.container != null) {
                 this.getChild(5).move(0, tpf, 0);
             }
+        } else {
+            this.up = true;
         }
     }
 
@@ -163,10 +134,16 @@ public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
      * Taking a container
      */
     public void pushGrabber(float tpf) {
-        this.getChild(1).move(0, tpf * -1, 0);
-        this.getChild(2).move(0, tpf * -1, 0);
-        this.getChild(3).move(0, tpf * -1, 0);
-        this.getChild(4).move(0, tpf * -1, 0);
+        this.up = false;
+        if (this.getChild(1).getLocalTranslation().y >= -10f) {
+            for (int i = 1; i < this.children.size(); i++) {
+                this.getChild(i).move(0, tpf * -1, 0);
+            }
+
+        } else {
+            this.done = true;
+        }
+
     }
 
     /**

@@ -54,10 +54,10 @@ public class Ship extends Node {
         this.attachChild(shipSpatial);
     }
 
-    //  Init container
+    //  Init ship
     public void initShip() {
         shipSpatial = assetManager.loadModel("Models/high/ship/seaship.j3o");
-        shipSpatial.rotate(0, FastMath.PI, 0);
+        shipSpatial.rotate(0, -(FastMath.PI / 2), 0);
         shipSpatial.scale(size);
     }
 
@@ -104,7 +104,7 @@ public class Ship extends Node {
 
     public void Move(final MotionPath route, float speed) {
         MotionEvent motionControl = new MotionEvent(this, route);
-        motionControl.setDirectionType(MotionEvent.Direction.Path);
+        motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
         motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
         motionControl.setInitialDuration(10f);
         motionControl.setSpeed(speed);
@@ -114,16 +114,12 @@ public class Ship extends Node {
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 if (route.getNbWayPoints() == wayPointIndex + 1) {
                     setDocked();
-
                 } else {
                     System.out.println("nope");
                 }
-
             }
         });
-
     }
-
     public boolean getDocked() {
         return this.docked;
     }
