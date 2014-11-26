@@ -4,6 +4,8 @@
  */
 package containing;
 
+import HUD.Hud;
+import HUD.MyHUD;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
@@ -11,10 +13,17 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.builder.ImageBuilder;
+import de.lessvoid.nifty.builder.LayerBuilder;
+import de.lessvoid.nifty.builder.PanelBuilder;
+import de.lessvoid.nifty.builder.ScreenBuilder;
+import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 
 public class Game extends SimpleApplication {
 
@@ -27,6 +36,7 @@ public class Game extends SimpleApplication {
     Train train;
     Truck truck;
     
+   
     
     Freighter freighter;
     Boat ship;
@@ -45,6 +55,7 @@ public class Game extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
+        initHud();
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         harbor = new Harbor(bulletAppState, assetManager);
@@ -52,7 +63,8 @@ public class Game extends SimpleApplication {
         //right camera position
         //cam.setLocation(new Vector3f(200, 150, 150));
         //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
-        flyCam.setEnabled(true);
+//        flyCam.setEnabled(true);
+        flyCam.setDragToRotate(true);
         flyCam.setMoveSpeed(100);
         cam.setLocation(new Vector3f(30, 100, 30));
         cam.setFrustumFar(9000);
@@ -135,6 +147,188 @@ public class Game extends SimpleApplication {
         System.out.println(cam.getLocation().z); 
     }
 
+    private void initHud(){
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
+                assetManager, inputManager, audioRenderer, guiViewPort);
+        Nifty nifty = niftyDisplay.getNifty();
+        guiViewPort.addProcessor(niftyDisplay);
+   
+
+        nifty.loadStyleFile("nifty-default-styles.xml");
+        nifty.loadControlFile("nifty-default-controls.xml");
+
+        // <screen>
+        nifty.addScreen("hud", new ScreenBuilder("hud") {
+            {
+                controller(new MyHUD());
+                layer(new LayerBuilder("background") {
+                    {
+                        childLayoutVertical();
+                        padding("16px,0px,0px,0px");
+                        image(new ImageBuilder() {
+                            {
+                                childLayoutVertical();
+                                filename("Interface/top-left2.png");
+                                alignLeft();
+                            }
+                        });
+                    }
+                });
+
+                layer(new LayerBuilder("foreground") {
+                    {
+                        childLayoutVertical();
+
+                        panel(new PanelBuilder("panel_top") {
+                            {
+                                childLayoutCenter();
+                                alignLeft();
+                                height("120px");
+                                width("160px");
+
+                                panel(new PanelBuilder("panel_top_right1") {
+                                    {
+                                        childLayoutCenter();
+                                        alignLeft();
+                                        padding("16px,00px,58px,82px");
+
+                                        image(new ImageBuilder() {
+                                            {
+                                                filename("Interface/settings-button.png");
+                                                valignCenter();
+                                                interactOnClick("switchScreen(config)");
+                                            }
+                                        });
+                                    }
+                                });
+
+                                panel(new PanelBuilder("panel_top_right2") {
+                                    {
+                                        childLayoutCenter();
+                                        alignLeft();
+                                        padding("93px,00px,0px,12px");
+
+                                        image(new ImageBuilder() {
+                                            {
+                                                filename("Interface/play-button.png");
+                                                valignCenter();
+                                                interactOnClick("startSimulatie()");
+                                            }
+                                        });
+                                    }
+                                });
+                                panel(new PanelBuilder("panel_top_right3") {
+                                    {
+                                        childLayoutCenter();
+                                        alignLeft();
+                                        padding("28px,00px,0px,45px");
+
+                                        image(new ImageBuilder() {
+                                            {
+                                                filename("Interface/stop-button.png");
+                                                valignCenter();
+                                                interactOnClick("stopSimulatie()");
+                                            }
+                                        });
+                                    }
+                                });
+                                panel(new PanelBuilder("panel_top_right5") {
+                                    {
+                                        childLayoutCenter();
+                                        alignLeft();
+                                        padding("220px,00px,0px,10px");
+
+                                        image(new ImageBuilder() {
+                                            {
+                                                filename("Interface/ffw1.png");
+                                                valignCenter();
+                                                interactOnClick("stopSimulatie()");
+                                            }
+                                        });
+                                    }
+                                });
+                                panel(new PanelBuilder("panel_top_right6") {
+                                    {
+                                        childLayoutCenter();
+                                        alignLeft();
+                                        padding("330px,00px,0px,10px");
+
+                                        image(new ImageBuilder() {
+                                            {
+                                                filename("Interface/ffw2.png");
+                                                valignCenter();
+                                                interactOnClick("stopSimulatie()");
+                                            }
+                                        });
+                                    }
+                                });
+                                panel(new PanelBuilder("panel_top_right7") {
+                                    {
+                                        childLayoutCenter();
+                                        alignLeft();
+                                        padding("440px,00px,0px,10px");
+
+                                        image(new ImageBuilder() {
+                                            {
+                                                filename("Interface/ffw3.png");
+                                                valignCenter();
+                                                interactOnClick("stopSimulatie()");
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        }.build(nifty));
+        nifty.gotoScreen("hud"); 
+
+        nifty.addScreen("config", new ScreenBuilder("config") {
+            {
+                controller(new MyHUD());
+
+                layer(new LayerBuilder("foreground") {
+                    {
+                        childLayoutCenter();
+
+                        panel(new PanelBuilder("panel_top_right3") {
+                            {
+                                childLayoutCenter();
+
+                                image(new ImageBuilder() {
+                                    {
+                                        filename("Interface/config.png");
+
+//                                                interactOnClick("switchScreen(hud)");
+                                    }
+                                });
+
+                                panel(new PanelBuilder("panel_top_right3") {
+                                    {
+                                        childLayoutCenter();
+                                        alignRight();
+                                        padding("0px,16px,480px,0px");
+
+                                        control(new ButtonBuilder("StartButton", "X") {
+                                            {
+                                                alignRight();
+                                                height("20px");
+                                                width("50px");
+                                                visibleToMouse(true);
+                                                interactOnClick("switchScreen(hud)");
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        }.build(nifty));
+    }
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
