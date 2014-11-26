@@ -7,7 +7,6 @@ package containing;
 import containing.transport.Train;
 import containing.transport.Truck;
 import containing.transport.Boat;
-import HUD.Hud;
 import HUD.MyHUD;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
@@ -21,13 +20,13 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
+import containing.storage.Storage;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
-import java.util.ArrayList;
 
 public class Simulation extends SimpleApplication {
 
@@ -41,7 +40,7 @@ public class Simulation extends SimpleApplication {
     Truck truck;
     
     Freighter freighter;
-    Boat ship;
+    Boat boat;
     Harbor harbor;
     MotionPath motionPath;
     MotionPath motionPath1;
@@ -53,15 +52,6 @@ public class Simulation extends SimpleApplication {
     boolean pulledfromagv = false;
     boolean sequence = true; // true means incomplete.
     boolean agvatc = true;
-    ArrayList<String> config;
-
-    public Simulation(){
-        config = new ArrayList<String>();
-    }
-    
-    public void startSimulation() {
-        
-    }
     
     @Override
     public void simpleInitApp() {
@@ -94,19 +84,16 @@ public class Simulation extends SimpleApplication {
         rootNode.attachChild(harbor);
 
         // Adding a ship to the scene
-        ship = new Boat(assetManager, 0.5f);
+        boat = new Boat(assetManager, 0.5f);
         //ship.addContainer(new Container(assetManager, 1f));
-        ship.Move(harbor.getDockingroute(), 1.2f);
-        rootNode.attachChild(ship);
+        boat.Move(harbor.getFreighterDock(), 0.3f);
+        rootNode.attachChild(boat);
         //Adding freighter to the harbor
         freighter = new Freighter(assetManager, 0.5f);
         //freighter.addContainer(new Container(assetManager,1f));
-        freighter.Move(harbor.getFreighterDock(), 0.3f);
+        freighter.Move(harbor.getDockingroute(), 1.2f);
 
         rootNode.attachChild(freighter);
-
-        //creates ship
-        ship = new Boat(assetManager, 0.5f);
         
         // Adding a AGV to the harbor
         Material material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
@@ -115,36 +102,24 @@ public class Simulation extends SimpleApplication {
         agv.setLocalTranslation(0, 10.5f, 40);
         rootNode.attachChild(agv);
     }
-    
-    public String readConfig() {
-        if (!config.isEmpty()){
-        return this.config.get(0);
-        }
-        else {
-            return "No Command";
-        }
-    }
 
     @Override
     public void simpleUpdate(float tpf) {
-
-        System.out.println(readConfig());
-
-        if ("newboat".equals(readConfig())) {
-            //ship.addContainer(new Container(assetManager, 1f));
-            ship.Move(harbor.getDockingroute(), 4f);
-            rootNode.attachChild(ship);
+        
+            
+        for(Storage sl : harbor.storagelines){
+            sl.Getcranes().moveOut(tpf, 0);
         }
 
-        if (ship.getDocked()) //ship.detachChild(ship.containers.get(89));
+        if (freighter.getDocked()) //ship.detachChild(ship.containers.get(89));
         {
             for (ShipCrane sc : harbor.shCranes) {
                 if (sc.container == null) {
                     System.out.println("no container!");
                     sc.pushGrabber(tpf);
-                    if (sc.boundGrab.intersects(ship.containers.get(89).geometry)) {
+                    if (sc.boundGrab.intersects(freighter.containers.get(89).geometry)) {
                         System.out.println("it has hit!");
-                        sc.grabContainer(ship.containers.get(89));
+                        sc.grabContainer(freighter.containers.get(89));
                     }
                 } else if (sc.in && sc.container != null) {
                     sc.pushGrabber(tpf);
@@ -154,10 +129,11 @@ public class Simulation extends SimpleApplication {
                     sc.pullGrabber(tpf);
                 }
                 if (sc.done && sc.container != null) {
-
                     agv.setContainer(sc.container);
-                    agv.Move(harbor.fromcranepaths.get(0), 1f);
-                    agv.Move(harbor.fromcranepaths.get(1), 1f);
+                    sc.detachChildAt(5);
+                    sc.container = null;
+                    agv.Move(harbor.fromcranepaths.get(2), 3f);
+                    
                 }
 
             }
