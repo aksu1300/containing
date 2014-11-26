@@ -12,13 +12,13 @@ public class Simulation {
     
     public Simulation(){
     }
-    
+        Game G = new Game();
     /**
      * startSimulation methode start de 3D simulatie van de haven.
      * 
      */
     public void startSimulation(){
-        Game G = new Game();
+        
         G.start();  
     }
     
@@ -35,7 +35,7 @@ public class Simulation {
      * 
      */
     public void calcPath(){
-        
+            
     }
     
     /**

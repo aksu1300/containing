@@ -78,20 +78,17 @@ public class Game extends SimpleApplication {
         //ship.addContainer(new Container(assetManager, 1f));
         ship.Move(harbor.getDockingroute(), 1.2f);
         rootNode.attachChild(ship);
-
         //Adding freighter to the harbor
         freighter = new Freighter(assetManager, 0.5f);
         //freighter.addContainer(new Container(assetManager,1f));
         freighter.Move(harbor.getFreighterDock(), 0.3f);
         rootNode.attachChild(freighter);
-
-       
         
         // Adding a AGV to the harbor
         Material material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
         agv = new AGV("1", material, assetManager);
         agv.rotate(0, FastMath.PI, 0);
-        agv.setLocalTranslation(0, 10.5f, 0);
+        agv.setLocalTranslation(0, 10.5f, 40);
         rootNode.attachChild(agv);
         
     }
@@ -132,9 +129,9 @@ public class Game extends SimpleApplication {
                     
             }
         }   
-        System.out.println(cam.getLocation().x);
-        System.out.println(cam.getLocation().y);
-        System.out.println(cam.getLocation().z); 
+        //System.out.println(cam.getLocation().x);
+        //System.out.println(cam.getLocation().y);
+        //System.out.println(cam.getLocation().z); 
     }
 
     @Override

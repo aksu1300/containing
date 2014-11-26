@@ -35,17 +35,32 @@ public class Harbor extends Node{
     List<Vector3f> storagesloc = new ArrayList<Vector3f>();
     List<MotionPaths> tocranepaths = new ArrayList<MotionPaths>();
     List<MotionPaths> fromcranepaths = new ArrayList<MotionPaths>();
-    private int amountlines = 40;
+    List<Storage> storagelines = new ArrayList<Storage>();
     public ArrayList<shipCrane> shCranes;
     private AssetManager assetmanager;
+    
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
         shCranes = new ArrayList<shipCrane>();
         this.assetmanager = assetManager;
         initPlatform(assetManager, bulletAppState);
         initSky(assetManager);
-        initContainerlines(assetManager, bulletAppState, amountlines);
+        initStorage(assetManager, bulletAppState);        
         initShipcranes(assetManager);
+    }
+    
+    public void initStorage(AssetManager assetManager, BulletAppState bulletAppState){
+        for (int i = 0; i < 20; i++) { //aantal lines
+            Vector3f locplus = new Vector3f(0, 10.5f, i * +11);
+            Vector3f locminus = new Vector3f(0, 10.5f, i * -11);
+            Vector3f locplus2 = new Vector3f(0, 11f, i * + 11);
+            Vector3f locminus2 = new Vector3f(0, 11f, i * -11);
+            storagelines.add(new Storage(assetManager, new storageCrane(assetManager, 0.5f, locminus2), locminus, bulletAppState)); // beide kanten op.
+            storagelines.add(new Storage(assetManager, new storageCrane(assetManager, 0.5f, locplus2), locplus, bulletAppState));
+        }
+        for(Storage sl : storagelines){
+            this.attachChild(sl);
+        }
     }
     
     public void initTocranemotionpath(shipCrane crane, int i){
@@ -67,6 +82,14 @@ public class Harbor extends Node{
         cranepath.setCurveTension(0.0f);
         fromcranepaths.add(cranepath); 
     }
+    
+    public void initTothestorage(List<Storage> storagelines, int i){
+        MotionPaths storagepath = new MotionPaths("TestStore1");
+        //storagepath.addWayPoint();
+        //storagepath.addWayPoint();
+        storagepath.addWayPoint(new Vector3f());
+    }
+    
     
     public void initShipcranes(AssetManager assetManager){
      // Adding a shipCrane to the harbor
@@ -125,22 +148,5 @@ public class Harbor extends Node{
         Spatial sky = SkyFactory.createSky(assetManager, "Scenes/Beach/FullskiesSunset0068.dds", false);
         sky.setQueueBucket(RenderQueue.Bucket.Sky);
         this.attachChild(sky);
-    }
-
-    public void initContainerlines(AssetManager assetManager, BulletAppState bulletAppState, int ammountlines) {
-        for (int i = 0; i < amountlines; i++) {
-            Box containerlines = new Box(50, 0, 4);
-            Geometry containerlines_geom = new Geometry("Box", containerlines);
-            Material containerlines_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-            containerlines_mat.setColor("Color", ColorRGBA.Gray);
-            containerlines_geom.setMaterial(containerlines_mat);
-            Vector3f clinesloc = new Vector3f(0, 10.01f, (i * 10 + 1) - 200);
-            storagesloc.add(clinesloc);
-            containerlines_geom.setLocalTranslation(clinesloc);
-            this.attachChild(containerlines_geom);
-            RigidBodyControl containerlines_phy = new RigidBodyControl(0.0f);
-            containerlines_geom.addControl(containerlines_phy);
-            bulletAppState.getPhysicsSpace().add(containerlines_phy);
-        }
     }
 }

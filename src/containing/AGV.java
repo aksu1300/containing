@@ -2,6 +2,7 @@ package containing;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
@@ -51,7 +52,7 @@ public class AGV extends Node {
     
     public void setContainer(Container cargo){
         this.cargo = cargo; 
-        this.cargo.setLocalTranslation(0,0.6f,0);
+        this.cargo.setLocalTranslation(0,1.5f,0);
         this.attachChild(this.cargo);
         
     }
@@ -69,7 +70,7 @@ public class AGV extends Node {
         this.cargo = null;
     }
     
-    public void Move(MotionPath route, float speed){
+    public void Move(final MotionPath route, float speed){
         System.out.print("IK BEN HIERRRRRRR");
         MotionEvent motionControl = new MotionEvent(this, route);
         motionControl.setDirectionType(MotionEvent.Direction.Path);
