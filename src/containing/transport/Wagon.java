@@ -1,9 +1,10 @@
-package containing;
+package containing.transport;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import containing.Container;
 
 public class Wagon extends Node {
     private Vector3f loc;

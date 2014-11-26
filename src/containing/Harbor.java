@@ -4,6 +4,8 @@
  */
 package containing;
 
+import containing.storage.StorageCrane;
+import containing.storage.Storage;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -34,12 +36,12 @@ public class Harbor extends Node{
     List<MotionPaths> tocranepaths = new ArrayList<MotionPaths>();
     List<MotionPaths> fromcranepaths = new ArrayList<MotionPaths>();
     List<Storage> storagelines = new ArrayList<Storage>();
-    public ArrayList<shipCrane> shCranes;
+    public ArrayList<ShipCrane> shCranes;
     private AssetManager assetmanager;
     
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
-        shCranes = new ArrayList<shipCrane>();
+        shCranes = new ArrayList<ShipCrane>();
         this.assetmanager = assetManager;
         initPlatform(assetManager, bulletAppState);
         initSky(assetManager);
@@ -53,15 +55,15 @@ public class Harbor extends Node{
             Vector3f locminus = new Vector3f(0, 10.5f, i * -11);
             Vector3f locplus2 = new Vector3f(0, 11f, i * + 11);
             Vector3f locminus2 = new Vector3f(0, 11f, i * -11);
-            storagelines.add(new Storage(assetManager, new storageCrane(assetManager, 0.5f, locminus2), locminus, bulletAppState)); // beide kanten op.
-            storagelines.add(new Storage(assetManager, new storageCrane(assetManager, 0.5f, locplus2), locplus, bulletAppState));
+            //storagelines.add(new Storage(assetManager, new StorageCrane(assetManager, 0.5f, locminus2), locminus, bulletAppState)); // beide kanten op.
+            //storagelines.add(new Storage(assetManager, new StorageCrane(assetManager, 0.5f, locplus2), locplus, bulletAppState));
         }
         for(Storage sl : storagelines){
             this.attachChild(sl);
         }
     }
     
-    public void initTocranemotionpath(shipCrane crane, int i){
+    public void initTocranemotionpath(ShipCrane crane, int i){
         //Paths to the cranes
         MotionPaths cranepath = new MotionPaths("TestCrane1");
         cranepath.addWayPoint(new Vector3f(100, 10, -150));
@@ -71,7 +73,7 @@ public class Harbor extends Node{
         tocranepaths.add(cranepath);   
     }
     
-    public void initFromcranemotionpath(shipCrane crane, int i){
+    public void initFromcranemotionpath(ShipCrane crane, int i){
         // Paths from the cranes
         MotionPaths cranepath = new MotionPaths("TestCrane1");
         cranepath.addWayPoint(new Vector3f(140, 10, crane.getLocation().getZ()));
@@ -90,9 +92,9 @@ public class Harbor extends Node{
     
     
     public void initShipcranes(AssetManager assetManager){
-     // Adding a shipCrane to the harbor
+     // Adding a ShipCrane to the harbor
         for (int i = 0; i < 6; i++){
-        shipCrane crane = new shipCrane(assetManager, 1f, new Vector3f(160, 10.5f, -120 +(i*30)));
+        ShipCrane crane = new ShipCrane(assetManager, 1f, new Vector3f(160, 10.5f, -120 +(i*30)));
         crane.rotate(0, FastMath.PI, 0);
         crane.setLocalTranslation(crane.getLocation());
         initTocranemotionpath(crane, i);

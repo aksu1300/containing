@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package containing;
+package containing.storage;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
@@ -14,6 +14,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import containing.Container;
 import java.util.List;
 
 /**
@@ -24,11 +25,11 @@ public class Storage extends Node{
     
     private AssetManager assetManager;
     private List<Container> cargo;
-    private storageCrane crane;
+    private StorageCrane crane;
     private Vector3f loc;
     private BulletAppState bulletAppState;
     
-    public Storage(AssetManager assetManager, storageCrane cr, Vector3f l, BulletAppState bAS){
+    public Storage(AssetManager assetManager, StorageCrane cr, Vector3f l, BulletAppState bAS){
         this.assetManager = assetManager; 
         this.loc = l;
         this.bulletAppState = bAS;
@@ -62,7 +63,7 @@ public class Storage extends Node{
         return c;   
     }
     
-    public storageCrane Getcranes(){return this.crane;}
+    public StorageCrane Getcranes(){return this.crane;}
     
     
     

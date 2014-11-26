@@ -1,10 +1,11 @@
-package containing;
+package containing.transport;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import containing.Container;
 import java.util.ArrayList;
 
 public class Train extends Node {

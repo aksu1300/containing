@@ -16,7 +16,7 @@ import com.jme3.scene.Spatial;
  *
  * @author Driving Ghost
  */
-public class shipCrane extends Node {
+public class ShipCrane extends Node {
 
     Vector3f loc;
     Container container;
@@ -37,7 +37,7 @@ public class shipCrane extends Node {
     boolean in = false;
     boolean done = false;
 
-    public shipCrane(AssetManager _assetManager, float _size, Vector3f location) {
+    public ShipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.assetManager = _assetManager;
         this.size = _size;
         this.location = location;
