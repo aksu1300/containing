@@ -24,6 +24,7 @@ import de.lessvoid.nifty.builder.LayerBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
+import java.util.ArrayList;
 
 public class Game extends SimpleApplication {
 
@@ -36,14 +37,11 @@ public class Game extends SimpleApplication {
     Train train;
     Truck truck;
     
-   
-    
     Freighter freighter;
     Boat ship;
     Harbor harbor;
     MotionPath motionPath;
     MotionPath motionPath1;
-    
     boolean pushedtoship = false; //check if grabber is pushed to ship
     boolean pulledfromship = false; //check if grabber is pulled from ship
     boolean grabberin = false; // check if grabber is in
@@ -52,14 +50,19 @@ public class Game extends SimpleApplication {
     boolean pulledfromagv = false;
     boolean sequence = true; // true means incomplete.
     boolean agvatc = true;
+    ArrayList<String> config;
 
+    public Game(){
+        config = new ArrayList<String>();
+    }
+    
     @Override
     public void simpleInitApp() {
         initHud();
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         harbor = new Harbor(bulletAppState, assetManager);
-
+        
         //right camera position
         //cam.setLocation(new Vector3f(200, 150, 150));
         //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
@@ -69,7 +72,7 @@ public class Game extends SimpleApplication {
         cam.setLocation(new Vector3f(30, 100, 30));
         cam.setFrustumFar(9000);
         cam.onFrameChange();
-        
+
         // load water
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         WaterFilter water = new WaterFilter(rootNode, lightDir);
@@ -83,19 +86,15 @@ public class Game extends SimpleApplication {
         //Attach Platform to rootnode
         rootNode.attachChild(harbor);
 
-        // Adding a ship to the scene
-        ship = new Boat(assetManager, 0.5f);
-        //ship.addContainer(new Container(assetManager, 1f));
-        ship.Move(harbor.getDockingroute(), 1.2f);
-        rootNode.attachChild(ship);
-
         //Adding freighter to the harbor
         freighter = new Freighter(assetManager, 0.5f);
         //freighter.addContainer(new Container(assetManager,1f));
         freighter.Move(harbor.getFreighterDock(), 0.3f);
+
         rootNode.attachChild(freighter);
 
-       
+        //creates ship
+        ship = new Boat(assetManager, 0.5f);
         
         // Adding a AGV to the harbor
         Material material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
@@ -103,48 +102,59 @@ public class Game extends SimpleApplication {
         agv.rotate(0, FastMath.PI, 0);
         agv.setLocalTranslation(0, 10.5f, 0);
         rootNode.attachChild(agv);
-        
+    }
+    
+    public String readConfig() {
+        if (!config.isEmpty()){
+        return this.config.get(0);
+        }
+        else {
+            return "No Command";
+        }
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        if(ship.getDocked()){
-            for (shipCrane sc : harbor.shCranes){
-                if(pushedtoship == false){ // Grabber not down
-                   pushedtoship = sc.pushGrabber(tpf);}  // Gettting grabber down   
 
-                if (pushedtoship && sc.container == null){ //adding a set of container
-                   sc.container = new Container(assetManager, 1);
-                   sc.container.setLocalTranslation(new Vector3f(sc.getChild(3).getLocalTranslation()).setY(sc.getChild(3).getLocalTranslation().getY()+11.5f));
-                   sc.attachChild(sc.container); 
+        System.out.println(readConfig());
+
+        if ("newboat".equals(readConfig())) {
+            //ship.addContainer(new Container(assetManager, 1f));
+            ship.Move(harbor.getDockingroute(), 4f);
+            rootNode.attachChild(ship);
+        }
+
+        if (ship.getDocked()) //ship.detachChild(ship.containers.get(89));
+        {
+            for (shipCrane sc : harbor.shCranes) {
+                if (sc.container == null) {
+                    System.out.println("no container!");
+                    sc.pushGrabber(tpf);
+                    if (sc.boundGrab.intersects(ship.containers.get(89).geometry)) {
+                        System.out.println("it has hit!");
+                        sc.grabContainer(ship.containers.get(89));
+                    }
+                } else if (sc.in && sc.container != null) {
+                    sc.pushGrabber(tpf);
+                } else if (sc.up && sc.container != null) {
+                    sc.inGrabber(tpf);
+                } else {
+                    sc.pullGrabber(tpf);
+                }
+                if (sc.done && sc.container != null) {
+
+                    agv.setContainer(sc.container);
+                    agv.Move(harbor.fromcranepaths.get(0), 1f);
+                    agv.Move(harbor.fromcranepaths.get(1), 1f);
                 }
 
-                if(pulledfromship == false && pushedtoship){ // Grabber not up but down
-                    pulledfromship = sc.pullGrabber(tpf);} // Getting grabber up
-
-                if(pulledfromship && grabberin == false){ // Grabber not in
-                    grabberin = sc.inGrabber(tpf);} // Bringing grabber in
-
-                if(grabberin && pushedtoagv == false){ // Grabber not down to agv
-                    pushedtoagv = sc.pushGrabber(tpf);} // Getting grabber down to agv
-
-                if(pushedtoagv && agvgo == false){
-                    agv.setContainer(sc.container); // the container is attached to the agv.
-                    agvgo = true;}
-                
-                if(agvgo && pulledfromagv == false){
-                    pulledfromagv = sc.pullGrabber(tpf);}
-                    
-                if(agvatc && agvgo && pulledfromagv){
-                    agv.Move(harbor.fromcranepaths.get(0), 1f); // the agv will move away from the crane
-                    agvatc = false;
-                }
-                    
             }
-        }   
-        System.out.println(cam.getLocation().x);
-        System.out.println(cam.getLocation().y);
-        System.out.println(cam.getLocation().z); 
+
+            System.out.println("Ship has docked!");
+            System.out.println(cam.getLocation().x);
+            System.out.println(cam.getLocation().y);
+            System.out.println(cam.getLocation().z);
+        }
     }
 
     private void initHud(){

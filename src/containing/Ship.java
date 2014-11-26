@@ -34,7 +34,7 @@ public class Ship extends Node {
     //public RigidBodyControl ballPhy;
     private Vector3f lastLocation;
     // A ship has a list of containers 
-    private List<Container> containers;
+    public List<Container> containers;
 
     public Ship(AssetManager assetManager, float size) {
         this.assetManager = assetManager;
@@ -54,10 +54,10 @@ public class Ship extends Node {
         this.attachChild(shipSpatial);
     }
 
-    //  Init container
+    //  Init ship
     public void initShip() {
         shipSpatial = assetManager.loadModel("Models/high/ship/seaship.j3o");
-        shipSpatial.rotate(0, FastMath.PI, 0);
+        shipSpatial.rotate(0, -(FastMath.PI / 2), 0);
         shipSpatial.scale(size);
     }
 
@@ -67,39 +67,25 @@ public class Ship extends Node {
         shipSpatial.setMaterial(material);
     }
 
+    /**
+     * initHold zet de containers op hun plaats op het deck. 
+     */
     public void initHold() {
-        for (int x = 0; x < 3; x++) {
-            this.containers.add(new Container(assetManager, 1.5f));
-        }
-        for (int i = 0; i < 3; i++) {
-            Container x = containers.get(i);
-            x.setLocalTranslation(0, size / 2 + 0.1f, -10 + (i * 5));
-            this.attachChild(x);
-        }
 
+        for (int i = 0; i < 9; i++) { //aantal decks
+            for (int y = 0; y < 3; y++) { //aantal niveaus
+                for (int z = 0; z < 5; z++) { //aantal per niveau
+                    Container x = new Container(assetManager, 1.5f);
+                    x.rotate(0, -(FastMath.PI / 2), 0);
+                    x.setLocalTranslation(60-(i*24), size / 2 + 0.1f + (y*4.25f), -10 + (z * 5));
+                    this.attachChild(x);
+                    containers.add(x);
+                }
+            }
+        }
     }
 
-    /**
-     * Add a container to the ship
-     *
-     * @param container
-     */
-//    public void addContainer(Container container){
-//        // Adding a container to a ship
-//        this.containers.add(container);
-//
-//        // Now move the new container to a specific place 
-//        // But first check how many there are and use this to for the place
-//        // on the ship
-//        // DEBUGGGING
-////        int size = this.containers.size();
-////        container.setLocalTranslation(0, (size/2)+0.1f, 0);
-//        
-//                
-//        // Atach the container to the ship node
-//        this.attachChild(container);
-//        
-//    }
+    
     // Get a container from the boot
     public Container getContainer(int id) {
         // first deattach the container from the ship
@@ -118,26 +104,22 @@ public class Ship extends Node {
 
     public void Move(final MotionPath route, float speed) {
         MotionEvent motionControl = new MotionEvent(this, route);
-        motionControl.setDirectionType(MotionEvent.Direction.Path);
+        motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
         motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
         motionControl.setInitialDuration(10f);
         motionControl.setSpeed(speed);
         motionControl.play();
-        
-        route.addListener(new MotionPathListener() {
 
+        route.addListener(new MotionPathListener() {
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 if (route.getNbWayPoints() == wayPointIndex + 1) {
-                    setDocked(); 
+                    setDocked();
                 } else {
                     System.out.println("nope");
                 }
-               
             }
         });
-        
     }
-
     public boolean getDocked() {
         return this.docked;
     }
