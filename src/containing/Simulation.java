@@ -133,9 +133,7 @@ public class Simulation extends SimpleApplication {
                     sc.detachChildAt(5);
                     sc.container = null;
                     agv.Move(harbor.fromcranepaths.get(2), 3f);
-                    
                 }
-
             }
 
             System.out.println("Ship has docked!");
