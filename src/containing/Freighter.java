@@ -23,27 +23,29 @@ import java.util.List;
  */
 public class Freighter extends Node {
     
-    private String id;
-    private Vector3f loc;
-    private float speed;
-    private AssetManager assetmanager;
-    private AssetManager assetManager;
-    private Spatial shipSpatial;
     //private BulletAppState bulletAppState;
     //public Geometry ballGeo;
     private float size;
     private boolean docked = false;
     private Material material;
+    private Vector3f loc;
+    private float speed;
+    private AssetManager assetmanager;
+    private Spatial shipSpatial;
+    //private BulletAppState bulletAppState;
+    //public Geometry ballGeo;
     //public RigidBodyControl ballPhy;
     private Vector3f lastLocation;
     // A ship has a list of containers 
     public List<Container> containers;
     
     public Freighter(AssetManager assetmanager, Float size){
-       this.assetManager = assetmanager;
+       this.assetmanager = assetmanager;
         this.size = size;
-        containers = new ArrayList<Container>();
-
+    }    
+    public Freighter(AssetManager assetmanager) {
+        this.assetmanager = assetmanager;
+       
         //initHold
         initHold();
 
@@ -59,14 +61,14 @@ public class Freighter extends Node {
 
     //  Init ship
     public void initShip() {
-        shipSpatial = assetManager.loadModel("Models/high/ship/seaship.j3o");
+        shipSpatial = assetmanager.loadModel("Models/high/ship/seaship.j3o");
         shipSpatial.rotate(0, -(FastMath.PI / 2), 0);
-        shipSpatial.scale(size);
+        shipSpatial.scale(0.5f);
     }
 
     public void initMaterial() {
         // Load the container
-        material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
         shipSpatial.setMaterial(material);
     }
 
@@ -78,7 +80,7 @@ public class Freighter extends Node {
         for (int i = 0; i < 9; i++) { //aantal decks
             for (int y = 0; y < 3; y++) { //aantal niveaus
                 for (int z = 0; z < 5; z++) { //aantal per niveau
-                    Container x = new Container(assetManager, 1.5f);
+                    Container x = new Container(assetmanager, 1.5f);
                     x.rotate(0, -(FastMath.PI / 2), 0);
                     x.setLocalTranslation(60-(i*24), size / 2 + 0.1f + (y*4.25f), -10 + (z * 5));
                     this.attachChild(x);

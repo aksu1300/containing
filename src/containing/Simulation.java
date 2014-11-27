@@ -27,9 +27,19 @@ import de.lessvoid.nifty.builder.LayerBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class Simulation extends SimpleApplication {
 
+    // The client socket
+    private static Socket clientSocket = null;
+    private static DataInputStream is = null;
+    private static BufferedReader inputLine = null;
     private BulletAppState bulletAppState;
     private float initialWaterHeight = 0f;
     private Vector3f lightDir = new Vector3f(-4.9f, -1.3f, 5.9f);
@@ -53,13 +63,25 @@ public class Simulation extends SimpleApplication {
     boolean sequence = true; // true means incomplete.
     boolean agvatc = true;
     
+    public Simulation() {
+        initSockets();
+    }
+
+    public void startSimulation() {
+        if (clientSocket == null) {
+            System.out.println("Cannot start up the application without server connection.\r\nPlease start up the Server first. ");
+        } else {
+            this.start();
+        }
+    }
+
     @Override
     public void simpleInitApp() {
         initHud();
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         harbor = new Harbor(bulletAppState, assetManager);
-        
+
         //right camera position
         //cam.setLocation(new Vector3f(200, 150, 150));
         //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
@@ -89,12 +111,12 @@ public class Simulation extends SimpleApplication {
         boat.Move(harbor.getFreighterDock(), 0.3f);
         rootNode.attachChild(boat);
         //Adding freighter to the harbor
-        freighter = new Freighter(assetManager, 0.5f);
+        freighter = new Boat(assetManager); //mergeerror needs fix !!!!!!!!!!!!!!!!!!
         //freighter.addContainer(new Container(assetManager,1f));
         freighter.Move(harbor.getDockingroute(), 1.2f);
 
         rootNode.attachChild(freighter);
-        
+
         // Adding a AGV to the harbor
         Material material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
         agv = new AGV("1", material, assetManager);
@@ -146,12 +168,11 @@ public class Simulation extends SimpleApplication {
         }
     }
 
-    private void initHud(){
-        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
-                assetManager, inputManager, audioRenderer, guiViewPort);
+    private void initHud() {
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         Nifty nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
-   
+
 
         nifty.loadStyleFile("nifty-default-styles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
@@ -282,7 +303,7 @@ public class Simulation extends SimpleApplication {
                 });
             }
         }.build(nifty));
-        nifty.gotoScreen("hud"); 
+        nifty.gotoScreen("hud");
 
         nifty.addScreen("config", new ScreenBuilder("config") {
             {
@@ -328,6 +349,24 @@ public class Simulation extends SimpleApplication {
             }
         }.build(nifty));
     }
+
+    private void initSockets() {
+        /*
+         * Open a socket on a given host and port. Open input and output streams.
+         */
+        try {
+            clientSocket = new Socket("localhost", 5400);
+            inputLine = new BufferedReader(new InputStreamReader(System.in));
+            is = new DataInputStream(clientSocket.getInputStream());
+
+        } catch (UnknownHostException e) {
+            System.err.println("Don't know about host " + "localhost");
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for the connection to the host "
+                    + "localhost");
+        }
+    }
+
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code

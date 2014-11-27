@@ -18,19 +18,12 @@ import containing.Container;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Driving Ghost
- */
-
-
 public class Boat extends Node{
     
     private AssetManager assetManager;
     private Spatial shipSpatial;
     //private BulletAppState bulletAppState;
     //public Geometry ballGeo;
-    private float size;
     private boolean docked = false;
     private Material material;
     private Vector3f loc;
@@ -38,22 +31,13 @@ public class Boat extends Node{
     private Vector3f lastLocation;
     // A ship has a list of containers 
     public List<Container> containers;
-    
-    public Boat(AssetManager assetmanager, float size){
-        this.assetManager = assetmanager;
-        this.size = size;
+
+    public Boat(AssetManager assetManager) {
+        this.assetManager = assetManager;
         containers = new ArrayList<Container>();
-
-        //initHold
         initHold();
-
-        // Init ship 
         initShip();
-
-        // Init material of the ship
         initMaterial();
-
-        // Attach the model to the 
         this.attachChild(shipSpatial);
     }    
     
@@ -61,7 +45,7 @@ public class Boat extends Node{
     public void initShip() {
         shipSpatial = assetManager.loadModel("Models/high/ship/seaship.j3o");
         shipSpatial.rotate(0, -(FastMath.PI / 2), 0);
-        shipSpatial.scale(size);
+        shipSpatial.scale(0.25f);
     }
 
     public void initMaterial() {
@@ -119,7 +103,7 @@ public class Boat extends Node{
     public void setDocked() {
         this.docked = !docked;
     }
-    
+
 }
 
 
