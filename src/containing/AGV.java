@@ -57,7 +57,15 @@ public class AGV extends Node {
     public Vector3f getCurrentloc(){
         return this.getLocalTranslation();
     }
-        
+     
+    public float getSpeed(){
+        if(this.cargo != null){
+            return 0.125f;
+        }
+        else{
+            return 0.25f;
+        }
+    }
     
     public void setContainer(Container cargo){
         this.cargo = cargo; 

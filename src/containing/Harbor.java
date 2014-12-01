@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Jacco
+ * 
+ * @author ProjectGroep
  */
 public class Harbor extends Node {
 
@@ -59,10 +59,9 @@ public class Harbor extends Node {
    
     /***
      * initAGV initialises the AGV's on their parking spots. 
-     * 
      */
     public void initAGV() {
-        for (Storage s : storagelines) { //STORAGE S IS USED! But foreach looks better than a for loop B^) 
+        for (Storage s : storagelines) { //STORAGE S IS USED! B/c foreach looks better than a for loop B^) 
             for (int i = 0; i < 4; i++) { //BOT4 (A kant)
                 agvRoosterA.add(new AGV(("SAV" + i), assetmanager));
             }
@@ -111,10 +110,12 @@ public class Harbor extends Node {
 
         platTest.addWayPoint(WayPoints.PC.coords);
         platTest.addWayPoint(WayPoints.PB.coords);
-        platTest.addWayPoint(WayPoints.PA.coords);
-        platTest.addWayPoint(WayPoints.CA.coords);
-        platTest.addWayPoint(WayPoints.CB.coords);
+        platTest.addWayPoint(WayPoints.PF.coords);
         platTest.addWayPoint(WayPoints.PG.coords);
+        platTest.addWayPoint(WayPoints.CB.coords);
+        platTest.addWayPoint(WayPoints.CA.coords);
+        platTest.addWayPoint(WayPoints.PA.coords);
+        platTest.addWayPoint(WayPoints.PB.coords);
 
         platTest.setCurveTension(0.0f);
         return platTest;
@@ -133,6 +134,7 @@ public class Harbor extends Node {
         }
     }
 
+    //Freighter!
     public MotionPath getDockingroute() {
         final MotionPath dockingroute = new MotionPath();
         dockingroute.addWayPoint(new Vector3f(170, 9, -650));
@@ -140,13 +142,13 @@ public class Harbor extends Node {
         return dockingroute;
     }
 
+    //FREIGHTER!!
     public MotionPath getUndockingroute() {
         MotionPath undockingroute = new MotionPath();
         undockingroute.addWayPoint(new Vector3f(170, 9, 0));
         undockingroute.addWayPoint(new Vector3f(170, 9, 650));
         return undockingroute;
     }
-
     
     //EIGENLIJKS BOAT!
     public MotionPath getFreighterDock() {

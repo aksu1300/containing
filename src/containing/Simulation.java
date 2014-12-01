@@ -115,7 +115,7 @@ public class Simulation extends SimpleApplication {
         rootNode.attachChild(freighter);
         
         harbor.testMotionPaths().enableDebugShape(assetManager, rootNode);
-        harbor.agvRoosterA.get(0).Move(harbor.testMotionPaths(), 1);
+        harbor.agvRoosterA.get(0).Move(harbor.testMotionPaths(), harbor.agvRoosterA.get(0).getSpeed());
         
     }
 
