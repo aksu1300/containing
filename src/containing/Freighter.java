@@ -28,22 +28,18 @@ public class Freighter extends Node {
     private float size;
     private boolean docked = false;
     private Material material;
-    private Vector3f loc;
-    private float speed;
     private AssetManager assetmanager;
     private Spatial shipSpatial;
     //private BulletAppState bulletAppState;
     //public Geometry ballGeo;
     //public RigidBodyControl ballPhy;
-    private Vector3f lastLocation;
     // A ship has a list of containers 
     public List<Container> containers;
        
     public Freighter(AssetManager assetmanager) {
         this.assetmanager = assetmanager;
-       
+        containers = new ArrayList<Container>();
         
-
         // Init ship 
         initShip();
 
@@ -86,7 +82,6 @@ public class Freighter extends Node {
             }
         }
     }
-
     
     // Get a container from the boot
     public Container getContainer(int id) {
@@ -116,8 +111,6 @@ public class Freighter extends Node {
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 if (route.getNbWayPoints() == wayPointIndex + 1) {
                     setDocked();
-                } else {
-                    System.out.println("nope");
                 }
             }
         });
