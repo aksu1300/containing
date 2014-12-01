@@ -38,22 +38,20 @@ public class Freighter extends Node {
     private Vector3f lastLocation;
     // A ship has a list of containers 
     public List<Container> containers;
-    
-    public Freighter(AssetManager assetmanager, Float size){
-       this.assetmanager = assetmanager;
-        this.size = size;
-    }    
+       
     public Freighter(AssetManager assetmanager) {
         this.assetmanager = assetmanager;
        
-        //initHold
-        initHold();
+        
 
         // Init ship 
         initShip();
 
         // Init material of the ship
         initMaterial();
+        
+        //initHold
+        initHold();
 
         // Attach the model to the 
         this.attachChild(shipSpatial);
@@ -76,7 +74,6 @@ public class Freighter extends Node {
      * initHold zet de containers op hun plaats op het deck. 
      */
     public void initHold() {
-
         for (int i = 0; i < 9; i++) { //aantal decks
             for (int y = 0; y < 3; y++) { //aantal niveaus
                 for (int z = 0; z < 5; z++) { //aantal per niveau

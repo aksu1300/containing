@@ -85,7 +85,7 @@ public class Simulation extends SimpleApplication {
         //right camera position
         //cam.setLocation(new Vector3f(200, 150, 150));
         //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
-//        flyCam.setEnabled(true);
+        //flyCam.setEnabled(true);
         flyCam.setDragToRotate(true);
         flyCam.setMoveSpeed(100);
         cam.setLocation(new Vector3f(30, 100, 30));
@@ -106,12 +106,12 @@ public class Simulation extends SimpleApplication {
         rootNode.attachChild(harbor);
 
         // Adding a ship to the scene
-        boat = new Boat(assetManager, 0.5f);
+        boat = new Boat(assetManager);
         //ship.addContainer(new Container(assetManager, 1f));
         boat.Move(harbor.getFreighterDock(), 0.3f);
         rootNode.attachChild(boat);
         //Adding freighter to the harbor
-        freighter = new Boat(assetManager); //mergeerror needs fix !!!!!!!!!!!!!!!!!!
+        freighter = new Freighter(assetManager); //mergeerror needs fix !!!!!!!!!!!!!!!!!!
         //freighter.addContainer(new Container(assetManager,1f));
         freighter.Move(harbor.getDockingroute(), 1.2f);
 
