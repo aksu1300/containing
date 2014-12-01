@@ -31,7 +31,7 @@ public class StorageCrane extends Node {
     String id;
     float size;
     
-    StorageCrane(AssetManager _assetManager, float _size, Vector3f location){
+    public StorageCrane(AssetManager _assetManager, float _size, Vector3f location){
          this.assetManager = _assetManager;
          this.size = _size;
          this.location = location;
@@ -112,7 +112,12 @@ public class StorageCrane extends Node {
             return true; // Grabber reached top  
     }
     
-    public void moveOut(Vector3f loc){
+    public void moveOut(float tpf, int i){
+        System.out.println("JOEEEHOEEE" + this.getChild(1).getLocalTranslation().z);
+        if(this.getChild(1).getLocalTranslation().z <= (55 + (i * 1.5))){
+            for (int j = 0; j < this.children.size(); j++)
+               this.getChild(j).move(0, 0, tpf * 20);
+        }
         
     }
     

@@ -70,7 +70,8 @@ public class AGV extends Node {
         this.cargo = null;
     }
     
-    public void Move(final MotionPath route, float speed){
+    public void Move(MotionPath route, float speed){
+        System.out.println("FUCK JAKKO");
         MotionEvent motionControl = new MotionEvent(this, route);
         motionControl.setDirectionType(MotionEvent.Direction.Path);
         motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
