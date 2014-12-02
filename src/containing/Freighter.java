@@ -37,10 +37,10 @@ public class Freighter extends Node {
     //public RigidBodyControl ballPhy;
     private Vector3f lastLocation;
     // A ship has a list of containers 
-    public List<Container> containers;
+    public List<Container> containers = new ArrayList<Container>();
        
-    public Freighter(AssetManager assetmanager) {
-        this.assetmanager = assetmanager;
+    public Freighter(AssetManager assetManager) {
+        this.assetmanager = assetManager;
        
         
 
