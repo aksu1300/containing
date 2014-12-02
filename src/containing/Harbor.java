@@ -37,12 +37,14 @@ public class Harbor extends Node {
     List<Vector3f> cranesloc;
     List<Storage> storagelines;
     public ArrayList<ShipCrane> shCranes;
+    public ArrayList<TrainCrane> trCranes;
     public ArrayList<AGV> agvRoosterA;
     public ArrayList<AGV> agvRoosterB;
     private AssetManager assetmanager;
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
         shCranes = new ArrayList<ShipCrane>();
+        trCranes = new ArrayList<TrainCrane>();
         storagelines = new ArrayList<Storage>();
 
         storagesloc = new ArrayList<Vector3f>();
@@ -148,11 +150,13 @@ public class Harbor extends Node {
     }
     
     public void initTrainCranes() {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 4; i++)
         {
-            TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(160, 10.5f, -120 + (i * 30)));
-            crane.rotate(0, FastMath.PI, 0);
+            TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(-100 + (i * 20), 10, 250));
+            crane.rotate(0, FastMath.PI, 0.2f);
             crane.setLocalTranslation(crane.getLocation());
+            trCranes.add(crane);
+            this.attachChild(crane);
         }
     }
 
