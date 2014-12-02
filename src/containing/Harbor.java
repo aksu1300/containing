@@ -6,6 +6,7 @@ package containing;
 
 import containing.storage.StorageCrane;
 import containing.storage.Storage;
+import containing.transport.TrainCrane;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -19,6 +20,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Line;
 import com.jme3.util.SkyFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,8 @@ public class Harbor extends Node {
         initStorage(bulletAppState);
         initShipcranes();
         initAGV();
+        initRails();
+        initTrainCranes();
     }
    
     /***
@@ -130,6 +134,25 @@ public class Harbor extends Node {
 //        initFromcranemotionpath(crane, i);
             shCranes.add(crane);
             this.attachChild(crane);
+        }
+    }
+    
+    public void initRails() {
+        Line line = new Line(new Vector3f(-100, 10, 250), new Vector3f(-650, 10, 250));
+        line.setLineWidth(4);
+        Geometry geometry = new Geometry("Bullet", line);
+        Material orange = new Material(assetmanager, "Common/MatDefs/Misc/Unshaded.j3md");
+        orange.setColor("Color", ColorRGBA.Blue);
+        geometry.setMaterial(orange);                  
+        this.attachChild(geometry);
+    }
+    
+    public void initTrainCranes() {
+        for (int i = 0; i < 6; i++)
+        {
+            TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(160, 10.5f, -120 + (i * 30)));
+            crane.rotate(0, FastMath.PI, 0);
+            crane.setLocalTranslation(crane.getLocation());
         }
     }
 
