@@ -29,9 +29,9 @@ public class TrainCrane extends Node {
     boolean in = false;
     boolean done = false;
     
-    public TrainCrane(AssetManager _assetManager, float _size, Vector3f location) {
-        this.assetManager = _assetManager;
-        this.size = _size;
+    public TrainCrane(AssetManager assetManager, float size, Vector3f location) {
+        this.assetManager = assetManager;
+        this.size = size;
         this.location = location;
     
         initContainer();

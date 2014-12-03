@@ -134,8 +134,8 @@ public class Harbor extends Node {
             ShipCrane crane = new ShipCrane(assetmanager, 1f, new Vector3f(160, 10.5f, -120 + (i * 30)));
             crane.rotate(0, FastMath.PI, 0);
             crane.setLocalTranslation(crane.getLocation());
-//        initTocranemotionpath(crane, i);
-//        initFromcranemotionpath(crane, i);
+            //initTocranemotionpath(crane, i);
+            //initFromcranemotionpath(crane, i);
             shCranes.add(crane);
             this.attachChild(crane);
         }
