@@ -11,13 +11,12 @@ import java.util.ArrayList;
 
 public class Train extends Node {
     
-    private String id;
     private Vector3f location;
     private Spatial model;
     private Material material;
     private float speed;
-    private ArrayList cargo;
-    private ArrayList wagons;
+    private ArrayList<Container> cargo;
+    private ArrayList<Wagon> wagons;
     private AssetManager assetmanager;
     
     public Train(Vector3f location, AssetManager assetmanager) {
@@ -37,17 +36,13 @@ public class Train extends Node {
      * @param assetmanager AssetManager for the train ex:new AssetManager
      * @param wagons Wagons that can be added to the train ex:new Wagon
      */
-    public Train(String id, Vector3f location, AssetManager assetManager, ArrayList wagons) {
-        this.id = id;
+    public Train(Vector3f location, AssetManager assetwanager, ArrayList wagons) {
         this.location = location; 
-        this.cargo = null;
-        this.model = assetManager.loadModel("Models/high/train/train.j3o");
-        this.model.scale(1f);
-        this.material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        this.model = assetmanager.loadModel("Models/high/train/train.j3o");
+        this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
         this.model.setMaterial(material);
-        this.attachChild(model);
         this.wagons = wagons;
-        System.out.println("train heas spawned!");
+        this.attachChild(model);
     }
     
     /**
@@ -81,7 +76,11 @@ public class Train extends Node {
     
     // <editor-fold defaultstate="collapsed" desc="Gets & Sets">
     
-    public ArrayList getCargo(){
+    /**
+     * lololololol
+     * @return the Cargo of all the wagons.
+     */
+    public ArrayList<Container> getCargo(){
         return this.cargo;
     }
     
@@ -89,11 +88,11 @@ public class Train extends Node {
         return this.wagons.size();
     }
     
-    public ArrayList getCarts() {
+    public ArrayList<Wagon> getWagons() {
         return this.wagons;
     }
     
-    public void setCargo(Container container, Wagon wagon) {
+    public void setCargo(Wagon wagon, Container container) {
         wagon.setCargo(container);
     }
     
