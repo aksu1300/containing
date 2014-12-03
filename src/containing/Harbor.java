@@ -22,6 +22,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Line;
 import com.jme3.util.SkyFactory;
+import containing.transport.Train;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +62,7 @@ public class Harbor extends Node {
         initAGV();
         initRails();
         initTrainCranes();
+        initTrain();
     }
    
     /***
@@ -153,11 +155,18 @@ public class Harbor extends Node {
         for (int i = 0; i < 4; i++)
         {
             TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(-100 + (i * 20), 10, 250));
-            crane.rotate(0, FastMath.PI, 0.2f);
+            crane.rotate(0, FastMath.PI * 1.5f, 0);
             crane.setLocalTranslation(crane.getLocation());
             trCranes.add(crane);
             this.attachChild(crane);
         }
+    }
+    
+    public void initTrain() {
+        Train train = new Train(new Vector3f(-100, 11, 250), assetmanager);
+        train.rotate(0, FastMath.PI * 1.5f, 0);
+        train.setLocalTranslation(train.getLocation());
+        this.attachChild(train);
     }
 
     public MotionPath getDockingroute() {

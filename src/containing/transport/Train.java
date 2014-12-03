@@ -16,6 +16,16 @@ public class Train extends Node {
     private float speed;
     private ArrayList cargo;
     private ArrayList wagons;
+    private AssetManager assetManager;
+    
+    public Train(Vector3f loc, AssetManager assetManager) {
+        this.loc = loc;
+        this.cargo = null;
+        this.assetManager = assetManager;
+        model = assetManager.loadModel("Models/high/train/train.j3o");
+        model.scale(1f);
+        this.attachChild(model);
+    }
     
     /**
      * Train that gets the containers out of the harbor.
@@ -25,13 +35,12 @@ public class Train extends Node {
      * @param assetManager AssetManager for the train ex:new AssetManager
      * @param wagons Wagons that can be added to the train ex:new Wagon
      */
-    public Train(String id, Vector3f loc,float speed , AssetManager assetManager, ArrayList wagons) {
+    public Train(String id, Vector3f loc, AssetManager assetManager, ArrayList wagons) {
         this.id = id;
         this.loc = loc; 
         this.cargo = null;
-        this.speed = speed;
         model = assetManager.loadModel("Models/high/train/train.j3o");
-        model.scale(1.5f);
+        model.scale(1f);
         this.attachChild(model);
         this.wagons = wagons;
     }
@@ -77,5 +86,8 @@ public class Train extends Node {
     
     public void updateSpeed(float uSpeed) {this.speed = uSpeed;}
     
+    public Vector3f getLocation() {
+        return this.loc;
+    }
     // </editor-fold>
 }

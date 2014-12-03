@@ -13,7 +13,7 @@ public class Wagon extends Node {
     private float speed;
     private String id;
     
-    public Wagon(String id,Vector3f loc ,float speed , AssetManager assetManager) {
+    public Wagon(String id,Vector3f loc , AssetManager assetManager) {
         this.id = id;
         this.loc = loc;
         this.cargo = null;
