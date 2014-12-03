@@ -21,7 +21,6 @@ public class Container extends Node{
     private Spatial container;
     private float size;
     private Material material;
-
     public BoundingVolume geometry;
 
     

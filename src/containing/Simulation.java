@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class Simulation extends SimpleApplication {
 
@@ -45,6 +46,7 @@ public class Simulation extends SimpleApplication {
     private Vector3f lightDir = new Vector3f(-4.9f, -1.3f, 5.9f);
     Spatial cargo;
     ShipCrane shCrane;
+    Truck t;
     Train train;
     Truck truck;
     Freighter freighter;
@@ -52,14 +54,7 @@ public class Simulation extends SimpleApplication {
     Harbor harbor;
     MotionPath motionPath;
     MotionPath motionPath1;
-    boolean pushedtoship = false; //check if grabber is pushed to ship
-    boolean pulledfromship = false; //check if grabber is pulled from ship
-    boolean grabberin = false; // check if grabber is in
-    boolean pushedtoagv = false; // check if grabber is pushed to agv
-    boolean agvgo = false; // check if grabber is pulled from agv
-    boolean pulledfromagv = false;
-    boolean sequence = true; // true means incomplete.
-    boolean agvatc = true;
+    AGVController agvc;
 
     public Simulation() {
         initSockets();
@@ -79,13 +74,14 @@ public class Simulation extends SimpleApplication {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         harbor = new Harbor(bulletAppState, assetManager);
+        agvc = new AGVController();
 
         //right camera position
         //cam.setLocation(new Vector3f(200, 150, 150));
         //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
         //flyCam.setEnabled(true);
         flyCam.setDragToRotate(true);
-        flyCam.setMoveSpeed(100);
+        flyCam.setMoveSpeed(300);
         cam.setLocation(new Vector3f(30, 100, 30));
         cam.setFrustumFar(9000);
         cam.onFrameChange();
@@ -111,52 +107,23 @@ public class Simulation extends SimpleApplication {
         //Adding freighter to the harbor
         freighter = new Freighter(assetManager);
         freighter.Move(harbor.getDockingroute(), 1.2f);
-
+        t = new Truck("AAA",new Vector3f(10,10,10),1, assetManager);
         rootNode.attachChild(freighter);
-        
-        harbor.testMotionPaths().enableDebugShape(assetManager, rootNode);
-        harbor.agvRoosterA.get(0).Move(harbor.testMotionPaths(), harbor.agvRoosterA.get(0).getSpeed());
-        
+        rootNode.attachChild(t);
+
     }
 
     @Override
     public void simpleUpdate(float tpf) {
 
+        if (freighter.getDocked()){
+            t.setContainer(new Container(assetManager, 1));
+        }
         
-
-        for (Storage sl : harbor.storagelines) {
-            sl.Getcranes().moveOut(tpf, 0);
-        }
-
-        if (freighter.getDocked()) //ship.detachChild(ship.containers.get(89));
-        {
-//            for (ShipCrane sc : harbor.shCranes) {
-//                if (sc.container == null) {
-//                    //System.out.println("no container!");
-//                    sc.pushGrabber(tpf);
-//                    if (sc.boundGrab.intersects(freighter.containers.get(89).geometry)) {
-//                        System.out.println("it has hit!");
-//                        sc.grabContainer(freighter.containers.get(89));
-//                    }
-//                } else if (sc.in && sc.container != null) {
-//                    sc.pushGrabber(tpf);
-//                } else if (sc.up && sc.container != null) {
-//                    sc.inGrabber(tpf);
-//                } else {
-//                    sc.pullGrabber(tpf);
-//                }
-//                if (sc.done && sc.container != null) {
-//                    agv.setContainer(sc.container);
-//                    sc.container = null;
-//                    sc.detachChildAt(5);
-//                    agv.Move(harbor.fromcranepaths.get(2), 3f);
-//                }
-//            }
-        }
-
         System.out.println(cam.getLocation().x);
         System.out.println(cam.getLocation().y);
         System.out.println(cam.getLocation().z);
+
     }
 
     private void initHud() {

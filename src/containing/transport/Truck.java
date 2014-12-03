@@ -2,6 +2,7 @@ package containing.transport;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -11,6 +12,7 @@ public class Truck extends Node {
     String id;
     Vector3f loc;
     Spatial model;
+    Material material;
     float speed;
     Container cargo;
 
@@ -19,8 +21,12 @@ public class Truck extends Node {
         this.loc = loc; 
         this.cargo = null;
         this.speed = speed;
+        
         model = assetManager.loadModel("Models/high/truck.j3o");
-        model.scale(1.5f);
+        material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        model.setMaterial(material);
+        model.scale(1);
+        model.setLocalTranslation(loc);
         this.attachChild(model);
     }
     
@@ -48,7 +54,7 @@ public class Truck extends Node {
     
     public void setContainer(Container cargo){
         this.cargo = cargo; 
-        this.cargo.setLocalTranslation(0, 0.6f, 0);
+        this.cargo.setLocalTranslation(loc.x, loc.y+1.2f, loc.z-0.35f);
         this.attachChild(this.cargo);
     }
     

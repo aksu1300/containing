@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  * @author ProjectGroep
  */
 public class Harbor extends Node {
@@ -35,14 +35,18 @@ public class Harbor extends Node {
     List<Vector3f> cranesloc;
     List<Storage> storagelines;
     public ArrayList<ShipCrane> shCranes;
+    public ArrayList<ShipCrane> boatCranes;
+    public ArrayList<TruckCrane> trCranes;
     public ArrayList<AGV> agvRoosterA;
     public ArrayList<AGV> agvRoosterB;
     private AssetManager assetmanager;
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
-        shCranes = new ArrayList<ShipCrane>();
-        storagelines = new ArrayList<Storage>();
 
+        shCranes = new ArrayList<ShipCrane>();
+        boatCranes = new ArrayList<ShipCrane>();
+        storagelines = new ArrayList<Storage>();
+        trCranes = new ArrayList<TruckCrane>();
         storagesloc = new ArrayList<Vector3f>();
         cranesloc = new ArrayList<Vector3f>();
 
@@ -50,81 +54,86 @@ public class Harbor extends Node {
         agvRoosterB = new ArrayList<AGV>();
 
         this.assetmanager = assetManager;
+
         initPlatform(bulletAppState);
         initSky();
-        initStorage(bulletAppState);
+        initStorage();
         initShipcranes();
-        initAGV();
+        initBoatCranes();
+        initTruckcranes();
     }
-   
-    /***
-     * initAGV initialises the AGV's on their parking spots. 
+
+    /**
+     * *
+     * initAGV initialises the AGV's on their parking spots.
      */
-    public void initAGV() {
-        for (Storage s : storagelines) { //STORAGE S IS USED! B/c foreach looks better than a for loop B^) 
-            for (int i = 0; i < 4; i++) { //BOT4 (A kant)
-                agvRoosterA.add(new AGV(("SAV" + i), assetmanager));
-            }
-            for (int i = 0; i < 4; i++) { //TOP4 (B kant)
-                agvRoosterB.add(new AGV(("SBV" + i), assetmanager));
-            }
-        }
-        float zval = 106; //beginnend Z waarde. 
-        for (int i = 0; i < agvRoosterA.size(); i++) {
-            if(i % 4 == 0){
-                zval -= 24.5f; //na elke 4 agvs wordt de z waarde met 24.5 verlaagt. 
-            }
-            agvRoosterA.get(i).setLocalTranslation(75,10.5f,zval-(i*5)); 
-            agvRoosterA.get(i).rotate(0, -(FastMath.PI / 2), 0); //goedom zetten.
-            this.attachChild(agvRoosterA.get(i)); //attach to world!
-        }
-        zval = 106;
-        for (int i = 0; i < agvRoosterB.size(); i++) { //onderstaande code werkt hetzelfde als voor roosterA. le copy paste!
-            if(i % 4 == 0){
-                zval -= 24.5f;
-            }
-            agvRoosterB.get(i).setLocalTranslation(-122,10.5f,zval-(i*5));
-            agvRoosterB.get(i).rotate(0, (FastMath.PI / 2), 0);
-            this.attachChild(agvRoosterB.get(i));
+   
+    public void initTreinRails() {
+    }
+
+    
+    /***
+     * Initaliseert de weg van en naar punten. Ligt onder de waypoints.
+     */
+    public void initWeg() {
+    }
+
+    //FreightCranes
+    public void initBoatCranes() {
+        // Adding a BoatCrane to the harbor
+        for (int i = 0; i < 8; i++) {
+            ShipCrane crane = new ShipCrane(assetmanager, 1f, new Vector3f(40 - (i * 30), 14, -450));
+            crane.rotate(0, -FastMath.PI / 2, 0);
+            crane.setLocalTranslation(crane.getLocation());
+            shCranes.add(crane);
+            this.attachChild(crane);
         }
     }
 
-    public void initStorage(BulletAppState bulletAppState) {
-        for (float i = -2.5f; i < 6.5f; i += 1.5f) { //aantal lines
-            Vector3f locminus = new Vector3f(-25, 10.5f, i * - 30);
-            Vector3f locminus2 = new Vector3f(-25, 10.5f, i * - 30);
-            storagelines.add(new Storage(assetmanager, new StorageCrane(assetmanager, 0.5f, locminus2), locminus, bulletAppState)); // beide kanten op.
+    public void initStorage() {
+
+        int amount = 4;
+        int asciivalue = 48;
+        
+        for (float i = -2.5f; i < 18.5f; i += 1.5f) { //aantal lines
+            if (storagelines.size() == 8){
+                amount = 3;
+            }
+            
+            Vector3f locminus = new Vector3f(-25 - (i * 30), 10.5f, 30);
+            Vector3f locminus2 = new Vector3f(-25 - (i * 30), 10.5f, 30);
+            storagelines.add(new Storage(assetmanager, new StorageCrane(assetmanager, 0.5f, locminus2), locminus ,amount, asciivalue )); // beide kanten op.
+            asciivalue++;
         }
         for (Storage sl : storagelines) {
             this.attachChild(sl);
         }
+
     }
-
-    //LATER VERWIJDEREN VOOR AGV CONTROLEUR!
-    public MotionPath testMotionPaths() {
-        MotionPaths platTest = new MotionPaths("AGVtestpath");
-        platTest.addWayPoint(WayPoints.PA.coords);
-        platTest.addWayPoint(WayPoints.PG.coords);
-        platTest.addWayPoint(WayPoints.PF.coords);
-        platTest.addWayPoint(WayPoints.PE.coords);
-
-        platTest.addWayPoint(WayPoints.PC.coords);
-        platTest.addWayPoint(WayPoints.PB.coords);
-        platTest.addWayPoint(WayPoints.PF.coords);
-        platTest.addWayPoint(WayPoints.PG.coords);
-        platTest.addWayPoint(WayPoints.CB.coords);
-        platTest.addWayPoint(WayPoints.CA.coords);
-        platTest.addWayPoint(WayPoints.PA.coords);
-        platTest.addWayPoint(WayPoints.PB.coords);
-
-        platTest.setCurveTension(0.0f);
-        return platTest;
+    
+    public void initTruckcranes(){
+        for (int i = 0; i < 20; i++){
+            TruckCrane trCrane = new TruckCrane(assetmanager, new Vector3f(-740, 14, 64 - (i*15)));
+            trCrane.rotate(0, FastMath.PI/2, 0);
+            trCrane.setLocalTranslation(-740, 14, 64 - (i*15));
+            trCranes.add(trCrane);
+        }
+        for (TruckCrane tr : trCranes){
+            this.attachChild(tr);
+        }
     }
 
     public void initShipcranes() {
+        int ruimte = 30;
         // Adding a ShipCrane to the harbor
-        for (int i = 0; i < 6; i++) {
-            ShipCrane crane = new ShipCrane(assetmanager, 1f, new Vector3f(160, 10.5f, -120 + (i * 30)));
+        for (int i = 0; i < 10; i++) {
+            if (i == 5){
+                ruimte *=2;
+            }
+            else{
+                ruimte = 30;
+            }
+            ShipCrane crane = new ShipCrane(assetmanager, 1f, new Vector3f(160, 10.5f, -120 + (i * ruimte)));
             crane.rotate(0, FastMath.PI, 0);
             crane.setLocalTranslation(crane.getLocation());
 //        initTocranemotionpath(crane, i);
@@ -149,30 +158,30 @@ public class Harbor extends Node {
         undockingroute.addWayPoint(new Vector3f(170, 9, 650));
         return undockingroute;
     }
-    
+
     //EIGENLIJKS BOAT!
     public MotionPath getFreighterDock() {
         MotionPath dockingroute = new MotionPath();
-        dockingroute.addWayPoint(new Vector3f(1500, 3, -360));
-        dockingroute.addWayPoint(new Vector3f(0, 3, -360));
+        dockingroute.addWayPoint(new Vector3f(1500, 3, -460));
+        dockingroute.addWayPoint(new Vector3f(0, 3, -460));
         return dockingroute;
     }
 
     //BOAT!
     public MotionPath getFreighterUndock() {
         MotionPath dockingroute = new MotionPath();
-        dockingroute.addWayPoint(new Vector3f(0, 9, -360));
-        dockingroute.addWayPoint(new Vector3f(-1700, 9, 1500));
+        dockingroute.addWayPoint(new Vector3f(0, 9, -460));
+        dockingroute.addWayPoint(new Vector3f(-1700, 9, 1600));
         return dockingroute;
     }
 
     public void initPlatform(BulletAppState bulletAppState) {
-        Box platform = new Box(400, 10, 350);
+        Box platform = new Box(1500, 10, 600);
         Geometry platform_geom = new Geometry("Box", platform);
         Material platform_mat = new Material(assetmanager, "Common/MatDefs/Misc/Unshaded.j3md");
         platform_mat.setColor("Color", ColorRGBA.LightGray);
         platform_geom.setMaterial(platform_mat);
-        platform_geom.setLocalTranslation(-250, 0, 0);
+        platform_geom.setLocalTranslation(-1350, 0, 150);
         this.attachChild(platform_geom);
         RigidBodyControl phyHarbor = new RigidBodyControl(0.0f);
         platform_geom.addControl(phyHarbor);
@@ -185,22 +194,3 @@ public class Harbor extends Node {
         this.attachChild(sky);
     }
 }
-//    public void initFromcranemotionpath(ShipCrane crane, int i){
-//        // Paths from the cranes
-//        MotionPaths cranepath = new MotionPaths("TestCrane1");
-//        cranepath.addWayPoint(new Vector3f(140, 10, crane.getLocation().getZ()));
-//        cranepath.addWayPoint(new Vector3f(140, 10, 200));
-//        cranepath.addWayPoint(new Vector3f(100, 10, 200));
-//        cranepath.setCurveTension(0.0f);
-//        fromcranepaths.add(cranepath); 
-//    }
-//    public void initTocranemotionpath(ShipCrane crane, int i){
-//        //Paths to the cranes
-//        MotionPaths cranepath = new MotionPaths("TestCrane1");
-//        cranepath.addWayPoint(new Vector3f(100, 10, -150));
-//        cranepath.addWayPoint(new Vector3f(140, 10, -150));
-//        cranepath.addWayPoint(new Vector3f(140, 10, crane.getLocation().getZ()));
-//        cranepath.setCurveTension(0.0f);
-//        tocranepaths.add(cranepath);   
-//    }
-

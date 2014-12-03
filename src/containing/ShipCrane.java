@@ -14,7 +14,7 @@ import com.jme3.scene.Spatial;
 
 /**
  *
- * @author Driving Ghost
+ * @author Umit
  */
 public class ShipCrane extends Node {
 

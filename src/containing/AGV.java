@@ -2,7 +2,6 @@ package containing;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
-import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
@@ -34,7 +33,7 @@ public class AGV extends Node {
         this.assetManager = assetManager;
         initModel();
         initMaterial();
-        this.attachChild(model);
+        
     }
 
     public void updateSpeed(float uSpeed) {
@@ -47,6 +46,7 @@ public class AGV extends Node {
     
     void initModel(){
         model = assetManager.loadModel("Models/high/agv/agv.j3o");
+        this.attachChild(model);
     }
     
     void initMaterial(){
@@ -60,10 +60,10 @@ public class AGV extends Node {
      
     public float getSpeed(){
         if(this.cargo != null){
-            return 0.125f;
+            return 0.25f;
         }
         else{
-            return 0.25f;
+            return 0.5f;
         }
     }
     
