@@ -49,8 +49,8 @@ public class Simulation extends SimpleApplication {
     Train train;
     Truck truck;
     
-    Freighter freighter;
-    Boat boat;
+    Boat freighter;
+    Freighter boat;
     Harbor harbor;
     MotionPath motionPath;
     MotionPath motionPath1;
@@ -69,6 +69,7 @@ public class Simulation extends SimpleApplication {
 
     public void startSimulation() {
         if (clientSocket == null) {
+            this.start();
             System.out.println("Cannot start up the application without server connection.\r\nPlease start up the Server first. ");
         } else {
             this.start();
@@ -106,14 +107,14 @@ public class Simulation extends SimpleApplication {
         rootNode.attachChild(harbor);
 
         // Adding a ship to the scene
-        boat = new Boat(assetManager);
+        boat = new Freighter(assetManager);
         //ship.addContainer(new Container(assetManager, 1f));
-        boat.Move(harbor.getFreighterDock(), 0.3f);
+        boat.Move(harbor.getDockingroute(), 0.3f);
         rootNode.attachChild(boat);
         //Adding freighter to the harbor
-        freighter = new Freighter(assetManager); //mergeerror needs fix !!!!!!!!!!!!!!!!!!
+        freighter = new Boat(assetManager); //mergeerror needs fix !!!!!!!!!!!!!!!!!!
         //freighter.addContainer(new Container(assetManager,1f));
-        freighter.Move(harbor.getDockingroute(), 1.2f);
+        freighter.Move(harbor.getFreighterDock(), 1.2f);
 
         rootNode.attachChild(freighter);
 

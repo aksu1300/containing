@@ -158,6 +158,5 @@ public class ShipCrane extends Node {
 
     private void initBounding() {
         boundGrab = this.getChild(1).getWorldBound();
-
     }
 }

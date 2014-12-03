@@ -37,12 +37,13 @@ public class Freighter extends Node {
     //public RigidBodyControl ballPhy;
     private Vector3f lastLocation;
     // A ship has a list of containers 
-    public List<Container> containers;
+    public List<Container> containers = new ArrayList<Container>();
+    
+    private Container x;
        
-    public Freighter(AssetManager assetmanager) {
-        this.assetmanager = assetmanager;
+    public Freighter(AssetManager assetManager) {
+        this.assetmanager = assetManager;
        
-        
 
         // Init ship 
         initShip();
@@ -51,7 +52,7 @@ public class Freighter extends Node {
         initMaterial();
         
         //initHold
-        initHold();
+        initHold(this.assetmanager);
 
         // Attach the model to the 
         this.attachChild(shipSpatial);
@@ -73,11 +74,11 @@ public class Freighter extends Node {
     /**
      * initHold zet de containers op hun plaats op het deck. 
      */
-    public void initHold() {
+    public void initHold(AssetManager assetmanager) {
         for (int i = 0; i < 9; i++) { //aantal decks
             for (int y = 0; y < 3; y++) { //aantal niveaus
                 for (int z = 0; z < 5; z++) { //aantal per niveau
-                    Container x = new Container(assetmanager, 1.5f);
+                    x = new Container(assetmanager, 1.5f);
                     x.rotate(0, -(FastMath.PI / 2), 0);
                     x.setLocalTranslation(60-(i*24), size / 2 + 0.1f + (y*4.25f), -10 + (z * 5));
                     this.attachChild(x);
