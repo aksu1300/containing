@@ -41,7 +41,7 @@ public class Storage extends Node{
     }
     
     public void Initline(){
-        Box containerlines = new Box(50, 0, 4.5f);
+        Box containerlines = new Box(110, 0, 15f);
         Geometry containerlines_geom = new Geometry("Box", containerlines);
         Material containerlines_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         containerlines_mat.setColor("Color", ColorRGBA.Gray);
