@@ -20,6 +20,7 @@ public class TruckCrane extends Node {
     
     Vector3f loc;
     Container container;
+    AGV agv;
     Material material;
     Spatial crane;
     Spatial grabbingGear;
@@ -86,9 +87,17 @@ public class TruckCrane extends Node {
 
     }
     
+    public void setAGV(AGV a){
+        this.agv = a;
+    }
+    
+    public AGV releaseAGV(){
+        return this.agv;
+    }
+    
     public void setContainer(Container c){
-        c.setLocalTranslation(this.getLocalTranslation().x-1, this.getLocalTranslation().y+2, this.getLocalTranslation().z);
         this.container = c;
+        c.setLocalTranslation(this.getLocalTranslation().x-1, this.getLocalTranslation().y+2, this.getLocalTranslation().z);
     }
     
     public void setTruck(Truck t){

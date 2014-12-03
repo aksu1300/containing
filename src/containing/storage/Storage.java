@@ -47,13 +47,13 @@ public class Storage extends Node {
         for (int i = 0; i < amount; i++) {
             AGV agv = new AGV("SA"+ Character.toChars(48 + value)+ "V"+i, assetManager);
             garageA.add(agv);
-            agv.setLocalTranslation(loc.x + 8 - (i *5), loc.y,340);
+            agv.setLocalTranslation(loc.x + 8 - (i *5), loc.y,320);
             this.attachChild(agv);
         }
         for (int i = 0; i < amount; i++) {
             AGV agv = new AGV("SB"+ Character.toChars(48 + value)+ "V"+i, assetManager);
             garageB.add(agv);
-            agv.setLocalTranslation(loc.x + 8 - (i *5), loc.y,-240);
+            agv.setLocalTranslation(loc.x + 8 - (i *5), loc.y,-260);
             this.attachChild(agv);
         } 
     }

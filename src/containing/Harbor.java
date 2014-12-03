@@ -93,6 +93,25 @@ public class Harbor extends Node {
         }
     }
 
+    public void initPlatform(BulletAppState bulletAppState) {
+        Box platform = new Box(1500, 10, 600);
+        Geometry platform_geom = new Geometry("Box", platform);
+        Material platform_mat = new Material(assetmanager, "Common/MatDefs/Misc/Unshaded.j3md");
+        platform_mat.setColor("Color", ColorRGBA.LightGray);
+        platform_geom.setMaterial(platform_mat);
+        platform_geom.setLocalTranslation(-1350, 0, 150);
+        this.attachChild(platform_geom);
+        RigidBodyControl phyHarbor = new RigidBodyControl(0.0f);
+        platform_geom.addControl(phyHarbor);
+        bulletAppState.getPhysicsSpace().add(phyHarbor);
+    }
+
+    public void initSky() {
+        Spatial sky = SkyFactory.createSky(assetmanager, "Scenes/Beach/FullskiesSunset0068.dds", false);
+        sky.setQueueBucket(RenderQueue.Bucket.Sky);
+        this.attachChild(sky);
+    }
+
     public void initStorage() {
 
         int amount = 4;
@@ -171,15 +190,15 @@ public class Harbor extends Node {
 
     public MotionPath truckDepart(Truck t, TruckCrane tc) { //van TC naar ver weg
         MotionPath path = new MotionPath();
-        path.addWayPoint(new Vector3f(-tc.getLocalTranslation().x -295, 0,0));
+        path.addWayPoint(new Vector3f(-tc.getLocalTranslation().x - 295, 0, 0));
         path.addWayPoint(new Vector3f(t.getLoc()));
         return path;
     }
 
     public MotionPath truckArrive(Truck t, TruckCrane tc) { //van ver weg naar TC
         MotionPath path = new MotionPath();
-        path.addWayPoint(new Vector3f(0,0,0));
-        path.addWayPoint(new Vector3f(-tc.getLocalTranslation().x-295,0,0));
+        path.addWayPoint(new Vector3f(0, 0, 0));
+        path.addWayPoint(new Vector3f(-tc.getLocalTranslation().x - 295, 0, 0));
         return path;
     }
 
@@ -197,24 +216,5 @@ public class Harbor extends Node {
         dockingroute.addWayPoint(new Vector3f(0, 9, -460));
         dockingroute.addWayPoint(new Vector3f(-1700, 9, 1600));
         return dockingroute;
-    }
-
-    public void initPlatform(BulletAppState bulletAppState) {
-        Box platform = new Box(1500, 10, 600);
-        Geometry platform_geom = new Geometry("Box", platform);
-        Material platform_mat = new Material(assetmanager, "Common/MatDefs/Misc/Unshaded.j3md");
-        platform_mat.setColor("Color", ColorRGBA.LightGray);
-        platform_geom.setMaterial(platform_mat);
-        platform_geom.setLocalTranslation(-1350, 0, 150);
-        this.attachChild(platform_geom);
-        RigidBodyControl phyHarbor = new RigidBodyControl(0.0f);
-        platform_geom.addControl(phyHarbor);
-        bulletAppState.getPhysicsSpace().add(phyHarbor);
-    }
-
-    public void initSky() {
-        Spatial sky = SkyFactory.createSky(assetmanager, "Scenes/Beach/FullskiesSunset0068.dds", false);
-        sky.setQueueBucket(RenderQueue.Bucket.Sky);
-        this.attachChild(sky);
     }
 }

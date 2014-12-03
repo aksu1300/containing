@@ -104,13 +104,6 @@ public class Simulation extends SimpleApplication {
         freighter.Move(harbor.getDockingroute(), 1.2f);
 
         rootNode.attachChild(freighter);
-
-        for (Truck x : harbor.trucks) {
-            for (int i = 0; i < harbor.trCranes.size(); i++) {
-                harbor.truckArrive(x, harbor.trCranes.get(i)).enableDebugShape(assetManager, rootNode);
-                x.move(harbor.truckArrive(x, harbor.trCranes.get(i)), 2);
-            }
-        }
     }
 
     @Override
