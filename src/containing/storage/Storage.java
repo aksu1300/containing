@@ -7,6 +7,7 @@ package containing.storage;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -34,7 +35,6 @@ public class Storage extends Node {
         this.garageB = new ArrayList<AGV>();
         this.assetManager = assetManager;
         this.loc = l;
-        //this.bulletAppState = bAS;
         this.crane = cr;
 
         initLine();
@@ -54,6 +54,7 @@ public class Storage extends Node {
             AGV agv = new AGV("SB"+ Character.toChars(48 + value)+ "V"+i, assetManager);
             garageB.add(agv);
             agv.setLocalTranslation(loc.x + 8 - (i *5), loc.y,-260);
+            agv.rotate(0, -FastMath.PI, 0);
             this.attachChild(agv);
         } 
     }

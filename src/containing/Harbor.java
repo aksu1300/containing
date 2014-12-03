@@ -30,8 +30,6 @@ import java.util.List;
  */
 public class Harbor extends Node {
 
-    //List with locations of cranes;
-    //List with locations of storageslines;
     List<Vector3f> storagesloc;
     List<Vector3f> cranesloc;
     List<Storage> storagelines;
@@ -67,10 +65,6 @@ public class Harbor extends Node {
         initTrucks();
     }
 
-    /**
-     * *
-     * initAGV initialises the AGV's on their parking spots.
-     */
     public void initTreinRails() {
     }
 
