@@ -11,16 +11,13 @@ import HUD.MyHUD;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
-import containing.storage.Storage;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
@@ -33,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 public class Simulation extends SimpleApplication {
 
@@ -101,29 +97,34 @@ public class Simulation extends SimpleApplication {
 
         // Adding a ship to the scene
         boat = new Boat(assetManager);
-        //ship.addContainer(new Container(assetManager, 1f));
         boat.Move(harbor.getFreighterDock(), 0.3f);
         rootNode.attachChild(boat);
         //Adding freighter to the harbor
         freighter = new Freighter(assetManager);
         freighter.Move(harbor.getDockingroute(), 1.2f);
-        t = new Truck("AAA",new Vector3f(10,10,10),1, assetManager);
-        rootNode.attachChild(freighter);
-        rootNode.attachChild(t);
 
+        rootNode.attachChild(freighter);
+
+        for (Truck x : harbor.trucks) {
+            for (int i = 0; i < harbor.trCranes.size(); i++) {
+                harbor.truckArrive(x, harbor.trCranes.get(i)).enableDebugShape(assetManager, rootNode);
+                x.move(harbor.truckArrive(x, harbor.trCranes.get(i)), 2);
+            }
+        }
     }
 
     @Override
     public void simpleUpdate(float tpf) {
 
-        if (freighter.getDocked()){
-            t.setContainer(new Container(assetManager, 1));
+        if (freighter.getDocked()) {
+            harbor.trucks.get(0).move(harbor.truckDepart(harbor.trucks.get(0), harbor.trCranes.get(0)), 1);
+            harbor.trucks.get(0).setContainer(new Container(assetManager, 1));
+            freighter.setDocked();
+
         }
-        
         System.out.println(cam.getLocation().x);
         System.out.println(cam.getLocation().y);
         System.out.println(cam.getLocation().z);
-
     }
 
     private void initHud() {
@@ -316,7 +317,8 @@ public class Simulation extends SimpleApplication {
             clientSocket = new Socket("localhost", 5400);
             inputLine = new BufferedReader(new InputStreamReader(System.in));
             is = new DataInputStream(clientSocket.getInputStream());
-
+            is.close();
+            inputLine.close();
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + "localhost");
         } catch (IOException e) {

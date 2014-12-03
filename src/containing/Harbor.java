@@ -20,6 +20,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.util.SkyFactory;
+import containing.transport.Truck;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class Harbor extends Node {
     public ArrayList<AGV> agvRoosterA;
     public ArrayList<AGV> agvRoosterB;
     private AssetManager assetmanager;
+    public ArrayList<Truck> trucks;
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
 
@@ -49,6 +51,7 @@ public class Harbor extends Node {
         trCranes = new ArrayList<TruckCrane>();
         storagesloc = new ArrayList<Vector3f>();
         cranesloc = new ArrayList<Vector3f>();
+        trucks = new ArrayList<Truck>();
 
         agvRoosterA = new ArrayList<AGV>();
         agvRoosterB = new ArrayList<AGV>();
@@ -61,21 +64,21 @@ public class Harbor extends Node {
         initShipcranes();
         initBoatCranes();
         initTruckcranes();
+        initTrucks();
     }
 
     /**
      * *
      * initAGV initialises the AGV's on their parking spots.
      */
-   
     public void initTreinRails() {
     }
 
-    
-    /***
+    /**
+     * *
      * Initaliseert de weg van en naar punten. Ligt onder de waypoints.
      */
-    public void initWeg() {
+    public void initRoad() {
     }
 
     //FreightCranes
@@ -94,15 +97,15 @@ public class Harbor extends Node {
 
         int amount = 4;
         int asciivalue = 48;
-        
+
         for (float i = -2.5f; i < 18.5f; i += 1.5f) { //aantal lines
-            if (storagelines.size() == 8){
+            if (storagelines.size() == 8) {
                 amount = 3;
             }
-            
+
             Vector3f locminus = new Vector3f(-25 - (i * 30), 10.5f, 30);
             Vector3f locminus2 = new Vector3f(-25 - (i * 30), 10.5f, 30);
-            storagelines.add(new Storage(assetmanager, new StorageCrane(assetmanager, 0.5f, locminus2), locminus ,amount, asciivalue )); // beide kanten op.
+            storagelines.add(new Storage(assetmanager, new StorageCrane(assetmanager, 0.5f, locminus2), locminus, amount, asciivalue)); // beide kanten op.
             asciivalue++;
         }
         for (Storage sl : storagelines) {
@@ -110,15 +113,23 @@ public class Harbor extends Node {
         }
 
     }
-    
-    public void initTruckcranes(){
-        for (int i = 0; i < 20; i++){
-            TruckCrane trCrane = new TruckCrane(assetmanager, new Vector3f(-740, 14, 64 - (i*15)));
-            trCrane.rotate(0, FastMath.PI/2, 0);
-            trCrane.setLocalTranslation(-740, 14, 64 - (i*15));
+
+    public void initTrucks() {
+        for (int i = 0; i < 20; i++) {
+            Truck t = new Truck("T" + (i + 1), new Vector3f(-1200, 11, 64 - (i * 15)), 1, assetmanager);
+            trucks.add(t);
+            this.attachChild(t);
+        }
+    }
+
+    public void initTruckcranes() {
+        for (int i = 0; i < 20; i++) {
+            TruckCrane trCrane = new TruckCrane(assetmanager, new Vector3f(-740, 11, 64 - (i * 15)));
+            trCrane.rotate(0, FastMath.PI / 2, 0);
+            trCrane.setLocalTranslation(-740, 11, 64 - (i * 15));
             trCranes.add(trCrane);
         }
-        for (TruckCrane tr : trCranes){
+        for (TruckCrane tr : trCranes) {
             this.attachChild(tr);
         }
     }
@@ -127,10 +138,9 @@ public class Harbor extends Node {
         int ruimte = 30;
         // Adding a ShipCrane to the harbor
         for (int i = 0; i < 10; i++) {
-            if (i == 5){
-                ruimte *=2;
-            }
-            else{
+            if (i == 5) {
+                ruimte *= 2;
+            } else {
                 ruimte = 30;
             }
             ShipCrane crane = new ShipCrane(assetmanager, 1f, new Vector3f(160, 10.5f, -120 + (i * ruimte)));
@@ -157,6 +167,20 @@ public class Harbor extends Node {
         undockingroute.addWayPoint(new Vector3f(170, 9, 0));
         undockingroute.addWayPoint(new Vector3f(170, 9, 650));
         return undockingroute;
+    }
+
+    public MotionPath truckDepart(Truck t, TruckCrane tc) { //van TC naar ver weg
+        MotionPath path = new MotionPath();
+        path.addWayPoint(new Vector3f(-tc.getLocalTranslation().x -295, 0,0));
+        path.addWayPoint(new Vector3f(t.getLoc()));
+        return path;
+    }
+
+    public MotionPath truckArrive(Truck t, TruckCrane tc) { //van ver weg naar TC
+        MotionPath path = new MotionPath();
+        path.addWayPoint(new Vector3f(0,0,0));
+        path.addWayPoint(new Vector3f(-tc.getLocalTranslation().x-295,0,0));
+        return path;
     }
 
     //EIGENLIJKS BOAT!

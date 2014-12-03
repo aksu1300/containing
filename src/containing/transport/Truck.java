@@ -2,7 +2,11 @@ package containing.transport;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.MotionPathListener;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -27,23 +31,26 @@ public class Truck extends Node {
         model.setMaterial(material);
         model.scale(1);
         model.setLocalTranslation(loc);
+        model.rotate(0, -FastMath.PI/2, 0);
+        
         this.attachChild(model);
     }
     
-    public void depart() {
-        Vector3f pointA = new Vector3f(12f, 6f, -8f);
-        Vector3f pointB = new Vector3f(12f, 6f, 14f);
-        MotionPath path = new MotionPath();
-        path.addWayPoint(pointA);
-        path.addWayPoint(pointB);
-    }
-    
-    public void arrive() {
-        Vector3f entry = new Vector3f(12f, 6f, 8f);
-        Vector3f station = new Vector3f(6f, 6f, 8f);
-        MotionPath path = new MotionPath();
-        path.addWayPoint(entry);
-        path.addWayPoint(station);
+    public void move(final MotionPath route, float speed){
+        MotionEvent motionControl = new MotionEvent(this, route);
+        //motionControl.setDirectionType(MotionEvent.Direction.Path);
+        //motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
+        motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(speed);
+        motionControl.play();
+
+        route.addListener(new MotionPathListener() {
+            public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                if (route.getNbWayPoints() == wayPointIndex + 1) {
+                    System.out.println("Point reached!");
+                }
+            }
+        });
     }
     
     // <editor-fold defaultstate="collapsed" desc="Gets & Sets">
@@ -52,9 +59,14 @@ public class Truck extends Node {
         
     }
     
+    public Vector3f getLoc(){
+        return this.loc;
+    }
+    
     public void setContainer(Container cargo){
         this.cargo = cargo; 
-        this.cargo.setLocalTranslation(loc.x, loc.y+1.2f, loc.z-0.35f);
+        this.cargo.rotate(0, -FastMath.PI/2, 0);
+        this.cargo.setLocalTranslation(loc.x, loc.y+1.2f, loc.z-0.345f);
         this.attachChild(this.cargo);
     }
     
