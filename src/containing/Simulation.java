@@ -18,6 +18,7 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
+import containing.storage.Storage;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
@@ -104,6 +105,16 @@ public class Simulation extends SimpleApplication {
         freighter.Move(harbor.getDockingroute(), 1.2f);
 
         rootNode.attachChild(freighter);
+        int i = 0;
+        for (Storage s : harbor.storagelines) {
+            for (AGV a : s.garageA) {
+                i++;
+            }
+            for (AGV b : s.garageB) {
+                i++;
+            }
+        }
+        System.out.println(i);
     }
 
     @Override
@@ -115,6 +126,7 @@ public class Simulation extends SimpleApplication {
             freighter.setDocked();
 
         }
+        
         System.out.println(cam.getLocation().x);
         System.out.println(cam.getLocation().y);
         System.out.println(cam.getLocation().z);

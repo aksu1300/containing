@@ -108,12 +108,12 @@ public class Harbor extends Node {
 
     public void initStorage() {
 
-        int amount = 4;
+        int amount = 3;
         int asciivalue = 48;
 
-        for (float i = -2.5f; i < 18.5f; i += 1.5f) { //aantal lines
-            if (storagelines.size() == 8) {
-                amount = 3;
+        for (float i = -2.5f; i < 31f; i += 1.5f) { //aantal lines
+            if (storagelines.size() == 4) {
+                amount = 2;
             }
 
             Vector3f locminus = new Vector3f(-25 - (i * 30), 10.5f, 30);
@@ -121,6 +121,7 @@ public class Harbor extends Node {
             storagelines.add(new Storage(assetmanager, new StorageCrane(assetmanager, 0.5f, locminus2), locminus, amount, asciivalue)); // beide kanten op.
             asciivalue++;
         }
+        
         for (Storage sl : storagelines) {
             this.attachChild(sl);
         }
@@ -129,7 +130,7 @@ public class Harbor extends Node {
 
     public void initTrucks() {
         for (int i = 0; i < 20; i++) {
-            Truck t = new Truck("T" + (i + 1), new Vector3f(-1200, 11, 64 - (i * 15)), 1, assetmanager);
+            Truck t = new Truck("T" + (i + 1), new Vector3f(-1200, 11, -350 - (i * 13)), 1, assetmanager);
             trucks.add(t);
             this.attachChild(t);
         }
@@ -137,9 +138,9 @@ public class Harbor extends Node {
 
     public void initTruckcranes() {
         for (int i = 0; i < 20; i++) {
-            TruckCrane trCrane = new TruckCrane(assetmanager, new Vector3f(-740, 11, 64 - (i * 15)));
+            TruckCrane trCrane = new TruckCrane(assetmanager, new Vector3f(-740, 11, -350 - (i * 13)));
             trCrane.rotate(0, FastMath.PI / 2, 0);
-            trCrane.setLocalTranslation(-740, 11, 64 - (i * 15));
+            
             trCranes.add(trCrane);
         }
         for (TruckCrane tr : trCranes) {

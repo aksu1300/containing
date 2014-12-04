@@ -7,6 +7,7 @@ package containing;
 import com.jme3.asset.AssetManager;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.material.Material;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -55,6 +56,9 @@ public class TruckCrane extends Node {
         this.attachChild(grabbingGear);
         this.attachChild(hookLeft);
         this.attachChild(hookRight);
+        
+        this.setLocalTranslation(location);
+        
         initBounding();
         
     }
