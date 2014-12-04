@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author account
  */
-public class Ship extends Node {
+public class Ship_old extends Node {
 
     private AssetManager assetManager;
     private Spatial shipSpatial;
@@ -36,7 +36,7 @@ public class Ship extends Node {
     // A ship has a list of containers 
     public List<Container> containers;
 
-    public Ship(AssetManager assetManager, float size) {
+    public Ship_old(AssetManager assetManager, float size) {
         this.assetManager = assetManager;
         this.size = size;
         containers = new ArrayList<Container>();
