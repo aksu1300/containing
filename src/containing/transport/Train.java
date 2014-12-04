@@ -3,6 +3,7 @@ package containing.transport;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.material.Material;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -39,22 +40,20 @@ public class Train extends Node {
     public Train(Vector3f location, AssetManager assetmanager, int nrWagons) {
         this.location = location;
         this.assetmanager = assetmanager;
+        this.initWagons();
         this.model = this.assetmanager.loadModel("Models/high/train/train.j3o");
         this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
         this.model.setMaterial(material);
         this.attachChild(this.model);
         this.wagons = new ArrayList<Wagon>();
-        this.initWagons(nrWagons);
         
     }
     
-    private void initWagons(int nrWagons) {
-        for(int i = 1; i <= nrWagons + 1; i++) {
-            Vector3f loc = this.location;
-            Wagon wagon = new Wagon("W" + i, loc.add((-20 * i), 0, 0), assetmanager);
-            wagon.setLocalTranslation(getLocation());
-            wagons.add(wagon);
-        }
+    private void initWagons() {
+        Wagon wagon = new Wagon("TW1", new Vector3f(0.06f, 0, -13.16f), this.assetmanager);
+        wagon.rotate(0, FastMath.PI, 0);
+        wagon.setLocalTranslation(wagon.getLocation());
+        this.attachChild(wagon);
     }
     
     /**

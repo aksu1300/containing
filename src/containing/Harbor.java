@@ -64,6 +64,7 @@ public class Harbor extends Node {
         initRails();
         initTrainCranes();
         initTrain();
+        //initTest();
     }
    
     /***
@@ -164,7 +165,7 @@ public class Harbor extends Node {
     }
     
     public void initTest() {
-        Wagon wagon = new Wagon("TW1", new Vector3f(-120, 10, 270), assetmanager);
+        Wagon wagon = new Wagon("TW1", new Vector3f(-86.8f, 10, 250), assetmanager);
         wagon.rotate(0, FastMath.PI * 1.5f, 0);
         wagon.setLocalTranslation(wagon.getLocation());
         this.attachChild(wagon);
