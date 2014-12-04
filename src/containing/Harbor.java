@@ -23,6 +23,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Line;
 import com.jme3.util.SkyFactory;
 import containing.transport.Train;
+import containing.transport.Wagon;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class Harbor extends Node {
 
         agvRoosterA = new ArrayList<AGV>();
         agvRoosterB = new ArrayList<AGV>();
-
+        
         this.assetmanager = assetManager;
         initPlatform(bulletAppState);
         initSky();
@@ -83,7 +84,7 @@ public class Harbor extends Node {
             if(i % 4 == 0){
                 zval -= 24.5f; //na elke 4 agvs wordt de z waarde met 24.5 verlaagt. 
             }
-            agvRoosterA.get(i).setLocalTranslation(75,10.5f,zval-(i*5)); 
+            agvRoosterA.get(i).setLocalTranslation(75,10.5f,zval-(i*5));
             agvRoosterA.get(i).rotate(0, -(FastMath.PI / 2), 0); //goedom zetten.
             this.attachChild(agvRoosterA.get(i)); //attach to world!
         }
@@ -162,9 +163,16 @@ public class Harbor extends Node {
         }
     }
     
+    public void initTest() {
+        Wagon wagon = new Wagon("TW1", new Vector3f(-120, 10, 270), assetmanager);
+        wagon.rotate(0, FastMath.PI * 1.5f, 0);
+        wagon.setLocalTranslation(wagon.getLocation());
+        this.attachChild(wagon);
+    }
+    
     public void initTrain() {
-        //Train train = new Train(new Vector3f(-100, 10, 250), assetmanager, 2);
-        Train train = new Train(new Vector3f(-100, 10.5f, 250), assetmanager);
+        Train train = new Train(new Vector3f(-100, 10, 250), assetmanager, 2);
+        //Train train = new Train(new Vector3f(-100, 10.5f, 250), assetmanager);
         train.rotate(0, FastMath.PI * 1.5f, 0);
         train.setLocalTranslation(train.getLocation());
         this.attachChild(train);
