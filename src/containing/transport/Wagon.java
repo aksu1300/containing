@@ -1,6 +1,7 @@
 package containing.transport;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.cinematic.MotionPath;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -20,7 +21,25 @@ public class Wagon extends Node {
         this.id = id;
         this.location = location;
         this.model = assetManager.loadModel("Models/high/train/wagon.j3o");
+        this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        this.model.setMaterial(material);
         this.attachChild(model);
+    }
+    
+    public void depart() {
+        Vector3f station = new Vector3f(0, 6f, 14f);
+        Vector3f exit = new Vector3f(0, 6f, 6f);
+        MotionPath path = new MotionPath();
+        path.addWayPoint(station);
+        path.addWayPoint(exit);
+    }
+    
+    public void arrive() {
+        Vector3f entry = new Vector3f(0, 6f, 6f);
+        Vector3f station = new Vector3f(0, 6f, 14f);
+        MotionPath path = new MotionPath();
+        path.addWayPoint(entry);
+        path.addWayPoint(station);
     }
     
     // <editor-fold defaultstate="collapsed" desc="Get & Set">

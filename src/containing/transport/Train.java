@@ -36,13 +36,25 @@ public class Train extends Node {
      * @param assetmanager AssetManager for the train ex:new AssetManager
      * @param wagons Wagons that can be added to the train ex:new Wagon
      */
-    public Train(Vector3f location, AssetManager assetwanager, ArrayList wagons) {
-        this.location = location; 
-        this.model = assetmanager.loadModel("Models/high/train/train.j3o");
-        this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
-        this.model.setMaterial(material);
-        this.wagons = wagons;
-        this.attachChild(model);
+    public Train(Vector3f location, AssetManager assetwanager, int nrWagons) {
+        try {
+            this.location = location;            
+            this.model = assetmanager.loadModel("Models/high/train/train.j3o");
+            this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
+            this.model.setMaterial(material);
+            this.wagons = new ArrayList<Wagon>();
+            this.initWagons(nrWagons);
+            this.attachChild(model);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    private void initWagons(int nrWagons) {
+        for(int i = 1; i <= nrWagons; i++) {
+            Vector3f loc = this.location;
+            this.wagons.add(new Wagon("W" + i, loc.add((-20 * i), 0, 0), assetmanager));
+        }
     }
     
     /**

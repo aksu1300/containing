@@ -163,7 +163,8 @@ public class Harbor extends Node {
     }
     
     public void initTrain() {
-        Train train = new Train(new Vector3f(-100, 11, 250), assetmanager);
+        //Train train = new Train(new Vector3f(-100, 10, 250), assetmanager, 2);
+        Train train = new Train(new Vector3f(-100, 10.5f, 250), assetmanager);
         train.rotate(0, FastMath.PI * 1.5f, 0);
         train.setLocalTranslation(train.getLocation());
         this.attachChild(train);
