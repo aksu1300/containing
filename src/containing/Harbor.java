@@ -6,6 +6,7 @@ package containing;
 
 import containing.storage.StorageCrane;
 import containing.storage.Storage;
+import containing.transport.TrainCrane;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -19,6 +20,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Line;
 import com.jme3.util.SkyFactory;
 import containing.transport.Truck;
 import java.util.ArrayList;
@@ -42,6 +44,9 @@ public class Harbor extends Node {
     public ArrayList<Truck> trucks;
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
+        shCranes = new ArrayList<ShipCrane>();
+        trCranes = new ArrayList<TrainCrane>();
+        storagelines = new ArrayList<Storage>();
 
         shCranes = new ArrayList<ShipCrane>();
         boatCranes = new ArrayList<ShipCrane>();
@@ -60,9 +65,10 @@ public class Harbor extends Node {
         initSky();
         initStorage();
         initShipcranes();
-        initBoatCranes();
-        initTruckcranes();
-        initTrucks();
+        initAGV();
+        initRails();
+        initTrainCranes();
+        initTrain();
     }
 
     public void initTreinRails() {
@@ -85,6 +91,35 @@ public class Harbor extends Node {
             shCranes.add(crane);
             this.attachChild(crane);
         }
+    }
+    
+    public void initRails() {
+        Line line = new Line(new Vector3f(-100, 10, 250), new Vector3f(-650, 10, 250));
+        line.setLineWidth(4);
+        Geometry geometry = new Geometry("Bullet", line);
+        Material orange = new Material(assetmanager, "Common/MatDefs/Misc/Unshaded.j3md");
+        orange.setColor("Color", ColorRGBA.Blue);
+        geometry.setMaterial(orange);                  
+        this.attachChild(geometry);
+    }
+    
+    public void initTrainCranes() {
+        for (int i = 0; i < 4; i++)
+        {
+            TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(-100 + (i * 20), 10, 250));
+            crane.rotate(0, FastMath.PI * 1.5f, 0);
+            crane.setLocalTranslation(crane.getLocation());
+            trCranes.add(crane);
+            this.attachChild(crane);
+        }
+    }
+    
+    public void initTrain() {
+        //Train train = new Train(new Vector3f(-100, 10, 250), assetmanager, 2);
+        Train train = new Train(new Vector3f(-100, 10.5f, 250), assetmanager);
+        train.rotate(0, FastMath.PI * 1.5f, 0);
+        train.setLocalTranslation(train.getLocation());
+        this.attachChild(train);
     }
 
     public void initPlatform(BulletAppState bulletAppState) {
