@@ -11,6 +11,9 @@ import HUD.MyHUD;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
@@ -53,6 +56,11 @@ public class Simulation extends SimpleApplication {
     MotionPath motionPath1;
     AGVController agvc;
 
+    
+    //Guid
+    private Nifty nifty;
+    
+    
     public Simulation() {
         initSockets();
     }
@@ -132,6 +140,27 @@ public class Simulation extends SimpleApplication {
         System.out.println(cam.getLocation().z);
     }
 
+    
+    public void initKeys(){
+        inputManager.addMapping("Show",  new KeyTrigger(KeyInput.KEY_F10));
+        inputManager.addMapping("Hide",   new KeyTrigger(KeyInput.KEY_F9));
+        // Add the names to the action listener.
+        inputManager.addListener(actionListener,"Show","Hide");
+      
+    }
+    
+        private ActionListener actionListener = new ActionListener() {
+        public void onAction(String name, boolean keyPressed, float tpf) {
+          if (name.equals("Show") && !keyPressed) {
+              //show the gui
+            initHud();
+          }
+          if(name.equals("Hide") && !keyPressed){
+              //and lets hide the gui
+            nifty.exit();
+          }
+        }
+      };
     private void initHud() {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         Nifty nifty = niftyDisplay.getNifty();
