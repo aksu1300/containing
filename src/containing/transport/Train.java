@@ -40,7 +40,7 @@ public class Train extends Node {
     public Train(Vector3f location, AssetManager assetmanager, int nrWagons) {
         this.location = location;
         this.assetmanager = assetmanager;
-        this.initWagons();
+        this.initWagons(nrWagons);
         this.model = this.assetmanager.loadModel("Models/high/train/train.j3o");
         this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
         this.model.setMaterial(material);
@@ -49,11 +49,13 @@ public class Train extends Node {
         
     }
     
-    private void initWagons() {
-        Wagon wagon = new Wagon("TW1", new Vector3f(0.06f, 0, -13.16f), this.assetmanager);
-        wagon.rotate(0, FastMath.PI, 0);
-        wagon.setLocalTranslation(wagon.getLocation());
-        this.attachChild(wagon);
+    private void initWagons(int nrWagons) {
+        for (int i = 1; i < nrWagons + 1; i++) {
+            Wagon wagon = new Wagon("TW" + i, new Vector3f(0.06f, 0, -13.16f * i), this.assetmanager);
+            wagon.rotate(0, FastMath.PI, 0);
+            wagon.setLocalTranslation(wagon.getLocation());
+            this.attachChild(wagon);
+        }
     }
     
     /**
