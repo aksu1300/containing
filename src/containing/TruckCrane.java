@@ -39,14 +39,6 @@ public class TruckCrane extends Node {
     BoundingVolume boundGrab;
     boolean done = false;
     int limit = 4;
-
-    
-    public void startProcedure(Truck t, AGV a){
-        setAGV(a);
-        setTruck(t);
-        craneDown();
-        
-    }
     
     
     public TruckCrane(AssetManager _assetManager, Vector3f location) {

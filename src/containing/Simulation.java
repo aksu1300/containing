@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 public class Simulation extends SimpleApplication {
 
@@ -50,7 +49,8 @@ public class Simulation extends SimpleApplication {
     Freighter freighter;
     Boat boat;
     Harbor harbor;
-    ArrayList<String> motionPath;
+    MotionPath motionPath;
+    MotionPath motionPath1;
     AGVController agvc;
 
     public Simulation() {
@@ -105,27 +105,33 @@ public class Simulation extends SimpleApplication {
         freighter.Move(harbor.getDockingroute(), 1.2f);
 
         rootNode.attachChild(freighter);
-        
-        int i = 0;
-
         for (TruckCrane tc : harbor.truckCranes) {
             Container xxx = new Container(assetManager, 1);
-            for (Truck xt : harbor.trucks) {
-                xt.truckArrive(tc);
-
-                AGV a = new AGV("AAA", assetManager);
-                a.setContainer(xxx);
-                   
-                        tc.startProcedure(harbor.trucks.get(i), a);
-                    
-                
-            }
+            tc.setAGV(new AGV("AAA", assetManager));
+            tc.agv.setContainer(xxx);
+            tc.craneDown();
         }
+
+        int i = 0;
+        for (Truck tc : harbor.trucks) {
+            tc.truckArrive(harbor.truckCranes.get(i));
+            harbor.truckCranes.get(i).truck = tc;
+            i++;
+        }
+        
+        for (TruckCrane tc : harbor.truckCranes) {
+                if(tc.container != null){
+                    tc.craneUp();
+                    
+                }
+            }
     }
 
     @Override
     public void simpleUpdate(float tpf) {
         if (freighter.getDocked()) {
+            
+            
         }
 //        System.out.println(cam.getLocation().x);
 //        System.out.println(cam.getLocation().y);
