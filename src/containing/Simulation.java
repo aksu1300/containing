@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class Simulation extends SimpleApplication {
 
@@ -49,8 +50,7 @@ public class Simulation extends SimpleApplication {
     Freighter freighter;
     Boat boat;
     Harbor harbor;
-    MotionPath motionPath;
-    MotionPath motionPath1;
+    ArrayList<String> motionPath;
     AGVController agvc;
 
     public Simulation() {
@@ -105,31 +105,32 @@ public class Simulation extends SimpleApplication {
         freighter.Move(harbor.getDockingroute(), 1.2f);
 
         rootNode.attachChild(freighter);
-        int i = 0;
-        for (Storage s : harbor.storagelines) {
-            for (AGV a : s.garageA) {
-                i++;
-            }
-            for (AGV b : s.garageB) {
-                i++;
-            }
-        }
-        System.out.println(i);
+        
+        
+//        int i = 0;
+//
+//        for (TruckCrane tc : harbor.truckCranes) {
+//            Container xxx = new Container(assetManager, 1);
+//            for (Truck xt : harbor.trucks) {
+//                xt.truckArrive(tc);
+//
+//                AGV a = new AGV("AAA", assetManager);
+//                a.setContainer(xxx);
+//                   
+//                        tc.startProcedure(harbor.trucks.get(i), a);
+//                    
+//                
+//            }
+//        }
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-
         if (freighter.getDocked()) {
-            harbor.trucks.get(0).move(harbor.truckDepart(harbor.trucks.get(0), harbor.trCranes.get(0)), 1);
-            harbor.trucks.get(0).setContainer(new Container(assetManager, 1));
-            freighter.setDocked();
-
         }
-        
-        System.out.println(cam.getLocation().x);
-        System.out.println(cam.getLocation().y);
-        System.out.println(cam.getLocation().z);
+//        System.out.println(cam.getLocation().x);
+//        System.out.println(cam.getLocation().y);
+//        System.out.println(cam.getLocation().z);
     }
 
     private void initHud() {

@@ -39,7 +39,7 @@ public class Storage extends Node {
 
         initLine();
         initAGV(amount, value);
-        //this.crane.rotate(0, FastMath.HALF_PI, 0);
+        
         this.attachChild(this.crane);
     }
 
