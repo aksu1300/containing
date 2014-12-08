@@ -49,11 +49,15 @@ public class Wagon extends Node {
     // <editor-fold defaultstate="collapsed" desc="Get & Set">
     
     public void setCargo(Container cargo){
-        if (cargo == null) {
+        if (this.cargo == null) {
             this.cargo = cargo; 
             this.cargo.setLocalTranslation(0,0.6f,0);
             this.attachChild(this.cargo);
         }
+    }
+    
+    public void resetCargo() {
+        this.cargo = null;
     }
     
     public Container getCargo(){

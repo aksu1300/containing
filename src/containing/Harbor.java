@@ -39,14 +39,13 @@ public class Harbor extends Node {
     List<Vector3f> cranesloc;
     List<Storage> storagelines;
     public ArrayList<ShipCrane> shCranes;
-    public ArrayList<TrainCrane> trCranes;
     public ArrayList<AGV> agvRoosterA;
     public ArrayList<AGV> agvRoosterB;
     private AssetManager assetmanager;
+    public Train train;
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
         shCranes = new ArrayList<ShipCrane>();
-        trCranes = new ArrayList<TrainCrane>();
         storagelines = new ArrayList<Storage>();
 
         storagesloc = new ArrayList<Vector3f>();
@@ -62,7 +61,7 @@ public class Harbor extends Node {
         initShipcranes();
         initAGV();
         initRails();
-        initTrainCranes();
+        initTrainCrane();
         initTrain();
         //initTest();
     }
@@ -153,15 +152,11 @@ public class Harbor extends Node {
         this.attachChild(geometry);
     }
     
-    public void initTrainCranes() {
-        for (int i = 0; i < 4; i++)
-        {
-            TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(-100 + (i * 20), 10, 250));
-            crane.rotate(0, FastMath.PI * 1.5f, 0);
-            crane.setLocalTranslation(crane.getLocation());
-            trCranes.add(crane);
-            this.attachChild(crane);
-        }
+    public void initTrainCrane() {
+        TrainCrane crane = new TrainCrane(assetmanager, new Vector3f(-100, 10, 250), this);
+        crane.rotate(0, FastMath.PI * 1.5f, 0);
+        crane.setLocalTranslation(crane.getLocation());
+        this.attachChild(crane);
     }
     
     public void initTest() {
@@ -172,8 +167,7 @@ public class Harbor extends Node {
     }
     
     public void initTrain() {
-        Train train = new Train(new Vector3f(-100, 10, 250), assetmanager, 2);
-        //Train train = new Train(new Vector3f(-100, 10.5f, 250), assetmanager);
+        Train train = new Train(new Vector3f(-113, 10, 250), assetmanager, 3);
         train.rotate(0, FastMath.PI * 1.5f, 0);
         train.setLocalTranslation(train.getLocation());
         this.attachChild(train);

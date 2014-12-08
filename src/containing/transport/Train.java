@@ -50,8 +50,14 @@ public class Train extends Node {
     }
     
     private void initWagons(int nrWagons) {
-        for (int i = 1; i < nrWagons + 1; i++) {
-            Wagon wagon = new Wagon("TW" + i, new Vector3f(0.06f, 0, -13.16f * i), this.assetmanager);
+        Wagon wagon1 = new Wagon("TW1", new Vector3f(0.06f, 0f, -13.1f), this.assetmanager);
+        wagon1.rotate(0, FastMath.PI, 0);
+        wagon1.setLocalTranslation(wagon1.getLocation());
+        this.attachChild(wagon1);
+        
+        float transloc = 5.35f;
+        for (int i = 2; i < nrWagons + 2; i++) {
+            Wagon wagon = new Wagon("TW" + i, new Vector3f(0.06f, 0, transloc + -18.45f * i), this.assetmanager);
             wagon.rotate(0, FastMath.PI, 0);
             wagon.setLocalTranslation(wagon.getLocation());
             this.attachChild(wagon);
