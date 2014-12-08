@@ -106,22 +106,21 @@ public class Simulation extends SimpleApplication {
 
         rootNode.attachChild(freighter);
         
-        
-//        int i = 0;
-//
-//        for (TruckCrane tc : harbor.truckCranes) {
-//            Container xxx = new Container(assetManager, 1);
-//            for (Truck xt : harbor.trucks) {
-//                xt.truckArrive(tc);
-//
-//                AGV a = new AGV("AAA", assetManager);
-//                a.setContainer(xxx);
-//                   
-//                        tc.startProcedure(harbor.trucks.get(i), a);
-//                    
-//                
-//            }
-//        }
+        int i = 0;
+
+        for (TruckCrane tc : harbor.truckCranes) {
+            Container xxx = new Container(assetManager, 1);
+            for (Truck xt : harbor.trucks) {
+                xt.truckArrive(tc);
+
+                AGV a = new AGV("AAA", assetManager);
+                a.setContainer(xxx);
+                   
+                        tc.startProcedure(harbor.trucks.get(i), a);
+                    
+                
+            }
+        }
     }
 
     @Override
