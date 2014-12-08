@@ -75,6 +75,7 @@ public class Simulation extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
+        
         initHud();
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
@@ -114,29 +115,28 @@ public class Simulation extends SimpleApplication {
 
         rootNode.attachChild(freighter);
         
+        
+        
         harbor.testMotionPaths().enableDebugShape(assetManager, rootNode);
         harbor.agvRoosterA.get(0).Move(harbor.testMotionPaths(), 1);
+        
         
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-
-        
-
-        for (Storage sl : harbor.storagelines) {
-            sl.Getcranes().moveOut(tpf, 0);
-        }
-
         if (freighter.getDocked()) //ship.detachChild(ship.containers.get(89));
         {
+            for(ShipCrane sc : harbor.shCranes)
+                sc.processShip(freighter, 2f);
+                freighter.setDocked();
 //            for (ShipCrane sc : harbor.shCranes) {
 //                if (sc.container == null) {
 //                    //System.out.println("no container!");
 //                    sc.pushGrabber(tpf);
 //                    if (sc.boundGrab.intersects(freighter.containers.get(89).geometry)) {
 //                        System.out.println("it has hit!");
-//                        sc.grabContainer(freighter.containers.get(89));
+//                        sc.grabContainer(freighter.);
 //                    }
 //                } else if (sc.in && sc.container != null) {
 //                    sc.pushGrabber(tpf);

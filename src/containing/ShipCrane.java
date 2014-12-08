@@ -6,11 +6,16 @@ package containing;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bounding.BoundingVolume;
+import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import java.util.List;
+import java.util.Stack;
 
 /**
  *
@@ -18,7 +23,6 @@ import com.jme3.scene.Spatial;
  */
 public class ShipCrane extends Node {
 
-    Vector3f loc;
     Container container;
     Material material;
     Spatial crane;
@@ -29,7 +33,7 @@ public class ShipCrane extends Node {
     AssetManager assetManager;
     Vector3f location;
     float speed;
-    String id;
+    int id;
     float size;
     boolean status = false; // flase is up, true is down
     BoundingVolume boundGrab;
@@ -37,10 +41,11 @@ public class ShipCrane extends Node {
     boolean in = false;
     boolean done = false;
 
-    public ShipCrane(AssetManager _assetManager, float _size, Vector3f location) {
+    public ShipCrane(AssetManager _assetManager, float _size, Vector3f _location, int _id) {
         this.assetManager = _assetManager;
         this.size = _size;
-        this.location = location;
+        this.location = _location;
+        this.id = _id;
 
         //Init Sphere
         initContainer();
@@ -65,12 +70,20 @@ public class ShipCrane extends Node {
         crane.setMaterial(material);
 
         grabbingGear.setMaterial(material);
+        grabbingGear.getLocalTranslation().y = grabbingGear.getLocalTranslation().y + 8 ;
+        grabbingGear.getLocalTranslation().x = grabbingGear.getLocalTranslation().x + 12 ;
 
         grabbingGearHolder.setMaterial(material);
-
+        grabbingGearHolder.getLocalTranslation().y = grabbingGearHolder.getLocalTranslation().y + 8 ;
+        grabbingGearHolder.getLocalTranslation().x = grabbingGearHolder.getLocalTranslation().x + 12 ;
+        
         hookLeft.setMaterial(material);
-
+        hookLeft.getLocalTranslation().y = hookLeft.getLocalTranslation().y + 8 ;
+        hookLeft.getLocalTranslation().x = hookLeft.getLocalTranslation().x + 12 ;
+        
         hookRight.setMaterial(material);
+        hookRight.getLocalTranslation().y = hookRight.getLocalTranslation().y + 8 ;
+        hookRight.getLocalTranslation().x = hookRight.getLocalTranslation().x + 12 ;
 
     }
 
@@ -108,44 +121,23 @@ public class ShipCrane extends Node {
             for (int i = 1; i < this.children.size(); i++) {
                 this.getChild(i).move(tpf, 0, 0);
             }
-        } else {
+        } 
+        else {
             this.in = true;
         }
     }
-
-    /**
-     * Grabbing a container
-     */
-    public void pullGrabber(float tpf) {
-        if (this.getChild(1).getLocalTranslation().y <= 9) {
-            this.getChild(1).move(0, tpf, 0);
-            this.getChild(2).move(0, tpf, 0);
-            this.getChild(3).move(0, tpf, 0);
-            this.getChild(4).move(0, tpf, 0);
-            if (this.container != null) {
-                //this.getChild(5).move(0, tpf, 0);
-            }
-        } else {
-            this.up = true;
-        }
+    
+    public void processShip(Freighter fr, float speed){
+        
+        
+        MotionEvent motionControl = new MotionEvent(this, );
+        motionControl.setDirectionType(MotionEvent.Direction.Path);
+        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
+        motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(speed);        
+        motionControl.play();   
     }
-
-    /**
-     * Taking a container
-     */
-    public void pushGrabber(float tpf) {
-        this.up = false;
-        if (this.getChild(1).getLocalTranslation().y >= -10f) {
-            for (int i = 1; i < this.children.size(); i++) {
-                this.getChild(i).move(0, tpf * -1, 0);
-            }
-
-        } else {
-            this.done = true;
-        }
-
-    }
-
+    
     /**
      * Grabbing a container
      */
@@ -155,9 +147,28 @@ public class ShipCrane extends Node {
         this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y + 10, this.getChild(1).getLocalTranslation().z);
         this.attachChild(container);
     }
+    
+    /**
+     * Moving to a container
+     */
+    public void moveTo(float speed,Freighter fr, int deck){
+        final MotionPath route = new MotionPath();
+        route.addWayPoint(this.location);
+        
+        route.addWayPoint(new Vector3f(this.location.x, this.location.y, 60 - 24*deck));
+        this.location.z = 60 - 24*deck;
+        //(fr.getContainerlist().get(deck).get(0).peek().getLocalTranslation().z)
+        MotionEvent motionControl = new MotionEvent(this, route);
+        motionControl.setDirectionType(MotionEvent.Direction.Path);
+        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
+        motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(speed);
+        motionControl.play();
+    }
 
     private void initBounding() {
         boundGrab = this.getChild(1).getWorldBound();
-
     }
+
+
 }

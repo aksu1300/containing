@@ -123,7 +123,7 @@ public class Harbor extends Node {
     public void initShipcranes() {
         // Adding a ShipCrane to the harbor
         for (int i = 0; i < 6; i++) {
-            ShipCrane crane = new ShipCrane(assetmanager, 1f, new Vector3f(160, 10.5f, -120 + (i * 30)));
+            ShipCrane crane = new ShipCrane(assetmanager, 1f, new Vector3f(160, 10.5f, 320 + (-i * 30)), i);
             crane.rotate(0, FastMath.PI, 0);
             crane.setLocalTranslation(crane.getLocation());
 //        initTocranemotionpath(crane, i);
