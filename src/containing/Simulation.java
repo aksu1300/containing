@@ -21,6 +21,9 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
 import containing.storage.Storage;
+import containing.transport.Wagon;
+import containing.xml.Record;
+import containing.xml.XMLReader;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
@@ -33,6 +36,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Simulation extends SimpleApplication {
 
@@ -70,7 +75,45 @@ public class Simulation extends SimpleApplication {
     public void startSimulation() {
         if (clientSocket == null) {
             this.start();
-            System.out.println("Cannot start up the application without server connection.\r\nPlease start up the Server first. ");
+            
+            XMLReader reader1 = new XMLReader();
+
+            System.out.println("Record   s : " + reader1.records.size());
+
+            for(Record re : reader1.records)
+            {
+                System.out.println("Records i d  : " + re.getRecordId());
+                System.out.println("Company  : " + re.getArival_company());
+                System.out.println("Arival Date  : " + re.getArival_date());
+                System.out.println("From  : " + re.getArival_from());
+                System.out.println("To  : " + re.getArival_to());
+
+                System.out.println("Records id  : " + re.getArival_transport());
+                System.out.println("Container : " + re.getWeight());
+                System.out.println("=============================================");
+                
+                if(re.getArival_transport().toLowerCase() == "vrachtauto")
+                {
+                    Truck truck = new Truck(re.getRecordId(),new Vector3f(4,4,4), 5, assetManager);
+                    rootNode.attachChild(truck);
+                }
+                
+                if(re.getArival_transport().toLowerCase() == "trein")
+                {
+                    ArrayList<Wagon> wagons = new ArrayList<Wagon>();
+                    for(int i = 0; i < Integer.parseInt(re.getWeight()); i++){
+                        Wagon wagon = new Wagon(re.getRecordId(),new Vector3f(5,4,4),5,assetManager);
+                        wagons.add(wagon);
+                    }
+                    
+                    Train train = new Train(re.getRecordId(),new Vector3f(10,10,10), 5, assetManager,wagons);
+                    
+                    rootNode.attachChild(train);
+                }
+            }
+            
+                System.out.println("Cannot start up the application without server connection.\r\nPlease start up the Server first. ");
+            
         } else {
             this.start();
         }

@@ -65,8 +65,6 @@ public class XMLReader {
                     {
                         Element eElement = (Element) fstNode;
 
-                        System.out.println("Reccord id : " + eElement.getAttribute("id"));
-
                         record.recordId = eElement.getAttribute("id");
 
                         record.arival_date = eElement.getElementsByTagName("d").item(0).getTextContent() + "/" +   eElement.getElementsByTagName("m").item(0).getTextContent() + "/" +  eElement.getElementsByTagName("j").item(0).getTextContent();
@@ -87,7 +85,7 @@ public class XMLReader {
                         record.departure_company = eElement.getElementsByTagName("bedrijf").item(1).getTextContent(); 
 
                         record.size = eElement.getElementsByTagName("l").item(0).getTextContent() + " b " + eElement.getElementsByTagName("b").item(0).getTextContent() + " h " + eElement.getElementsByTagName("l").item(0).getTextContent();
-                        record.weight = eElement.getElementsByTagName("leeg").item(0).getTextContent() + " inhoud : " + eElement.getElementsByTagName("inhoud").item(0).getTextContent();
+                       record.weight = /*eElement.getElementsByTagName("leeg").item(0).getTextContent() + " inhoud : " +*/ eElement.getElementsByTagName("inhoud").item(0).getTextContent();
 
                         record.content_name = eElement.getElementsByTagName("naam").item(1).getTextContent();
                         record.content_type = eElement.getElementsByTagName("soort").item(0).getTextContent();
