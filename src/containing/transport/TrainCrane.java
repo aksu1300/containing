@@ -3,8 +3,10 @@ package containing.transport;
 import com.jme3.asset.AssetManager;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -110,16 +112,20 @@ public class TrainCrane extends Node {
         this.move(wagon.getLocation());
     }
     
-    private void takeContainer(Wagon wagon) {
-        giveT();
+    private void takeContainer(Wagon wagon) { 
+        TakeT();
         this.container = wagon.getCargo();
+        this.container.rotate(0, (FastMath.PI * 0.5f), 0);
+        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y + 2, this.getChild(1).getLocalTranslation().z);
         wagon.resetCargo();
         this.attachChild(container);
         retractT();
     }
     
-    private void giveT() {
-        
+    private void TakeT() {
+        MotionPath path = new MotionPath();
+        path.addWayPoint(location);
+        Move(path);
     }
     
     private void retractT() {
@@ -129,6 +135,7 @@ public class TrainCrane extends Node {
     private void placeContainer(AGV agv) {
         grabA();
         agv.setContainer(this.container);
+        this.container = null;
         pullA();
     }
     private void grabA() {
@@ -137,6 +144,17 @@ public class TrainCrane extends Node {
     
     private void pullA() {
         
+    }
+    
+    public void Move(MotionPath path){
+        
+        MotionEvent motionControl = new MotionEvent(this, path);
+        motionControl.setDirectionType(MotionEvent.Direction.Path);
+        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
+        motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(this.speed);
+        
+        motionControl.play();
     }
     
     
@@ -180,10 +198,4 @@ public class TrainCrane extends Node {
 
     }
     
-    public void grabContainer(Container grabbed) {
-        this.container = grabbed;
-        this.container.rotate(0, (FastMath.PI / 2), 0);
-        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y + 10, this.getChild(1).getLocalTranslation().z);
-        this.attachChild(container);
-    }
 }
