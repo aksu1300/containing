@@ -43,12 +43,10 @@ public class Simulation extends SimpleApplication {
     private BulletAppState bulletAppState;
     private float initialWaterHeight = 0f;
     private Vector3f lightDir = new Vector3f(-4.9f, -1.3f, 5.9f);
-    AGV agv;
     Spatial cargo;
     ShipCrane shCrane;
     Train train;
     Truck truck;
-    
     Freighter freighter;
     Boat boat;
     Harbor harbor;
@@ -62,14 +60,14 @@ public class Simulation extends SimpleApplication {
     boolean pulledfromagv = false;
     boolean sequence = true; // true means incomplete.
     boolean agvatc = true;
-    
+
     public Simulation() {
         initSockets();
     }
 
     public void startSimulation() {
         if (clientSocket == null) {
-            System.out.println("Cannot start up the application without server connection.\r\nPlease start up the Server first. ");
+            System.out.println("Cannot start up the application without server connection.\r\nPlease start up the Server first.");
         } else {
             this.start();
         }
@@ -111,61 +109,54 @@ public class Simulation extends SimpleApplication {
         boat.Move(harbor.getFreighterDock(), 0.3f);
         rootNode.attachChild(boat);
         //Adding freighter to the harbor
-        freighter = new Freighter(assetManager); //mergeerror needs fix !!!!!!!!!!!!!!!!!!
-        //freighter.addContainer(new Container(assetManager,1f));
+        freighter = new Freighter(assetManager);
         freighter.Move(harbor.getDockingroute(), 1.2f);
 
         rootNode.attachChild(freighter);
-
-        // Adding a AGV to the harbor
-        Material material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
-        agv = new AGV("1", material, assetManager);
-        agv.rotate(0, FastMath.PI, 0);
-        agv.setLocalTranslation(0, 10.5f, 40);
-        rootNode.attachChild(agv);
+        
+        harbor.testMotionPaths().enableDebugShape(assetManager, rootNode);
+        harbor.agvRoosterA.get(0).Move(harbor.testMotionPaths(), 1);
+        
     }
 
     @Override
     public void simpleUpdate(float tpf) {
+
         
-            
-        for(Storage sl : harbor.storagelines){
+
+        for (Storage sl : harbor.storagelines) {
             sl.Getcranes().moveOut(tpf, 0);
         }
 
         if (freighter.getDocked()) //ship.detachChild(ship.containers.get(89));
         {
-            for (ShipCrane sc : harbor.shCranes) {
-                if (sc.container == null) {
-                    System.out.println("no container!");
-                    sc.pushGrabber(tpf);
-                    if (sc.boundGrab.intersects(freighter.containers.get(89).geometry)) {
-                        System.out.println("it has hit!");
-                        sc.grabContainer(freighter.containers.get(89));
-                    }
-                } else if (sc.in && sc.container != null) {
-                    sc.pushGrabber(tpf);
-                } else if (sc.up && sc.container != null) {
-                    sc.inGrabber(tpf);
-                } else {
-                    sc.pullGrabber(tpf);
-                }
-                if (sc.done && sc.container != null) {
-                    agv.setContainer(sc.container);
-                    sc.detachChildAt(5);
-                    sc.container = null;
-                    agv.Move(harbor.fromcranepaths.get(2), 3f);
-                }
-            }
-
-            System.out.println("Ship has docked!");
-            System.out.println(cam.getLocation().x);
-            System.out.println(cam.getLocation().y);
-            System.out.println(cam.getLocation().z);
-            //System.out.println(cam.getLocation().x);
-            //System.out.println(cam.getLocation().y);
-            //System.out.println(cam.getLocation().z);
+//            for (ShipCrane sc : harbor.shCranes) {
+//                if (sc.container == null) {
+//                    //System.out.println("no container!");
+//                    sc.pushGrabber(tpf);
+//                    if (sc.boundGrab.intersects(freighter.containers.get(89).geometry)) {
+//                        System.out.println("it has hit!");
+//                        sc.grabContainer(freighter.containers.get(89));
+//                    }
+//                } else if (sc.in && sc.container != null) {
+//                    sc.pushGrabber(tpf);
+//                } else if (sc.up && sc.container != null) {
+//                    sc.inGrabber(tpf);
+//                } else {
+//                    sc.pullGrabber(tpf);
+//                }
+//                if (sc.done && sc.container != null) {
+//                    agv.setContainer(sc.container);
+//                    sc.container = null;
+//                    sc.detachChildAt(5);
+//                    agv.Move(harbor.fromcranepaths.get(2), 3f);
+//                }
+//            }
         }
+
+        System.out.println(cam.getLocation().x);
+        System.out.println(cam.getLocation().y);
+        System.out.println(cam.getLocation().z);
     }
 
     private void initHud() {

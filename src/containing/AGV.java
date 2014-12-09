@@ -27,13 +27,13 @@ public class AGV extends Node {
     Container cargo; 
     float speed;
     String id;
+    AssetManager assetManager;
 
-    public AGV(String id, Material material, AssetManager assetManager) {
+    public AGV(String id, AssetManager assetManager) {
         this.id = id;
-        this.material = material;
-        model = assetManager.loadModel("Models/high/agv/agv.j3o");
-        model.setMaterial(material);
-        model.scale(1.5f);
+        this.assetManager = assetManager;
+        initModel();
+        initMaterial();
         this.attachChild(model);
     }
 
@@ -43,6 +43,15 @@ public class AGV extends Node {
 
     public void findPath() {
         
+    }
+    
+    void initModel(){
+        model = assetManager.loadModel("Models/high/agv/agv.j3o");
+    }
+    
+    void initMaterial(){
+        material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        model.setMaterial(material);
     }
     
     public Vector3f getCurrentloc(){
@@ -71,12 +80,13 @@ public class AGV extends Node {
     }
     
     public void Move(MotionPath route, float speed){
-        System.out.println("FUCK JAKKO");
+        
         MotionEvent motionControl = new MotionEvent(this, route);
         motionControl.setDirectionType(MotionEvent.Direction.Path);
         motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
         motionControl.setInitialDuration(10f);
         motionControl.setSpeed(speed);
+        
         motionControl.play();
     }
     
