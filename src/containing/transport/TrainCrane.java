@@ -17,6 +17,7 @@ import containing.Harbor;
 import java.util.ArrayList;
 
 public class TrainCrane extends Node {
+
     Spatial crane;
     Spatial grabbingGear;
     Spatial grabbingGearHolder;
@@ -25,43 +26,39 @@ public class TrainCrane extends Node {
     Material material;
     AssetManager assetmanager;
     BoundingVolume boundGrab;
-    
     String id;
     Vector3f location;
     float speed;
-    
     Container container;
     Harbor harbor;
     Train train;
     boolean idle;
-    
-    
     boolean status = false; // false is up, true is down
     boolean up = true;
     boolean in = false;
     boolean done = false;
-    
+
     public TrainCrane(AssetManager assetManager, Vector3f location, Harbor harbor) {
         this.assetmanager = assetManager;
         this.location = location;
         this.harbor = harbor;
-    
+
         initModels();
         initMaterials();
-        
+
         this.attachChild(crane);
         this.attachChild(grabbingGear);
         this.attachChild(grabbingGearHolder);
         this.attachChild(hookLeft);
         this.attachChild(hookRight);
-        
+
         initBounding();
         this.idle = true;
     }
-    
+
     private void initMaterials() {
         this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
-        
+
         crane.setMaterial(material);
         grabbingGear.setMaterial(material);
         grabbingGearHolder.setMaterial(material);
@@ -69,7 +66,7 @@ public class TrainCrane extends Node {
         hookRight.setMaterial(material);
 
     }
-    
+
     private void initModels() {
         crane = assetmanager.loadModel("Models/high/crane/traincrane/crane.j3o");
         grabbingGear = assetmanager.loadModel("Models/high/crane/traincrane/grabbingGear.j3o");
@@ -77,15 +74,15 @@ public class TrainCrane extends Node {
         hookLeft = assetmanager.loadModel("Models/high/crane/traincrane/hookLeft.j3o");
         hookRight = assetmanager.loadModel("Models/high/crane/traincrane/hookRight.j3o");
     }
-    
+
     private void initBounding() {
         this.boundGrab = this.getChild(1).getWorldBound();
     }
-    
+
     public Vector3f getLocation() {
         return this.location;
     }
-    
+
     public boolean getstate() {
         return this.idle;
     }
@@ -100,19 +97,21 @@ public class TrainCrane extends Node {
         takeContainer(wagon);
         placeContainer(agv);
     }
-    
+
     private Wagon calcWagon(Container container) {
-        for (Wagon wagon : this.train.getWagons())
-            if (wagon.getCargo() == container)
+        for (Wagon wagon : this.train.getWagons()) {
+            if (wagon.getCargo() == container) {
                 return wagon;
+            }
+        }
         return null;
     }
-    
+
     private void moveTo(Wagon wagon) {
         this.move(wagon.getLocation());
     }
-    
-    private void takeContainer(Wagon wagon) { 
+
+    private void takeContainer(Wagon wagon) {
         TakeT();
         this.container = wagon.getCargo();
         this.container.rotate(0, (FastMath.PI * 0.5f), 0);
@@ -121,43 +120,40 @@ public class TrainCrane extends Node {
         this.attachChild(container);
         retractT();
     }
-    
+
     private void TakeT() {
         MotionPath path = new MotionPath();
         path.addWayPoint(location);
         Move(path);
     }
-    
+
     private void retractT() {
-        
     }
-    
+
     private void placeContainer(AGV agv) {
         grabA();
         agv.setContainer(this.container);
         this.container = null;
         pullA();
     }
+
     private void grabA() {
-        
     }
-    
+
     private void pullA() {
-        
     }
-    
-    public void Move(MotionPath path){
-        
+
+    public void Move(MotionPath path) {
+
         MotionEvent motionControl = new MotionEvent(this, path);
         motionControl.setDirectionType(MotionEvent.Direction.Path);
         motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
         motionControl.setInitialDuration(10f);
         motionControl.setSpeed(this.speed);
-        
+
         motionControl.play();
     }
-    
-    
+
     //oud.
     public void inGrabber(float tpf) {
         if (this.getChild(1).getLocalTranslation().x < 20) {
@@ -170,7 +166,7 @@ public class TrainCrane extends Node {
             this.in = true;
         }
     }
-    
+
     public void pullGrabber(float tpf) {
         if (this.getChild(1).getLocalTranslation().y <= 9) {
             this.getChild(1).move(0, tpf, 0);
@@ -184,7 +180,7 @@ public class TrainCrane extends Node {
             this.up = true;
         }
     }
-    
+
     public void pushGrabber(float tpf) {
         this.up = false;
         if (this.getChild(1).getLocalTranslation().y >= -10f) {
@@ -197,5 +193,4 @@ public class TrainCrane extends Node {
         }
 
     }
-    
 }
