@@ -26,12 +26,14 @@ public class TrainCrane extends Node {
     Material material;
     AssetManager assetmanager;
     BoundingVolume boundGrab;
+	
     String id;
     Vector3f location;
     float speed;
+	
     Container container;
     Harbor harbor;
-    Train train;
+	
     boolean idle;
     boolean status = false; // false is up, true is down
     boolean up = true;
@@ -90,7 +92,6 @@ public class TrainCrane extends Node {
     //nieuw
     public void giveContainer(AGV agv, Container container, Wagon Wagon) {
         this.idle = false;
-        this.train = harbor.train;
         Wagon wagon;
         wagon = calcWagon(container);
         moveTo(wagon);
@@ -99,7 +100,8 @@ public class TrainCrane extends Node {
     }
 
     private Wagon calcWagon(Container container) {
-        for (Wagon wagon : this.train.getWagons()) {
+	Train train = this.harbor.train;
+        for (Wagon wagon : train.getWagons()) {
             if (wagon.getCargo() == container) {
                 return wagon;
             }
@@ -124,6 +126,7 @@ public class TrainCrane extends Node {
     private void TakeT() {
         MotionPath path = new MotionPath();
         path.addWayPoint(location);
+	
         Move(path);
     }
 
