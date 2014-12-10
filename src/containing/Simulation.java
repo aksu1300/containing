@@ -113,31 +113,37 @@ public class Simulation extends SimpleApplication {
         freighter.Move(harbor.getDockingroute(), 1.2f);
 
         rootNode.attachChild(freighter);
-        int i = 0;
-        for (Storage s : harbor.storagelines) {
-            for (AGV a : s.garageA) {
-                i++;
-            }
-            for (AGV b : s.garageB) {
-                i++;
-            }
+        for (TruckCrane tc : harbor.truckCranes) {
+            Container xxx = new Container(assetManager, 1);
+            tc.setAGV(new AGV("AAA", assetManager));
+            tc.agv.setContainer(xxx);
+            tc.craneDown();
         }
-        System.out.println(i);
+
+        int i = 0;
+        for (Truck tc : harbor.trucks) {
+            tc.truckArrive(harbor.truckCranes.get(i));
+            harbor.truckCranes.get(i).truck = tc;
+            i++;
+        }
+        
+        for (TruckCrane tc : harbor.truckCranes) {
+                if(tc.container != null){
+                    tc.craneUp();
+                    
+                }
+            }
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-
         if (freighter.getDocked()) {
-            harbor.trucks.get(0).move(harbor.truckDepart(harbor.trucks.get(0), harbor.trCranes.get(0)), 1);
-            harbor.trucks.get(0).setContainer(new Container(assetManager, 1));
-            freighter.setDocked();
-
+            
+            
         }
-        
-        System.out.println(cam.getLocation().x);
-        System.out.println(cam.getLocation().y);
-        System.out.println(cam.getLocation().z);
+//        System.out.println(cam.getLocation().x);
+//        System.out.println(cam.getLocation().y);
+//        System.out.println(cam.getLocation().z);
     }
 
     

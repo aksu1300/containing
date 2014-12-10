@@ -22,6 +22,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Line;
 import com.jme3.util.SkyFactory;
+import containing.transport.Train;
 import containing.transport.Truck;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,8 @@ public class Harbor extends Node {
     List<Storage> storagelines;
     public ArrayList<ShipCrane> shCranes;
     public ArrayList<ShipCrane> boatCranes;
-    public ArrayList<TruckCrane> trCranes;
+    public ArrayList<TruckCrane> truckCranes;
+    public ArrayList<TrainCrane> trainCranes;
     public ArrayList<AGV> agvRoosterA;
     public ArrayList<AGV> agvRoosterB;
     private AssetManager assetmanager;
@@ -45,13 +47,13 @@ public class Harbor extends Node {
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
         shCranes = new ArrayList<ShipCrane>();
-        trCranes = new ArrayList<TrainCrane>();
+        trainCranes = new ArrayList<TrainCrane>();
         storagelines = new ArrayList<Storage>();
-
+        truckCranes = new ArrayList<TruckCrane>();
         shCranes = new ArrayList<ShipCrane>();
         boatCranes = new ArrayList<ShipCrane>();
         storagelines = new ArrayList<Storage>();
-        trCranes = new ArrayList<TruckCrane>();
+        truckCranes = new ArrayList<TruckCrane>();
         storagesloc = new ArrayList<Vector3f>();
         cranesloc = new ArrayList<Vector3f>();
         trucks = new ArrayList<Truck>();
@@ -65,7 +67,9 @@ public class Harbor extends Node {
         initSky();
         initStorage();
         initShipcranes();
-        initAGV();
+        
+        initTruckcranes();
+        initTrucks();
         initRails();
         initTrainCranes();
         initTrain();
@@ -94,7 +98,7 @@ public class Harbor extends Node {
     }
     
     public void initRails() {
-        Line line = new Line(new Vector3f(-100, 10, 250), new Vector3f(-650, 10, 250));
+        Line line = new Line(new Vector3f(-100, 10, 500), new Vector3f(-650, 10, 500));
         line.setLineWidth(4);
         Geometry geometry = new Geometry("Bullet", line);
         Material orange = new Material(assetmanager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -106,17 +110,17 @@ public class Harbor extends Node {
     public void initTrainCranes() {
         for (int i = 0; i < 4; i++)
         {
-            TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(-100 + (i * 20), 10, 250));
+            TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(-100 + (i * 20), 10, 500));
             crane.rotate(0, FastMath.PI * 1.5f, 0);
             crane.setLocalTranslation(crane.getLocation());
-            trCranes.add(crane);
+            trainCranes.add(crane);
             this.attachChild(crane);
         }
     }
     
     public void initTrain() {
         //Train train = new Train(new Vector3f(-100, 10, 250), assetmanager, 2);
-        Train train = new Train(new Vector3f(-100, 10.5f, 250), assetmanager);
+        Train train = new Train(new Vector3f(-100, 10.5f, 500), assetmanager);
         train.rotate(0, FastMath.PI * 1.5f, 0);
         train.setLocalTranslation(train.getLocation());
         this.attachChild(train);
@@ -124,12 +128,17 @@ public class Harbor extends Node {
 
     public void initPlatform(BulletAppState bulletAppState) {
         Box platform = new Box(1500, 10, 600);
+        Box TruckPlatform = new Box(500, 10, 600);
         Geometry platform_geom = new Geometry("Box", platform);
+        Geometry truckplatform_geom = new Geometry("Box", TruckPlatform);
         Material platform_mat = new Material(assetmanager, "Common/MatDefs/Misc/Unshaded.j3md");
         platform_mat.setColor("Color", ColorRGBA.LightGray);
         platform_geom.setMaterial(platform_mat);
+        truckplatform_geom.setMaterial(platform_mat);
         platform_geom.setLocalTranslation(-1350, 0, 150);
+        truckplatform_geom.setLocalTranslation(-1100, 0, -50);
         this.attachChild(platform_geom);
+        this.attachChild(truckplatform_geom);
         RigidBodyControl phyHarbor = new RigidBodyControl(0.0f);
         platform_geom.addControl(phyHarbor);
         bulletAppState.getPhysicsSpace().add(phyHarbor);
@@ -176,9 +185,9 @@ public class Harbor extends Node {
             TruckCrane trCrane = new TruckCrane(assetmanager, new Vector3f(-740, 11, -350 - (i * 13)));
             trCrane.rotate(0, FastMath.PI / 2, 0);
             
-            trCranes.add(trCrane);
+            truckCranes.add(trCrane);
         }
-        for (TruckCrane tr : trCranes) {
+        for (TruckCrane tr : truckCranes) {
             this.attachChild(tr);
         }
     }
@@ -216,20 +225,6 @@ public class Harbor extends Node {
         undockingroute.addWayPoint(new Vector3f(170, 9, 0));
         undockingroute.addWayPoint(new Vector3f(170, 9, 650));
         return undockingroute;
-    }
-
-    public MotionPath truckDepart(Truck t, TruckCrane tc) { //van TC naar ver weg
-        MotionPath path = new MotionPath();
-        path.addWayPoint(new Vector3f(-tc.getLocalTranslation().x - 295, 0, 0));
-        path.addWayPoint(new Vector3f(t.getLoc()));
-        return path;
-    }
-
-    public MotionPath truckArrive(Truck t, TruckCrane tc) { //van ver weg naar TC
-        MotionPath path = new MotionPath();
-        path.addWayPoint(new Vector3f(0, 0, 0));
-        path.addWayPoint(new Vector3f(-tc.getLocalTranslation().x - 295, 0, 0));
-        return path;
     }
 
     //EIGENLIJKS BOAT!

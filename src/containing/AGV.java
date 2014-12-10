@@ -69,17 +69,17 @@ public class AGV extends Node {
     
     public void setContainer(Container cargo){
         this.cargo = cargo; 
-        this.cargo.setLocalTranslation(0,1.5f,0);
+        this.cargo.setLocalTranslation(0,1.2f,0);
         this.attachChild(this.cargo);
-        
     }
     
     public void setLocation(Vector3f newloc){
         this.loc = newloc;
     }
     
-    public Spatial getContainer(){
-        return cargo;
+    public Container getContainer(){
+        this.detachChild(this.cargo);
+        return this.cargo;
     }
     
     public void removeContainer(){

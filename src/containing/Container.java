@@ -27,7 +27,8 @@ public class Container extends Node{
     public Container(AssetManager _assetManager, float _size) {
         this.assetManager = _assetManager;
         this.size = _size;
-
+        this.id = "XXX";
+        
         //Init Sphere
         initContainer();
         

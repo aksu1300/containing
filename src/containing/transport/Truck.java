@@ -6,11 +6,11 @@ import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import containing.Container;
+import containing.TruckCrane;
 
 public class Truck extends Node {
     String id;
@@ -19,6 +19,7 @@ public class Truck extends Node {
     Material material;
     float speed;
     Container cargo;
+    boolean ready = false;
 
     public Truck(String id, Vector3f loc, float speed, AssetManager assetManager) {
         this.id = id;
@@ -36,18 +37,43 @@ public class Truck extends Node {
         this.attachChild(model);
     }
     
-    public void move(final MotionPath route, float speed){
-        MotionEvent motionControl = new MotionEvent(this, route);
-        //motionControl.setDirectionType(MotionEvent.Direction.Path);
-        //motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
+    public void truckArrive(TruckCrane tc) { //van ver weg naar TC
+        final MotionPath path = new MotionPath();
+        path.addWayPoint(new Vector3f(0, 0, 0));
+        path.addWayPoint(new Vector3f(-tc.getLocalTranslation().x - 295, 0, 0));
+        
+        MotionEvent motionControl = new MotionEvent(this, path);
         motionControl.setInitialDuration(10f);
         motionControl.setSpeed(speed);
         motionControl.play();
 
-        route.addListener(new MotionPathListener() {
+        path.addListener(new MotionPathListener() {
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
-                if (route.getNbWayPoints() == wayPointIndex + 1) {
-                    System.out.println("Point reached!");
+                if (path.getNbWayPoints() == wayPointIndex + 1) {
+                   
+                }
+            }
+        });
+        
+    }
+    
+    public void truckDepart(TruckCrane tc){
+        
+        final MotionPath path = new MotionPath();
+        path.addWayPoint(new Vector3f(-tc.getLocalTranslation().x - 295, 0, 0));
+        path.addWayPoint(this.getLocalTranslation());
+        
+        
+        
+        MotionEvent motionControl = new MotionEvent(this, path);
+        motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(speed);
+        motionControl.play();
+
+        path.addListener(new MotionPathListener() {
+            public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                if (path.getNbWayPoints() == wayPointIndex + 1) {
+                    setReady();
                 }
             }
         });
@@ -71,6 +97,14 @@ public class Truck extends Node {
     }
     
     public Container getContainer(){return cargo;}
+    
+    public boolean getReady(){
+        return this.ready;
+    }
+    
+    public void setReady(){
+        this.ready = !ready;
+    }
     
     // </editor-fold>
 }
