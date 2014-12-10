@@ -84,8 +84,8 @@ public class Simulation extends SimpleApplication {
         //right camera position
         //cam.setLocation(new Vector3f(200, 150, 150));
         //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
-        //flyCam.setEnabled(true);
-        flyCam.setDragToRotate(true);
+        flyCam.setEnabled(true);
+//        flyCam.setDragToRotate(true);
         flyCam.setMoveSpeed(300);
         cam.setLocation(new Vector3f(30, 100, 30));
         cam.setFrustumFar(9000);
