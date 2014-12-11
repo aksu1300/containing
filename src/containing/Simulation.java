@@ -18,7 +18,6 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
-import containing.storage.Storage;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
@@ -28,9 +27,12 @@ import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Simulation extends SimpleApplication {
 
@@ -52,6 +54,8 @@ public class Simulation extends SimpleApplication {
     MotionPath motionPath;
     MotionPath motionPath1;
     AGVController agvc;
+    Socket socket;
+    ArrayList<String> path;
 
     public Simulation() {
         initSockets();
@@ -105,39 +109,20 @@ public class Simulation extends SimpleApplication {
         freighter.Move(harbor.getDockingroute(), 1.2f);
 
         rootNode.attachChild(freighter);
-        for (TruckCrane tc : harbor.truckCranes) {
-            Container xxx = new Container(assetManager, 1);
-            tc.setAGV(new AGV("AAA", assetManager));
-            tc.agv.setContainer(xxx);
-            tc.craneDown();
-        }
 
-        int i = 0;
-        for (Truck tc : harbor.trucks) {
-            tc.truckArrive(harbor.truckCranes.get(i));
-            harbor.truckCranes.get(i).truck = tc;
-            i++;
-        }
-        
-        for (TruckCrane tc : harbor.truckCranes) {
-                if(tc.container != null){
-                    tc.craneUp();
-                    
-                }
-            }
+        harbor.shCranes.get(0).moveCranes(freighter);
+
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        if (freighter.getDocked()) {
-            
-            
-        }
-//        System.out.println(cam.getLocation().x);
-//        System.out.println(cam.getLocation().y);
-//        System.out.println(cam.getLocation().z);
+        ///Update inputlist
+        
+        updateCommands();
+        
+        ///Send outputlist
     }
-
+    
     private void initHud() {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         Nifty nifty = niftyDisplay.getNifty();
@@ -319,22 +304,30 @@ public class Simulation extends SimpleApplication {
             }
         }.build(nifty));
     }
-
-    private void initSockets() {
-        /*
-         * Open a socket on a given host and port. Open input and output streams.
-         */
+    
+    private void updateCommands(){
         try {
-            clientSocket = new Socket("localhost", 5400);
-            inputLine = new BufferedReader(new InputStreamReader(System.in));
-            is = new DataInputStream(clientSocket.getInputStream());
-            is.close();
-            inputLine.close();
+             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            Command c = (Command) ois.readObject();
+            c.toString();
+            ois.close();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void initSockets() {
+        try {
+            socket = new Socket("localhost", 5400);
+            path = new ArrayList<String>();
+            
         } catch (UnknownHostException e) {
-            System.err.println("Don't know about host " + "localhost");
+            e.printStackTrace();
         } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to the host "
-                    + "localhost");
+            e.printStackTrace();
         }
     }
 

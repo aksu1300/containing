@@ -6,6 +6,8 @@ package containing;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bounding.BoundingVolume;
+import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -37,9 +39,8 @@ public class ShipCrane extends Node {
     boolean in = false;
     boolean done = false;
 
-    public ShipCrane(AssetManager _assetManager, float _size, Vector3f location) {
+    public ShipCrane(AssetManager _assetManager, Vector3f location) {
         this.assetManager = _assetManager;
-        this.size = _size;
         this.location = location;
 
         //Init Sphere
@@ -50,7 +51,6 @@ public class ShipCrane extends Node {
 
         // Attach to the root node
         this.attachChild(crane);
-
         this.attachChild(grabbingGear);
         this.attachChild(grabbingGearHolder);
         this.attachChild(hookLeft);
@@ -58,7 +58,20 @@ public class ShipCrane extends Node {
         initBounding();
 
     }
+    
+    public void moveCranes(Freighter f) {
+        
+        final MotionPath dockingroute = new MotionPath();
+        dockingroute.addWayPoint(this.getLocalTranslation());
+        dockingroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, f.getLocalTranslation().z -(230)));
 
+        MotionEvent motionControl = new MotionEvent(this, dockingroute);
+
+        motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(2);
+        motionControl.play();
+    }
+    
     // init Materials
     private void initMaterials() {
         material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
@@ -78,22 +91,12 @@ public class ShipCrane extends Node {
     private void initContainer() {
         // Load the container
         crane = assetManager.loadModel("Models/high/crane/dockingcrane/crane.j3o");
-        crane.scale(size);
-
         grabbingGear = assetManager.loadModel("Models/high/crane/dockingcrane/grabbingGear.j3o");
-        grabbingGear.scale(size);
-
         grabbingGearHolder = assetManager.loadModel("Models/high/crane/dockingcrane/grabbingGearHolder.j3o");
-        grabbingGearHolder.scale(size);
-
         hookLeft = assetManager.loadModel("Models/high/crane/dockingcrane/hookLeft.j3o");
-        hookLeft.scale(size);
-
         hookRight = assetManager.loadModel("Models/high/crane/dockingcrane/hookRight.j3o");
-        hookRight.scale(size);
-
     }
-
+    
     /**
      * Grabbing a container
      */
@@ -101,51 +104,7 @@ public class ShipCrane extends Node {
         return this.location;
     }
 
-    public void inGrabber(float tpf) {
-        if (this.getChild(1).getLocalTranslation().x < 20) {
-            this.in = false;
-            tpf = tpf * 4;
-            for (int i = 1; i < this.children.size(); i++) {
-                this.getChild(i).move(tpf, 0, 0);
-            }
-        } else {
-            this.in = true;
-        }
-    }
-
-    /**
-     * Grabbing a container
-     */
-    public void pullGrabber(float tpf) {
-        if (this.getChild(1).getLocalTranslation().y <= 9) {
-            this.getChild(1).move(0, tpf, 0);
-            this.getChild(2).move(0, tpf, 0);
-            this.getChild(3).move(0, tpf, 0);
-            this.getChild(4).move(0, tpf, 0);
-            if (this.container != null) {
-                //this.getChild(5).move(0, tpf, 0);
-            }
-        } else {
-            this.up = true;
-        }
-    }
-
-    /**
-     * Taking a container
-     */
-    public void pushGrabber(float tpf) {
-        this.up = false;
-        if (this.getChild(1).getLocalTranslation().y >= -10f) {
-            for (int i = 1; i < this.children.size(); i++) {
-                this.getChild(i).move(0, tpf * -1, 0);
-            }
-
-        } else {
-            this.done = true;
-        }
-
-    }
-
+    
     /**
      * Grabbing a container
      */
