@@ -59,6 +59,7 @@ public class Train extends Node {
         for (int i = 2; i < nrWagons + 2; i++) {
             Wagon wagon = new Wagon("TW" + i, new Vector3f(0.06f, 0, transloc + -18.45f * i), this.assetmanager);
             wagon.rotate(0, FastMath.PI, 0);
+//            wagon.setCargo(new Container(this.assetmanager,1.0f));
             wagon.setLocalTranslation(wagon.getLocation());
             this.attachChild(wagon);
         }
@@ -102,6 +103,7 @@ public class Train extends Node {
     }
     
     public int getWagonCount() {
+//        System.out.println(wagons.size());
         return this.wagons.size();
     }
     

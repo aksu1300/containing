@@ -26,6 +26,7 @@ public class Wagon extends Node {
         this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
         this.model.setMaterial(material);
         this.attachChild(model);
+        
     }
     
     public void depart() {
@@ -47,11 +48,10 @@ public class Wagon extends Node {
     // <editor-fold defaultstate="collapsed" desc="Get & Set">
     
      public void setCargo(Container cargo){
-        if (this.cargo == null) {
             this.cargo = cargo; 
             this.cargo.setLocalTranslation(0,0.6f,0);
             this.attachChild(this.cargo);
-        }
+        
     }
     
     public void resetCargo() {

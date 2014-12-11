@@ -11,6 +11,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import containing.AGV;
 import containing.Container;
 import java.util.ArrayList;
 
@@ -18,6 +19,9 @@ public class TrainCrane extends Node {
     Vector3f loc;
     Container container;
     Material material;
+    Wagon wagon;
+    Train train;
+    AGV agv;
     Spatial crane;
     Spatial grabbingGear;
     Spatial grabbingGearHolder;
@@ -34,6 +38,7 @@ public class TrainCrane extends Node {
     boolean in = false;
     boolean done = false;
     
+    
     public TrainCrane(AssetManager assetManager, float size, Vector3f location) {
         this.assetManager = assetManager;
         this.size = size;
@@ -48,8 +53,10 @@ public class TrainCrane extends Node {
         this.attachChild(hookLeft);
         this.attachChild(hookRight);
         initBounding();
+        
         //muhahah this works
-        craneDown();
+//        this.wagon.setCargo(new Container(this.assetManager,1.0f));
+        //init this in the simulation
 //        craneDown();
     }
     
@@ -85,7 +92,10 @@ public class TrainCrane extends Node {
         hookRight.scale(size);
 
     }
-    
+    public void doMove(Train train){
+        //do stuff with train here and get the cargo of each wagon
+        System.out.println(train.getWagonCount());
+    }
     //make some bools to see if the crane did a certain movement andneeds to do something else
     public void craneRight(){
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
@@ -136,6 +146,7 @@ public class TrainCrane extends Node {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
                         //crane down when has a container so that it sits on an agv
                         craneDown();
+                        
                     }
                 }
             });
@@ -146,7 +157,7 @@ public class TrainCrane extends Node {
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 5, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 2.2f, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
@@ -175,12 +186,12 @@ public class TrainCrane extends Node {
 
                 final MotionPath trainroute = new MotionPath();
                 trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-                trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - 5, this.getChild(i).getLocalTranslation().z));
+                trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - 2.2f, this.getChild(i).getLocalTranslation().z));
 
                 MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
                 grabMotion.add(motionControl);
         }
-
+        
         
         for (MotionEvent me : grabMotion) {
             final MotionPath mp = me.getPath();
@@ -190,7 +201,13 @@ public class TrainCrane extends Node {
             mp.addListener( new MotionPathListener() {
             public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
                 //crane up if picked up container
-               craneUp();
+                if(done == false){ 
+                  
+//               setContainer(wagon.getCargo());
+//               craneUp();
+                }else{
+//                    releaseContainer();
+                }
             }
       });
             
@@ -250,5 +267,24 @@ public class TrainCrane extends Node {
     
     private void initBounding() {
         boundGrab = this.getChild(1).getWorldBound();
+    }
+    public void setAGV(AGV a) {
+        this.agv = a;
+        this.attachChild(agv);
+        this.agv.setLocalTranslation(0, 0, 0);
+
+    }
+    public Container getContainer() {
+        return this.container;
+    }
+
+    public void setContainer(Container c) {
+        this.container = c;
+        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y +3.8f , this.getChild(1).getLocalTranslation().z);
+        this.attachChild(this.container);
+    }
+    
+    public void releaseContainer() {
+        this.detachChild(container);
     }
 }

@@ -21,7 +21,7 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
-import containing.storage.Storage;
+import containing.transport.TrainCrane;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
@@ -119,6 +119,13 @@ public class Simulation extends SimpleApplication {
             tc.agv.setContainer(xxx);
             tc.craneDown();
         }
+        
+        for(TrainCrane trc : harbor.trainCranes){
+            Container x1 = new Container(assetManager,1);
+            trc.setContainer(x1);
+            trc.craneDown();
+        }
+       
 
         int i = 0;
         for (Truck tc : harbor.trucks) {
