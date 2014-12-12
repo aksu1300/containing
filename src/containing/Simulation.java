@@ -4,6 +4,7 @@
  */
 package containing;
 
+import serialclass.Command;
 import containing.transport.Train;
 import containing.transport.Truck;
 import containing.transport.Boat;
@@ -309,8 +310,7 @@ public class Simulation extends SimpleApplication {
         try {
              ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Command c = (Command) ois.readObject();
-            c.toString();
-            ois.close();
+            System.out.println(c.toString());
             
         } catch (IOException ex) {
             Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
