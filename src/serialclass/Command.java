@@ -9,15 +9,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *
+ * PROJECT IS SIMULATION!!
  * @author Driving Ghost
  */
 public class Command implements Serializable {
 
     private static final long serialVersionUID = 6529685098267757690L;
     
-    String command;
-    String identifier;
+    final String command;
+    final String identifier;
     ArrayList<Container> contents = new ArrayList<Container>();
     Container content;
     float orx;
@@ -28,10 +28,10 @@ public class Command implements Serializable {
     float dez;
 
     /**
-     * For creating ships, boats, trains
-     * @param command
-     * @param identifier
-     * @param contents 
+     * For creating freighter, boats, trains
+     * @param command Use the create string to use this class correctly.
+     * @param identifier Class name of the item you wish to create. Such as boat, freighter or train.
+     * @param contents List of Containers. It holds all the containers in it's cargo hold.
      */
     public Command(String command, String identifier, ArrayList<Container> contents){
         
@@ -41,10 +41,10 @@ public class Command implements Serializable {
     }
     
     /**
-     * 
-     * @param command
-     * @param identifier
-     * @param content 
+     * for creating trucks! 
+     * @param command use the create String to use this class correctly.
+     * @param identifier class name of the object you wish to create.
+     * @param content A single container. 
      */
     public Command(String command, String identifier, Container content){
         this.command = command;
@@ -53,11 +53,12 @@ public class Command implements Serializable {
     }
     
     /**
-     * 
-     * @param command
-     * @param identifier 
+     * For moving units!
+     * @param command Use the MOVE command to use this correctly.
+     * @param identifier the identifier parameter is used to grab the desired object. Such as an AGV or a crane. 
+     * @param target the target parameter is used to identify the point or object to move to
      */
-    public Command(String command, String identifier){
+    public Command(String command, String identifier, String target){
         
         this.command = command;
         this.identifier = identifier;
@@ -65,26 +66,28 @@ public class Command implements Serializable {
     }
     
     /**
-     * 
-     * @param command
-     * @param identifier
-     * @param orgin
-     * @param destin 
+     * This command is used to move targets to a vector desired by the user.
+     * @param command use the MOVE command to use this correctly
+     * @param identifier the identifier parameter is used to grab the desired object. This can be an AGV or a crane.
+     * @param dex Destination vector x value.
+     * @param dey Destination vector y value.
+     * @param dez Destination vector z value. 
      */
-     public Command(String command, String identifier, float orx, float ory, float orz, float dex, float dey, float dez) {
+     public Command(String command, String identifier, float dex, float dey, float dez) {
 
         this.command = command;
         this.identifier = identifier;
-        this.orx = orx;
-        this.ory = ory;
-        this.orz = orz;
-
+        
         this.dex = dex;
         this.dey = dey;
         this.dez = dez;
     }
     
+     /**
+      * The toString method allows you to print all the information this object holds. 
+      * @return Object information, such as the command, identifier, orx, ory and orz value in a single string. 
+      */
      public String toString() {
-        return command + ":" + identifier  + ":(" + orx + ":" + ory + ":"+ orz + "):";
+        return command + ":" + identifier  + ":(" + orx + ":" + ory + ":"+ orz + ")";
     }
 }
