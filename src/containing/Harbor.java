@@ -24,42 +24,55 @@ import com.jme3.scene.shape.Line;
 import com.jme3.util.SkyFactory;
 import containing.transport.Train;
 import containing.transport.Wagon;
+import containing.transport.Truck;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
- * @author Jacco
+ * @author ProjectGroep
  */
 public class Harbor extends Node {
 
-    //List with locations of cranes;
-    //List with locations of storageslines;
     List<Vector3f> storagesloc;
     List<Vector3f> cranesloc;
     List<Storage> storagelines;
     public ArrayList<ShipCrane> shCranes;
+
     public ArrayList<AGV> agvRoosterA;
     public ArrayList<AGV> agvRoosterB;
     private AssetManager assetmanager;
     public Train train;
 
-    public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
-        shCranes = new ArrayList<ShipCrane>();
-        storagelines = new ArrayList<Storage>();
+    public ArrayList<ShipCrane> boatCranes;
+    public ArrayList<TruckCrane> truckCranes;
+    public ArrayList<TrainCrane> trainCranes;
+    public ArrayList<Truck> trucks;
 
+    public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
+        trainCranes = new ArrayList<TrainCrane>();
+        storagelines = new ArrayList<Storage>();
+        truckCranes = new ArrayList<TruckCrane>();
+        shCranes = new ArrayList<ShipCrane>();
+        boatCranes = new ArrayList<ShipCrane>();
+        storagelines = new ArrayList<Storage>();
+        truckCranes = new ArrayList<TruckCrane>();
         storagesloc = new ArrayList<Vector3f>();
         cranesloc = new ArrayList<Vector3f>();
+        trucks = new ArrayList<Truck>();
 
         agvRoosterA = new ArrayList<AGV>();
         agvRoosterB = new ArrayList<AGV>();
         
         this.assetmanager = assetManager;
+
         initPlatform(bulletAppState);
         initSky();
-        initStorage(bulletAppState);
+        initStorage();
         initShipcranes();
-        initAGV();
+        
+        initTruckcranes();
+        initTrucks();
         initRails();
         initTrainCrane();
         initTrain();
@@ -99,51 +112,30 @@ public class Harbor extends Node {
         }
     }
 
-    public void initStorage(BulletAppState bulletAppState) {
-        for (float i = -2.5f; i < 6.5f; i += 1.5f) { //aantal lines
-            Vector3f locminus = new Vector3f(-25, 10.5f, i * - 30);
-            Vector3f locminus2 = new Vector3f(-25, 10.5f, i * - 30);
-            storagelines.add(new Storage(assetmanager, new StorageCrane(assetmanager, 0.5f, locminus2), locminus, bulletAppState)); // beide kanten op.
-        }
-        for (Storage sl : storagelines) {
-            this.attachChild(sl);
-        }
+    public void initTreinRails() {
     }
 
-    //LATER VERWIJDEREN VOOR AGV CONTROLEUR!
-    public MotionPath testMotionPaths() {
-        MotionPaths platTest = new MotionPaths("AGVtestpath");
-        platTest.addWayPoint(WayPoints.PA.coords);
-        platTest.addWayPoint(WayPoints.PG.coords);
-        platTest.addWayPoint(WayPoints.PF.coords);
-        platTest.addWayPoint(WayPoints.PE.coords);
-
-        platTest.addWayPoint(WayPoints.PC.coords);
-        platTest.addWayPoint(WayPoints.PB.coords);
-        platTest.addWayPoint(WayPoints.PA.coords);
-        platTest.addWayPoint(WayPoints.CA.coords);
-        platTest.addWayPoint(WayPoints.CB.coords);
-        platTest.addWayPoint(WayPoints.PG.coords);
-
-        platTest.setCurveTension(0.0f);
-        return platTest;
+    /**
+     * *
+     * Initaliseert de weg van en naar punten. Ligt onder de waypoints.
+     */
+    public void initRoad() {
     }
 
-    public void initShipcranes() {
-        // Adding a ShipCrane to the harbor
-        for (int i = 0; i < 6; i++) {
-            ShipCrane crane = new ShipCrane(assetmanager, 1f, new Vector3f(160, 10.5f, -120 + (i * 30)));
-            crane.rotate(0, FastMath.PI, 0);
+    //FreightCranes
+    public void initBoatCranes() {
+        // Adding a BoatCrane to the harbor
+        for (int i = 0; i < 8; i++) {
+            ShipCrane crane = new ShipCrane(assetmanager, new Vector3f(40 - (i * 30), 14, -450));
+            crane.rotate(0, -FastMath.PI / 2, 0);
             crane.setLocalTranslation(crane.getLocation());
-            //initTocranemotionpath(crane, i);
-            //initFromcranemotionpath(crane, i);
             shCranes.add(crane);
             this.attachChild(crane);
         }
     }
     
     public void initRails() {
-        Line line = new Line(new Vector3f(-100, 10, 250), new Vector3f(-650, 10, 250));
+        Line line = new Line(new Vector3f(-100, 10, 500), new Vector3f(-650, 10, 500));
         line.setLineWidth(4);
         Geometry geometry = new Geometry("Bullet", line);
         Material orange = new Material(assetmanager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -167,51 +159,25 @@ public class Harbor extends Node {
     }
     
     public void initTrain() {
-        Train train = new Train(new Vector3f(-113, 10, 250), assetmanager, 3);
+        Train train = new Train(new Vector3f(-113, 10, 250), assetmanager, 3);  
         train.rotate(0, FastMath.PI * 1.5f, 0);
         train.setLocalTranslation(train.getLocation());
         this.attachChild(train);
     }
 
-    public MotionPath getDockingroute() {
-        final MotionPath dockingroute = new MotionPath();
-        dockingroute.addWayPoint(new Vector3f(170, 9, -650));
-        dockingroute.addWayPoint(new Vector3f(170, 9, 0));
-        return dockingroute;
-    }
-
-    public MotionPath getUndockingroute() {
-        MotionPath undockingroute = new MotionPath();
-        undockingroute.addWayPoint(new Vector3f(170, 9, 0));
-        undockingroute.addWayPoint(new Vector3f(170, 9, 650));
-        return undockingroute;
-    }
-
-    
-    //EIGENLIJKS BOAT!
-    public MotionPath getFreighterDock() {
-        MotionPath dockingroute = new MotionPath();
-        dockingroute.addWayPoint(new Vector3f(1500, 3, -360));
-        dockingroute.addWayPoint(new Vector3f(0, 3, -360));
-        return dockingroute;
-    }
-
-    //BOAT!
-    public MotionPath getFreighterUndock() {
-        MotionPath dockingroute = new MotionPath();
-        dockingroute.addWayPoint(new Vector3f(0, 9, -360));
-        dockingroute.addWayPoint(new Vector3f(-1700, 9, 1500));
-        return dockingroute;
-    }
-
     public void initPlatform(BulletAppState bulletAppState) {
-        Box platform = new Box(400, 10, 350);
+        Box platform = new Box(1500, 10, 600);
+        Box TruckPlatform = new Box(500, 10, 600);
         Geometry platform_geom = new Geometry("Box", platform);
+        Geometry truckplatform_geom = new Geometry("Box", TruckPlatform);
         Material platform_mat = new Material(assetmanager, "Common/MatDefs/Misc/Unshaded.j3md");
         platform_mat.setColor("Color", ColorRGBA.LightGray);
         platform_geom.setMaterial(platform_mat);
-        platform_geom.setLocalTranslation(-250, 0, 0);
+        truckplatform_geom.setMaterial(platform_mat);
+        platform_geom.setLocalTranslation(-1350, 0, 150);
+        truckplatform_geom.setLocalTranslation(-1100, 0, -50);
         this.attachChild(platform_geom);
+        this.attachChild(truckplatform_geom);
         RigidBodyControl phyHarbor = new RigidBodyControl(0.0f);
         platform_geom.addControl(phyHarbor);
         bulletAppState.getPhysicsSpace().add(phyHarbor);
@@ -222,23 +188,97 @@ public class Harbor extends Node {
         sky.setQueueBucket(RenderQueue.Bucket.Sky);
         this.attachChild(sky);
     }
-}
-//    public void initFromcranemotionpath(ShipCrane crane, int i){
-//        // Paths from the cranes
-//        MotionPaths cranepath = new MotionPaths("TestCrane1");
-//        cranepath.addWayPoint(new Vector3f(140, 10, crane.getLocation().getZ()));
-//        cranepath.addWayPoint(new Vector3f(140, 10, 200));
-//        cranepath.addWayPoint(new Vector3f(100, 10, 200));
-//        cranepath.setCurveTension(0.0f);
-//        fromcranepaths.add(cranepath); 
-//    }
-//    public void initTocranemotionpath(ShipCrane crane, int i){
-//        //Paths to the cranes
-//        MotionPaths cranepath = new MotionPaths("TestCrane1");
-//        cranepath.addWayPoint(new Vector3f(100, 10, -150));
-//        cranepath.addWayPoint(new Vector3f(140, 10, -150));
-//        cranepath.addWayPoint(new Vector3f(140, 10, crane.getLocation().getZ()));
-//        cranepath.setCurveTension(0.0f);
-//        tocranepaths.add(cranepath);   
-//    }
 
+    public void initStorage() {
+
+        int amount = 3;
+        int asciivalue = 48;
+
+        for (float i = -2.5f; i < 31f; i += 1.5f) { //aantal lines
+            if (storagelines.size() == 4) {
+                amount = 2;
+            }
+
+            Vector3f locminus = new Vector3f(-25 - (i * 30), 10.5f, 30);
+            Vector3f locminus2 = new Vector3f(-25 - (i * 30), 10.5f, 30);
+            storagelines.add(new Storage(assetmanager, new StorageCrane(assetmanager, 0.5f, locminus2), locminus, amount, asciivalue)); // beide kanten op.
+            asciivalue++;
+        }
+        
+        for (Storage sl : storagelines) {
+            this.attachChild(sl);
+        }
+
+    }
+
+    public void initTrucks() {
+        for (int i = 0; i < 20; i++) {
+            Truck t = new Truck("T" + (i + 1), new Vector3f(-1200, 11, -350 - (i * 13)), 1, assetmanager);
+            trucks.add(t);
+            this.attachChild(t);
+        }
+    }
+
+    public void initTruckcranes() {
+        for (int i = 0; i < 20; i++) {
+            TruckCrane trCrane = new TruckCrane(assetmanager, new Vector3f(-740, 11, -350 - (i * 13)));
+            trCrane.rotate(0, FastMath.PI / 2, 0);
+            
+            truckCranes.add(trCrane);
+        }
+        for (TruckCrane tr : truckCranes) {
+            this.attachChild(tr);
+        }
+    }
+
+    public void initShipcranes() {
+        int ruimte = 30;
+        // Adding a ShipCrane to the harbor
+        for (int i = 0; i < 10; i++) {
+            if (i == 5) {
+                ruimte *= 2;
+            } else {
+                ruimte = 30;
+            }
+            ShipCrane crane = new ShipCrane(assetmanager, new Vector3f(160, 10.5f, -120 + (i * ruimte)));
+            crane.rotate(0, FastMath.PI, 0);
+            crane.setLocalTranslation(crane.getLocation());
+//        initTocranemotionpath(crane, i);
+//        initFromcranemotionpath(crane, i);
+            shCranes.add(crane);
+            this.attachChild(crane);
+        }
+    }
+
+    //Freighter!
+    public MotionPath getDockingroute() {
+        final MotionPath dockingroute = new MotionPath();
+        dockingroute.addWayPoint(new Vector3f(175, 9, -650));
+        dockingroute.addWayPoint(new Vector3f(175, 9, 0));
+        return dockingroute;
+    }
+
+    //FREIGHTER!!
+    public MotionPath getUndockingroute() {
+        MotionPath undockingroute = new MotionPath();
+        undockingroute.addWayPoint(new Vector3f(170, 9, 0));
+        undockingroute.addWayPoint(new Vector3f(170, 9, 650));
+        return undockingroute;
+    }
+
+    //EIGENLIJKS BOAT!
+    public MotionPath getFreighterDock() {
+        MotionPath dockingroute = new MotionPath();
+        dockingroute.addWayPoint(new Vector3f(1500, 3, -460));
+        dockingroute.addWayPoint(new Vector3f(0, 3, -460));
+        return dockingroute;
+    }
+
+    //BOAT!
+    public MotionPath getFreighterUndock() {
+        MotionPath dockingroute = new MotionPath();
+        dockingroute.addWayPoint(new Vector3f(0, 9, -460));
+        dockingroute.addWayPoint(new Vector3f(-1700, 9, 1600));
+        return dockingroute;
+    }
+}

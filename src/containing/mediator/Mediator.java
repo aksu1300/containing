@@ -1,14 +1,13 @@
-
 package containing.mediator;
 
 public class Mediator {
-    private Protocol protocol;
+    private static Protocol protocol;
     
     public Mediator() {
         
     }
     
-    private void parse() {
+    private static void parse() {
         switch (protocol) {
             case TEST: System.out.println("TEST");
                 break;
