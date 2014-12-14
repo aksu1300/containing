@@ -34,12 +34,12 @@ public class TrainCrane extends Node {
     float speed;
     String id;
     float size;
-    boolean idle = true;// its not doing anything, so it can be used
+    public boolean idle = true;// its not doing anything, so it can be used
     boolean status = false; // flase is up, true is down
     BoundingVolume boundGrab;
     boolean up = true;
     boolean in = false;
-    boolean done = false;
+    public boolean done = false;
     Harbor harbor;
     
     public TrainCrane(AssetManager assetManager, float size, Vector3f location) {
@@ -96,10 +96,11 @@ public class TrainCrane extends Node {
 
     }
     public void doMove(Wagon wagon){
-            this.cargo = wagon.getCargo();
+            done = false;
+            setWagon(wagon);
             craneDown();
-        
     }
+    
     //make some bools to see if the crane did a certain movement andneeds to do something else
     public void craneRight(){
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
@@ -149,8 +150,12 @@ public class TrainCrane extends Node {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
                         //crane down when has a container so that it sits on an agv
-                        craneDown();
+                       
                         releaseContainer();
+                        done = true;
+                        if(done == true){
+                            craneRight();
+                        }
                     }
                 }
             });
@@ -177,7 +182,11 @@ public class TrainCrane extends Node {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
                         //craneleft when has a container
-                        craneLeft();
+                        craneDown();
+                        releaseContainer();
+                        releaseWagon();
+                        done = true;
+                        idle = true;
                     }
                 }
             });
@@ -187,6 +196,7 @@ public class TrainCrane extends Node {
         //check for container has to happen 
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
+           
 
                 final MotionPath trainroute = new MotionPath();
                 trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
@@ -206,12 +216,13 @@ public class TrainCrane extends Node {
             public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
                 //crane up if picked up container
                 if(done == false){ 
-                  setContainer(cargo);
-                  System.out.println(cargo);
+                  setContainer(wagon.getCargo());
+                  idle = false;
 //               setContainer(wagon.getCargo());
                craneUp();
                 }else{
-//                    releaseContainer();
+                    idle = true;
+                    done = true;
                 }
             }
       });
@@ -219,6 +230,13 @@ public class TrainCrane extends Node {
         }
         
 //        dockingroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 5, this.getChild(i).getLocalTranslation().z));
+    }
+    
+    public void setWagon(Wagon w){
+        this.wagon = w;
+    }
+    public void releaseWagon(){
+        this.wagon = null;
     }
     public Vector3f getLocation() {
         return this.location;

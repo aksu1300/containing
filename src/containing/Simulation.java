@@ -59,12 +59,9 @@ public class Simulation extends SimpleApplication {
     MotionPath motionPath;
     MotionPath motionPath1;
     AGVController agvc;
-
-    
     //Guid
     private Nifty nifty;
-    
-    
+
     public Simulation() {
         initSockets();
     }
@@ -121,102 +118,92 @@ public class Simulation extends SimpleApplication {
             Container xxx = new Container(assetManager, 1);
             tc.setAGV(new AGV("AAA", assetManager));
             tc.agv.setContainer(xxx);
-            tc.craneDown(); 
+            tc.craneDown();
         }
-        
-//       
-//        System.out.println(harbor.train);
-//        train = harbor.train;
-//        try{
-            tCranes = harbor.trainCranes;
-            for(Train trn : harbor.trains){
-//                System.out.println(trn.getId());
-//                System.out.println(trn.getWagonCount());
-//                System.out.println(trn.getWagons());
-//                tcrane.doMove(trn.getWagons());
-                trn.getWagons().get(0).setCargo(new Container(this.assetManager,1.0f));
-//                System.out.println(trn.getWagons().get(0).getCargo());
-                //tcrane is nothing o_o so we get nothing make sure the right crane is initialized from the harbor
-//                System.out.println(tCranes);
-//               for(Wagon w : trn.getWagons()){
-////                   System.out.println(w.getId());
-//               }
-                for(Wagon w : trn.getWagons()){
-                   w.setCargo(new Container(assetManager,1.0f));
-//                   System.out.println(w.getId());
-                   if(w.getCargo() != null){
-                       
-                       tCranes.get(1).doMove(w);
-//                        
-                   }
-                   
-               }
-               
-            }
 
-                
-//               for(Wagon w : trn.getWagons()){
-//                   w.setCargo(new Container(assetManager,1.0f));
-//                   System.out.println(w.getId());
-//                   tcrane.doMove(w.get);
-//                   i++;
-//               }
-                
-            
-//        }catch(Exception e){
-//            e.printStackTrace();
-//        }
+
+        tCranes = harbor.trainCranes;
+        train = harbor.train;
         
+        for (Wagon w : train.getWagons()) {
+            w.setCargo(new Container(assetManager, 1.0f));
+            if(tCranes.get(0).idle = true ){
+//                tCranes.get(0).doMove(train.getWagons().get(k));
+                 
+            }
+            
+                    
+        }
+        int k = train.getWagonCount() -1;
+        for(TrainCrane tr : harbor.trainCranes){
+            tr.doMove(train.getWagons().get(k));
+            k-=1; 
+        }
+//        for (int j = 0; j < tCranes.size(); j++) {
+//            for (int k = 0; k < train.getWagonCount(); k++) {
+//                if (train.getWagons().get(k).getCargo() != null) {
+//                    tCranes.get(j).doMove(train.getWagons().get(k).getCargo());
+//                } else if ( train.getWagons().get(k).getCargo() == null ) {
+//                    
+//                }
+//            }
+//        }
+
+
+
+
+
+
+
+
+
         int i = 0;
         for (Truck tc : harbor.trucks) {
             tc.truckArrive(harbor.truckCranes.get(i));
             harbor.truckCranes.get(i).truck = tc;
             i++;
         }
-        
+
         for (TruckCrane tc : harbor.truckCranes) {
-                if(tc.container != null){
-                    tc.craneUp();
-                    
-                }
+            if (tc.container != null) {
+                tc.craneUp();
+
             }
+        }
     }
 
     @Override
     public void simpleUpdate(float tpf) {
         if (freighter.getDocked()) {
-            
-            
         }
 //        System.out.println(cam.getLocation().x);
 //        System.out.println(cam.getLocation().y);
 //        System.out.println(cam.getLocation().z);
     }
 
-    
-    public void initKeys(){
-        inputManager.addMapping("Show",  new KeyTrigger(KeyInput.KEY_F10));
-        inputManager.addMapping("Hide",   new KeyTrigger(KeyInput.KEY_F9));
+    public void initKeys() {
+        inputManager.addMapping("Show", new KeyTrigger(KeyInput.KEY_F10));
+        inputManager.addMapping("Hide", new KeyTrigger(KeyInput.KEY_F9));
         // Add the names to the action listener.
-        inputManager.addListener(actionListener,"Show","Hide");
-      
+        inputManager.addListener(actionListener, "Show", "Hide");
+
     }
-    
-        private ActionListener actionListener = new ActionListener() {
+    private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
-          if (name.equals("Show") && !keyPressed) {
-              //show the gui
-            initHud();
-          }
-          if(name.equals("Hide") && !keyPressed){
-              //and lets hide the gui
-            nifty.exit();
-          }
+            if (name.equals("Show") && !keyPressed) {
+                //show the gui
+                initHud();
+            }
+            if (name.equals("Hide") && !keyPressed) {
+                //and lets hide the gui
+                nifty.exit();
+            }
         }
-      };
+    };
+
     private void initHud() {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
-        Nifty nifty = niftyDisplay.getNifty();
+        nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
 
 
