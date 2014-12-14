@@ -22,6 +22,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
 import containing.transport.TrainCrane;
+import containing.transport.Wagon;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class Simulation extends SimpleApplication {
 
@@ -49,6 +51,8 @@ public class Simulation extends SimpleApplication {
     Truck t;
     Train train;
     Truck truck;
+    Wagon wagon;
+    public ArrayList<TrainCrane> tCranes = new ArrayList<TrainCrane>();
     Freighter freighter;
     Boat boat;
     Harbor harbor;
@@ -117,16 +121,52 @@ public class Simulation extends SimpleApplication {
             Container xxx = new Container(assetManager, 1);
             tc.setAGV(new AGV("AAA", assetManager));
             tc.agv.setContainer(xxx);
-            tc.craneDown();
+            tc.craneDown(); 
         }
         
-        for(TrainCrane trc : harbor.trainCranes){
-            Container x1 = new Container(assetManager,1);
-            trc.setContainer(x1);
-            trc.craneDown();
-        }
-       
+//       
+//        System.out.println(harbor.train);
+//        train = harbor.train;
+//        try{
+            tCranes = harbor.trainCranes;
+            for(Train trn : harbor.trains){
+//                System.out.println(trn.getId());
+//                System.out.println(trn.getWagonCount());
+//                System.out.println(trn.getWagons());
+//                tcrane.doMove(trn.getWagons());
+                trn.getWagons().get(0).setCargo(new Container(this.assetManager,1.0f));
+//                System.out.println(trn.getWagons().get(0).getCargo());
+                //tcrane is nothing o_o so we get nothing make sure the right crane is initialized from the harbor
+//                System.out.println(tCranes);
+//               for(Wagon w : trn.getWagons()){
+////                   System.out.println(w.getId());
+//               }
+                for(Wagon w : trn.getWagons()){
+                   w.setCargo(new Container(assetManager,1.0f));
+//                   System.out.println(w.getId());
+                   if(w.getCargo() != null){
+                       
+                       tCranes.get(1).doMove(w);
+//                        
+                   }
+                   
+               }
+               
+            }
 
+                
+//               for(Wagon w : trn.getWagons()){
+//                   w.setCargo(new Container(assetManager,1.0f));
+//                   System.out.println(w.getId());
+//                   tcrane.doMove(w.get);
+//                   i++;
+//               }
+                
+            
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+        
         int i = 0;
         for (Truck tc : harbor.trucks) {
             tc.truckArrive(harbor.truckCranes.get(i));

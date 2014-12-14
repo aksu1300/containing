@@ -23,7 +23,7 @@ public class Wagon extends Node {
         this.location = location;
         this.assetmanager = assetmanager;
         this.model = this.assetmanager.loadModel("Models/high/train/wagon.j3o");
-        this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        this.material = new Material(this.assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
         this.model.setMaterial(material);
         this.attachChild(model);
         
@@ -72,6 +72,10 @@ public class Wagon extends Node {
     
     public float getSpeed() {
         return this.speed;
+    }
+    
+    public String getId(){
+        return this.id;
     }
     
 }

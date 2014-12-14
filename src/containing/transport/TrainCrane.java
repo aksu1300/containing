@@ -11,6 +11,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import containing.Harbor;
 import containing.AGV;
 import containing.Container;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public class TrainCrane extends Node {
     Vector3f loc;
     Container container;
+    Container cargo;
     Material material;
     Wagon wagon;
     Train train;
@@ -32,12 +34,13 @@ public class TrainCrane extends Node {
     float speed;
     String id;
     float size;
+    boolean idle = true;// its not doing anything, so it can be used
     boolean status = false; // flase is up, true is down
     BoundingVolume boundGrab;
     boolean up = true;
     boolean in = false;
     boolean done = false;
-    
+    Harbor harbor;
     
     public TrainCrane(AssetManager assetManager, float size, Vector3f location) {
         this.assetManager = assetManager;
@@ -92,9 +95,10 @@ public class TrainCrane extends Node {
         hookRight.scale(size);
 
     }
-    public void doMove(Train train){
-        //do stuff with train here and get the cargo of each wagon
-        System.out.println(train.getWagonCount());
+    public void doMove(Wagon wagon){
+            this.cargo = wagon.getCargo();
+            craneDown();
+        
     }
     //make some bools to see if the crane did a certain movement andneeds to do something else
     public void craneRight(){
@@ -146,7 +150,7 @@ public class TrainCrane extends Node {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
                         //crane down when has a container so that it sits on an agv
                         craneDown();
-                        
+                        releaseContainer();
                     }
                 }
             });
@@ -202,9 +206,10 @@ public class TrainCrane extends Node {
             public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
                 //crane up if picked up container
                 if(done == false){ 
-                  
+                  setContainer(cargo);
+                  System.out.println(cargo);
 //               setContainer(wagon.getCargo());
-//               craneUp();
+               craneUp();
                 }else{
 //                    releaseContainer();
                 }

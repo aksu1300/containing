@@ -45,6 +45,7 @@ public class Harbor extends Node {
     private AssetManager assetmanager;
     public ArrayList<Truck> trucks;
     public ArrayList<Train> trains;
+//    public Train train;
 
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
@@ -122,11 +123,10 @@ public class Harbor extends Node {
     }
     
     public void initTrain() {
-        //Train train = new Train(new Vector3f(-100, 10, 250), assetmanager, 2);
-        Train train = new Train(new Vector3f(-115, 10.5f, 500), assetmanager,3);
+       Train train = new Train("Train1", new Vector3f(-115, 10.5f, 500), assetmanager,5);
         train.rotate(0, FastMath.PI * 1.5f, 0);
-        train.setLocalTranslation(train.getLocation());
         trains.add(train);
+        train.setLocalTranslation(train.getLocation());
         
         this.attachChild(train);
     }

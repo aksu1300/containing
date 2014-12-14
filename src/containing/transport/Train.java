@@ -12,12 +12,13 @@ import java.util.ArrayList;
 
 public class Train extends Node {
     
+    String id;
     private Vector3f location;
     private Spatial model;
     private Material material;
     private float speed;
-    private ArrayList<Container> cargo;
-    private ArrayList<Wagon> wagons;
+
+    private ArrayList<Wagon> wagons = new ArrayList<Wagon>();
     private AssetManager assetmanager;
     
     public Train(Vector3f location, AssetManager assetmanager) {
@@ -37,7 +38,8 @@ public class Train extends Node {
      * @param assetmanager AssetManager for the train ex:new AssetManager
      * @param wagons Wagons that can be added to the train ex:new Wagon
      */
-    public Train(Vector3f location, AssetManager assetmanager, int nrWagons) {
+    public Train(String id, Vector3f location, AssetManager assetmanager, int nrWagons) {
+        this.id = id;
         this.location = location;
         this.assetmanager = assetmanager;
         this.initWagons(nrWagons);
@@ -45,7 +47,8 @@ public class Train extends Node {
         this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
         this.model.setMaterial(material);
         this.attachChild(this.model);
-        this.wagons = new ArrayList<Wagon>();
+        System.out.println(wagons);
+        
         
     }
     
@@ -53,7 +56,9 @@ public class Train extends Node {
         Wagon wagon1 = new Wagon("TW1", new Vector3f(0.06f, 0f, -13.1f), this.assetmanager);
         wagon1.rotate(0, FastMath.PI, 0);
         wagon1.setLocalTranslation(wagon1.getLocation());
-        this.attachChild(wagon1);
+//        wagon1.setCargo(new Container(this.assetmanager,1.0f));
+        this.wagons.add(wagon1);
+       this.attachChild(wagon1);
         
         float transloc = 5.35f;
         for (int i = 2; i < nrWagons + 2; i++) {
@@ -61,6 +66,7 @@ public class Train extends Node {
             wagon.rotate(0, FastMath.PI, 0);
 //            wagon.setCargo(new Container(this.assetmanager,1.0f));
             wagon.setLocalTranslation(wagon.getLocation());
+            this.wagons.add(wagon);
             this.attachChild(wagon);
         }
     }
@@ -98,12 +104,14 @@ public class Train extends Node {
      * lololololol
      * @return the Cargo of all the wagons.
      */
-    public ArrayList<Container> getCargo(){
-        return this.cargo;
+    
+    public String getId(){
+        return this.id;
     }
+
     
     public int getWagonCount() {
-//        System.out.println(wagons.size());
+        
         return this.wagons.size();
     }
     
