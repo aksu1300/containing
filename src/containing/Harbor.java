@@ -89,7 +89,7 @@ public class Harbor extends Node {
     public void initBoatCranes() {
         // Adding a BoatCrane to the harbor
         for (int i = 0; i < 8; i++) {
-            ShipCrane crane = new ShipCrane(assetmanager, 1f, new Vector3f(40 - (i * 30), 14, -450));
+            ShipCrane crane = new ShipCrane(assetmanager, new Vector3f(40 - (i * 30), 14, -450));
             crane.rotate(0, -FastMath.PI / 2, 0);
             crane.setLocalTranslation(crane.getLocation());
             shCranes.add(crane);
@@ -201,7 +201,7 @@ public class Harbor extends Node {
             } else {
                 ruimte = 30;
             }
-            ShipCrane crane = new ShipCrane(assetmanager, 1f, new Vector3f(160, 10.5f, -120 + (i * ruimte)));
+            ShipCrane crane = new ShipCrane(assetmanager, new Vector3f(160, 10.5f, -120 + (i * ruimte)));
             crane.rotate(0, FastMath.PI, 0);
             crane.setLocalTranslation(crane.getLocation());
 //        initTocranemotionpath(crane, i);
@@ -214,8 +214,8 @@ public class Harbor extends Node {
     //Freighter!
     public MotionPath getDockingroute() {
         final MotionPath dockingroute = new MotionPath();
-        dockingroute.addWayPoint(new Vector3f(170, 9, -650));
-        dockingroute.addWayPoint(new Vector3f(170, 9, 0));
+        dockingroute.addWayPoint(new Vector3f(175, 9, -650));
+        dockingroute.addWayPoint(new Vector3f(175, 9, 0));
         return dockingroute;
     }
 
