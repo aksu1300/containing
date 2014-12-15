@@ -110,7 +110,7 @@ public class Harbor extends Node {
     public void initTrainCranes() {
         for (int i = 0; i < 4; i++)
         {
-            TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(-100 + (i * 20), 10, 500));
+            TrainCrane crane = new TrainCrane(assetmanager, new Vector3f(-100 + (i * 20), 10, 500), this);
             crane.rotate(0, FastMath.PI * 1.5f, 0);
             crane.setLocalTranslation(crane.getLocation());
             trainCranes.add(crane);

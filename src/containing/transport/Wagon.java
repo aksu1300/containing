@@ -7,6 +7,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import containing.Container;
+import java.util.ArrayList;
 
 public class Wagon extends Node {
     private Vector3f location;
@@ -17,13 +18,16 @@ public class Wagon extends Node {
     private float speed;
     private String id;
     
-    public Wagon(String id,Vector3f location , AssetManager assetManager) {
+    public Wagon(String id,Vector3f location , AssetManager assetmanager) {
         this.id = id;
         this.location = location;
-        this.model = assetManager.loadModel("Models/high/train/wagon.j3o");
+        this.assetmanager = assetmanager;
+        this.model = this.assetmanager.loadModel("Models/high/train/wagon.j3o");
         this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
         this.model.setMaterial(material);
-        this.attachChild(model);
+        this.attachChild(this.model);
+        
+        
     }
     
     public void depart() {
@@ -45,19 +49,31 @@ public class Wagon extends Node {
     // <editor-fold defaultstate="collapsed" desc="Get & Set">
     
     public void setCargo(Container cargo){
-        if (cargo == null) {
+        if (this.cargo == null) {
             this.cargo = cargo; 
             this.cargo.setLocalTranslation(0,0.6f,0);
             this.attachChild(this.cargo);
         }
     }
     
+    public void resetCargo() {
+        this.cargo = null;
+    }
+    
     public Container getCargo(){
-        return cargo;
+        return this.cargo;
     }
     
     public void updateSpeed(float uSpeed) {
         this.speed = uSpeed;
+    }
+    
+    public Vector3f getLocation() {
+        return this.location;
+    }
+    
+    public float getSpeed() {
+        return this.speed;
     }
     
     // </editor-fold>

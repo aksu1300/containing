@@ -3,6 +3,7 @@ package containing.transport;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.material.Material;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -36,24 +37,30 @@ public class Train extends Node {
      * @param assetmanager AssetManager for the train ex:new AssetManager
      * @param wagons Wagons that can be added to the train ex:new Wagon
      */
-    public Train(Vector3f location, AssetManager assetwanager, int nrWagons) {
-        try {
-            this.location = location;            
-            this.model = assetmanager.loadModel("Models/high/train/train.j3o");
-            this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
-            this.model.setMaterial(material);
-            this.wagons = new ArrayList<Wagon>();
-            this.initWagons(nrWagons);
-            this.attachChild(model);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+    public Train(Vector3f location, AssetManager assetmanager, int nrWagons) {
+        this.location = location;
+        this.assetmanager = assetmanager;
+        this.initWagons(nrWagons);
+        this.model = this.assetmanager.loadModel("Models/high/train/train.j3o");
+        this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        this.model.setMaterial(material);
+        this.attachChild(this.model);
+        this.wagons = new ArrayList<Wagon>();
+        
     }
     
     private void initWagons(int nrWagons) {
-        for(int i = 1; i <= nrWagons; i++) {
-            Vector3f loc = this.location;
-            this.wagons.add(new Wagon("W" + i, loc.add((-20 * i), 0, 0), assetmanager));
+        Wagon wagon1 = new Wagon("TW1", new Vector3f(0.06f, 0f, -13.1f), this.assetmanager);
+        wagon1.rotate(0, FastMath.PI, 0);
+        wagon1.setLocalTranslation(wagon1.getLocation());
+        this.attachChild(wagon1);
+        
+        float transloc = 5.35f;
+        for (int i = 2; i < nrWagons + 2; i++) {
+            Wagon wagon = new Wagon("TW" + i, new Vector3f(0.06f, 0, transloc + -18.45f * i), this.assetmanager);
+            wagon.rotate(0, FastMath.PI, 0);
+            wagon.setLocalTranslation(wagon.getLocation());
+            this.attachChild(wagon);
         }
     }
     

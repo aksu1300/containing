@@ -91,7 +91,7 @@ public class Simulation extends SimpleApplication {
                 {
                     ArrayList<Wagon> wagons = new ArrayList<Wagon>();
                     for(int i = 0; i < Integer.parseInt(re.getWeight()); i++){
-                        Wagon wagon = new Wagon(re.getRecordId(),new Vector3f(5,4,4),5,assetManager);
+                        Wagon wagon = new Wagon(re.getRecordId(),new Vector3f(5,4,4), assetManager);
                         wagons.add(wagon);
                     }
                     
