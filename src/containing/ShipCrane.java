@@ -14,7 +14,7 @@ import com.jme3.scene.Spatial;
 
 /**
  *
- * @author Driving Ghost
+ * @author Umit
  */
 public class ShipCrane extends Node {
 
@@ -123,7 +123,7 @@ public class ShipCrane extends Node {
             this.getChild(3).move(0, tpf, 0);
             this.getChild(4).move(0, tpf, 0);
             if (this.container != null) {
-                this.getChild(5).move(0, tpf, 0);
+                //this.getChild(5).move(0, tpf, 0);
             }
         } else {
             this.up = true;

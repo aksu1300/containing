@@ -2,6 +2,7 @@ package containing.transport;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -10,30 +11,50 @@ import java.util.ArrayList;
 
 public class Train extends Node {
     
-    private String id;
-    private Vector3f loc;
+    private Vector3f location;
     private Spatial model;
+    private Material material;
     private float speed;
-    private ArrayList cargo;
-    private ArrayList wagons;
+    private ArrayList<Container> cargo;
+    private ArrayList<Wagon> wagons;
+    private AssetManager assetmanager;
+    
+    public Train(Vector3f location, AssetManager assetmanager) {
+        this.location = location;
+        this.assetmanager = assetmanager;
+        this.model = this.assetmanager.loadModel("Models/high/train/train.j3o");
+        this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        this.model.setMaterial(material);
+        this.attachChild(this.model);
+    }
     
     /**
      * Train that gets the containers out of the harbor.
      * @param id String ex:C10064
      * @param loc Vector3f location ex:new Vector3f(0, 6f, 0)
      * @param speed float Speed ex:6f
-     * @param assetManager AssetManager for the train ex:new AssetManager
+     * @param assetmanager AssetManager for the train ex:new AssetManager
      * @param wagons Wagons that can be added to the train ex:new Wagon
      */
-    public Train(String id, Vector3f loc,float speed , AssetManager assetManager, ArrayList wagons) {
-        this.id = id;
-        this.loc = loc; 
-        this.cargo = null;
-        this.speed = speed;
-        model = assetManager.loadModel("Models/high/train/train.j3o");
-        model.scale(1.5f);
-        this.attachChild(model);
-        this.wagons = wagons;
+    public Train(Vector3f location, AssetManager assetwanager, int nrWagons) {
+        try {
+            this.location = location;            
+            this.model = assetmanager.loadModel("Models/high/train/train.j3o");
+            this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
+            this.model.setMaterial(material);
+            this.wagons = new ArrayList<Wagon>();
+            this.initWagons(nrWagons);
+            this.attachChild(model);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    private void initWagons(int nrWagons) {
+        for(int i = 1; i <= nrWagons; i++) {
+            Vector3f loc = this.location;
+            this.wagons.add(new Wagon("W" + i, loc.add((-20 * i), 0, 0), assetmanager));
+        }
     }
     
     /**
@@ -67,15 +88,32 @@ public class Train extends Node {
     
     // <editor-fold defaultstate="collapsed" desc="Gets & Sets">
     
-    public ArrayList getCargo(){return this.cargo;}
+    /**
+     * lololololol
+     * @return the Cargo of all the wagons.
+     */
+    public ArrayList<Container> getCargo(){
+        return this.cargo;
+    }
     
-    public int getWagonCount() {return this.wagons.size();}
+    public int getWagonCount() {
+        return this.wagons.size();
+    }
     
-    public ArrayList getCarts() {return this.wagons;}
+    public ArrayList<Wagon> getWagons() {
+        return this.wagons;
+    }
     
-    public void setCargo(Container container, Wagon wagon) {wagon.setCargo(container);}
+    public void setCargo(Wagon wagon, Container container) {
+        wagon.setCargo(container);
+    }
     
-    public void updateSpeed(float uSpeed) {this.speed = uSpeed;}
+    public void updateSpeed(float uSpeed) {
+        this.speed = uSpeed;
+    }
     
+    public Vector3f getLocation() {
+        return this.location;
+    }
     // </editor-fold>
 }

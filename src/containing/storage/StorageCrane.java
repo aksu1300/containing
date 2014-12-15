@@ -33,7 +33,7 @@ public class StorageCrane extends Node {
     
     public StorageCrane(AssetManager _assetManager, float _size, Vector3f location){
          this.assetManager = _assetManager;
-         this.size = _size;
+        
          this.location = location;
          
          //Init Sphere
@@ -73,7 +73,7 @@ public class StorageCrane extends Node {
     private void initContainer() {
         // Load the container
         crane = assetManager.loadModel("Models/high/crane/storagecrane/crane.j3o");
-        crane.scale(0.324f, 1f, 1.5f);
+        //crane.scale(1, 0.5f, 1);
         
         grabbingGear = assetManager.loadModel("Models/high/crane/storagecrane/grabbingGear.j3o");
         grabbingGear.scale(size);
@@ -113,7 +113,6 @@ public class StorageCrane extends Node {
     }
     
     public void moveOut(float tpf, int i){
-        System.out.println("JOEEEHOEEE" + this.getChild(1).getLocalTranslation().z);
         if(this.getChild(1).getLocalTranslation().z <= (55 + (i * 1.5))){
             for (int j = 0; j < this.children.size(); j++)
                this.getChild(j).move(0, 0, tpf * 20);

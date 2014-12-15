@@ -21,14 +21,14 @@ public class Container extends Node{
     private Spatial container;
     private float size;
     private Material material;
-
     public BoundingVolume geometry;
 
     
     public Container(AssetManager _assetManager, float _size) {
         this.assetManager = _assetManager;
         this.size = _size;
-
+        this.id = "XXX";
+        
         //Init Sphere
         initContainer();
         
