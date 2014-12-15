@@ -66,7 +66,7 @@ public class WayPoints {
     Point E4;
     Point E5;
 
-    WayPoints() {
+    public WayPoints() {
         wpList = new ArrayList<Point>();
         initPoints();
         initList();
