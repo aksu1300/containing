@@ -63,12 +63,12 @@ public class ShipCrane extends Node {
 
     }
 
-    public void moveCrane(){
+    public void moveCrane(Vector3f location){
         ArrayList<MotionEvent> craneMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath craneroute = new MotionPath();
             craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z));
-            craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x , this.getLocalTranslation().y , this.getLocalTranslation().z + 5 ));
+            craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x + location.x , this.getLocalTranslation().y + location.y , this.getLocalTranslation().z + location.z ));
 
             MotionEvent motionControl = new MotionEvent(this, craneroute);
             craneMotion.add(motionControl);

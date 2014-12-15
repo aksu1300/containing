@@ -34,12 +34,12 @@ public class TrainCrane extends Node {
     float speed;
     String id;
     float size;
-    public boolean idle = true;// its not doing anything, so it can be used
-    boolean status = false; // flase is up, true is down
+    boolean idle = true;// its not doing anything, so it can be used
+    boolean status = false; 
     BoundingVolume boundGrab;
     boolean up = true;
     boolean in = false;
-    public boolean done = false;
+    boolean done = false;
     Harbor harbor;
     
     public TrainCrane(AssetManager assetManager, float size, Vector3f location) {
@@ -95,10 +95,41 @@ public class TrainCrane extends Node {
         hookRight.scale(size);
 
     }
-    public void doMove(Wagon wagon){
-            done = false;
+    public void doMove(Wagon wagon,Train train){
+            
             setWagon(wagon);
-            craneDown();
+            System.out.println(wagon.getLocation());
+            System.out.println(train.getLocation());
+            moveCrane(wagon.getLocation(),train.getLocation());
+    }
+    
+    public void moveCrane(Vector3f location , Vector3f trainloc){
+        ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
+        
+            final MotionPath trainroute = new MotionPath();
+            trainroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(trainloc.x - location.z , this.getLocalTranslation().y , this.getLocalTranslation().z ));
+
+            MotionEvent motionControl = new MotionEvent(this, trainroute);
+            grabMotion.add(motionControl);
+        
+        
+        for (MotionEvent me : grabMotion) {
+            final MotionPath mp = me.getPath();
+            me.setInitialDuration(10f);
+            me.setSpeed(1);
+            me.play();
+
+            mp.addListener(new MotionPathListener() {
+                public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                    if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                        //crane down when has a container so that it sits on an agv
+                        craneDown();
+                        setIdle(false);
+                    }
+                }
+            });
+        }
     }
     
     //make some bools to see if the crane did a certain movement andneeds to do something else
@@ -122,8 +153,10 @@ public class TrainCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        //crane down when has a container so that it sits on an agv
-                        craneDown();
+                        if(idle == false){
+                            setIdle(true);
+                        }
+                        
                     }
                 }
             });
@@ -151,10 +184,12 @@ public class TrainCrane extends Node {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
                         //crane down when has a container so that it sits on an agv
                        
-                        releaseContainer();
-                        done = true;
-                        if(done == true){
-                            craneRight();
+                        
+                        
+                        if(idle == false){
+                            craneDown();
+                        }else{
+                            
                         }
                     }
                 }
@@ -181,12 +216,15 @@ public class TrainCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        //craneleft when has a container
-                        craneDown();
-                        releaseContainer();
-                        releaseWagon();
-                        done = true;
-                        idle = true;
+                        if(idle == false){
+                            releaseWagon();
+                            done = true;
+                            craneLeft();
+                            
+                        }else{
+                            craneRight();
+                        }
+                        
                     }
                 }
             });
@@ -212,17 +250,22 @@ public class TrainCrane extends Node {
             me.setInitialDuration(10f);
             me.setSpeed(1);
             me.play();
+            
             mp.addListener( new MotionPathListener() {
             public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
                 //crane up if picked up container
-                if(done == false){ 
-                  setContainer(wagon.getCargo());
-                  idle = false;
-//               setContainer(wagon.getCargo());
-               craneUp();
+                if(idle == false){ 
+                    if(done == true){
+                        setIdle(true);
+                        releaseContainer();
+                        craneUp();
+                    }else{
+                        setContainer(wagon.getCargo());
+                        craneUp();
+                    }
                 }else{
-                    idle = true;
-                    done = true;
+
+                   craneUp();
                 }
             }
       });
@@ -276,7 +319,7 @@ public class TrainCrane extends Node {
             }
 
         } else {
-            this.done = true;
+            
         }
 
     }
@@ -299,6 +342,10 @@ public class TrainCrane extends Node {
     }
     public Container getContainer() {
         return this.container;
+    }
+    
+    public void setIdle(boolean idle){
+        this.idle =idle;
     }
 
     public void setContainer(Container c) {

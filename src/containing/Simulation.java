@@ -122,18 +122,18 @@ public class Simulation extends SimpleApplication {
         }
 
         shCrane = harbor.shCranes;
-        shCrane.get(0).moveCrane();
+        //this works 
+//        shCrane.get(0).moveCrane(new Vector3f(0,0,4));
         tCranes = harbor.trainCranes;
         train = harbor.train;
         
         for (Wagon w : train.getWagons()) {
             w.setCargo(new Container(assetManager, 1.0f));         
         }
-        int k = train.getWagonCount() -1;
-        for(TrainCrane tr : harbor.trainCranes){
-            tr.doMove(train.getWagons().get(k));
-            k-=1; 
-        }
+            tCranes.get(3).doMove(train.getWagons().get(5),train);
+            tCranes.get(2).doMove(train.getWagons().get(4),train);
+           
+        
         
 //        for (int j = 0; j < tCranes.size(); j++) {
 //            for (int k = 0; k < train.getWagonCount(); k++) {
