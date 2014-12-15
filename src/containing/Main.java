@@ -1,7 +1,5 @@
 package containing;
 
-import containing.xml.Record;
-import containing.xml.XMLReader;
 
 /**
  * test
@@ -19,22 +17,6 @@ public class Main {
         Simulation simu = new Simulation();
         simu.startSimulation();
         
-        XMLReader reader1 = new XMLReader();
-        
-        System.out.println("Records : " + reader1.records.size());
-        
-        for(Record re : reader1.records)
-        {
-            System.out.println("Records id  : " + re.getRecordId());
-            System.out.println("Company  : " + re.getArival_company());
-            System.out.println("Arival Date  : " + re.getArival_date());
-            System.out.println("From  : " + re.getArival_from());
-            System.out.println("To  : " + re.getArival_to());
-            
-            System.out.println("Records id  : " + re.getArival_transport());
-            System.out.println("Container : " + re.getWeight());
-            System.out.println("=============================================");
-        } 
     }
 }
 

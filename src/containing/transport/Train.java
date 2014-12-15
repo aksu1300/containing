@@ -12,13 +12,35 @@ import java.util.ArrayList;
 
 public class Train extends Node {
     
+    private String Id;
     private Vector3f location;
     private Spatial model;
     private Material material;
     private float speed;
-    private ArrayList<Container> cargo;
+    private ArrayList<Container> containers;
     private ArrayList<Wagon> wagons;
     private AssetManager assetmanager;
+
+    // Get the id of the train
+    public String getId() {
+        return Id;
+    }
+
+    // Set the id of the train
+    public String setId(String Id) {
+        return this.Id = Id;
+    }
+
+   
+    // Get containers
+    public ArrayList<Container> getContainers() {
+        return containers;
+    }
+
+    // Set containers
+    public void setContainers(ArrayList<Container> containers) {
+        this.containers = containers;
+    }
     
     public Train(Vector3f location, AssetManager assetmanager) {
         this.location = location;
@@ -95,13 +117,6 @@ public class Train extends Node {
     
     // <editor-fold defaultstate="collapsed" desc="Gets & Sets">
     
-    /**
-     * lololololol
-     * @return the Cargo of all the wagons.
-     */
-    public ArrayList<Container> getCargo(){
-        return this.cargo;
-    }
     
     public int getWagonCount() {
         return this.wagons.size();

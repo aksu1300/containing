@@ -46,7 +46,7 @@ public class Freighter extends Node {
         initMaterial();
         
         //initHold
-        initHold(this.assetmanager);
+        initHold();
 
         // Attach the model to the 
         this.attachChild(shipSpatial);

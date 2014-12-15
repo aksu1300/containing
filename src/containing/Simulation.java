@@ -21,8 +21,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
 import containing.storage.Storage;
 import containing.transport.Wagon;
-import containing.xml.Record;
-import containing.xml.XMLReader;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
@@ -69,44 +67,7 @@ public class Simulation extends SimpleApplication {
     public void startSimulation() {
         if (clientSocket == null) {
             this.start();
-            
-            XMLReader reader1 = new XMLReader();
-
-            System.out.println("Record   s : " + reader1.records.size());
-
-            for(Record re : reader1.records)
-            {
-                System.out.println("Records i d  : " + re.getRecordId());
-                System.out.println("Company  : " + re.getArival_company());
-                System.out.println("Arival Date  : " + re.getArival_date());
-                System.out.println("From  : " + re.getArival_from());
-                System.out.println("To  : " + re.getArival_to());
-
-                System.out.println("Records id  : " + re.getArival_transport());
-                System.out.println("Container : " + re.getWeight());
-                System.out.println("=============================================");
-                
-                if(re.getArival_transport().toLowerCase() == "vrachtauto")
-                {
-                    Truck truck = new Truck(re.getRecordId(),new Vector3f(4,4,4), 5, assetManager);
-                    rootNode.attachChild(truck);
-                }
-                
-                if(re.getArival_transport().toLowerCase() == "trein")
-                {
-                    ArrayList<Wagon> wagons = new ArrayList<Wagon>();
-                    for(int i = 0; i < Integer.parseInt(re.getWeight()); i++){
-                        Wagon wagon = new Wagon(re.getRecordId(),new Vector3f(5,4,4), assetManager);
-                        wagons.add(wagon);
-                    }
-                    
-                    Train train = new Train(re.getRecordId(),new Vector3f(10,10,10), 5, assetManager,wagons);
-                    
-                    rootNode.attachChild(train);
-                }
-            }
-            
-                System.out.println("Cannot start up the application without server connection.\r\nPlease start up the Server first. ");
+            System.out.println("Cannot start up the application without server connection.\r\nPlease start up the Server first. ");
             
         } else {
             this.start();
@@ -353,6 +314,8 @@ public class Simulation extends SimpleApplication {
         try {
              ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             Command c = (Command) ois.readObject();
+            // send recieved command to the parser
+            parseCommand(c);
             System.out.println(c.toString());
             
         } catch (IOException ex) {
@@ -364,16 +327,85 @@ public class Simulation extends SimpleApplication {
     
     private void initSockets() {
         try {
-            socket = new Socket("localhost", 5400);
+            socket = new Socket("127.0.0.1", 5400);
             path = new ArrayList<String>();
-            
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * The parseCommand method will parse 
+     * Commands sent to the simulator
+     * @param cmd 
+     */
+    private void parseCommand(Command cmd){
+        
+       /*
+        * The Create commands
+        */
+       if(cmd.getCommand().equals("createShip")){
+           // The createShip command is recvied so create a ship
+           Boat ship = new Boat(assetManager);
+           ship.setContainers(cmd.getContents());
+           ship.setId(cmd.getIdentifier());
+           
+           // attach the boat to the rootNode
+           rootNode.attachChild(ship);        
+           
+           // 
+           System.out.println("We recieved a createShip sheize :" + ship.getContainers().size());
+       }
+       
+       if(cmd.getCommand() == "createFreighter"){
+       }
 
+       if(cmd.getCommand() == "createTrain"){
+           Train train = new Train(new Vector3f(3,4,5), assetManager);
+           train.setContainers(cmd.getContents());
+           train.setId(cmd.getIdentifier());
+           
+           // Attach the train to the rootNode
+           rootNode.attachChild(train);
+       
+       }
+       
+       if(cmd.getCommand() == "createTruck" ){
+       
+       } 
+        
+        
+       /*
+        * The moving commands
+        */
+       if(cmd.getCommand() == "moveShip"){
+           
+       }
+       
+       if(cmd.getCommand() == "moveFreighter"){
+       
+       }
+       
+       if(cmd.getCommand() == "moveShip"){
+           
+       }
+       
+       if(cmd.getCommand() == "moveTrain"){
+       
+       }
+       
+       if(cmd.getCommand() == "moveTruck" ){
+       
+       }
+    }
+    
+    /**
+     * 
+     * 
+     * @param rm 
+     */
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code

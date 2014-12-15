@@ -20,6 +20,7 @@ import java.util.List;
 
 public class Boat extends Node{
     
+    private String Id;
     private AssetManager assetManager;
     private Spatial shipSpatial;
     //private BulletAppState bulletAppState;
@@ -30,7 +31,28 @@ public class Boat extends Node{
     //public RigidBodyControl ballPhy;
     private Vector3f lastLocation;
     // A ship has a list of containers 
-    public List<Container> containers;
+    private List<Container> containers;
+
+    
+    // Get the ship id
+    public String getId() {
+        return Id;
+    }
+
+    // Set the ship id
+    public void setId(String Id) {
+        this.Id = Id;
+    }
+    
+    // Get the list of the containers
+    public List<Container> getContainers() {
+        return containers;
+    }
+
+    // Set a list of container to the ship container list
+    public void setContainers(List<Container> containers) {
+        this.containers = containers;
+    }
 
     public Boat(AssetManager assetManager) {
         this.assetManager = assetManager;

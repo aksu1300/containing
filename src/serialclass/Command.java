@@ -83,6 +83,46 @@ public class Command implements Serializable {
         this.dey = dey;
         this.dez = dez;
     }
+     
+    public String getCommand() {
+        return command;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public ArrayList<Container> getContents() {
+        return contents;
+    }
+
+    public Container getContent() {
+        return content;
+    }
+
+    public float getOrx() {
+        return orx;
+    }
+
+    public float getOry() {
+        return ory;
+    }
+
+    public float getOrz() {
+        return orz;
+    }
+
+    public float getDex() {
+        return dex;
+    }
+
+    public float getDey() {
+        return dey;
+    }
+
+    public float getDez() {
+        return dez;
+    }
     
      public String toString() {
         return command + ":" + identifier  + ":(" + orx + ":" + ory + ":"+ orz + "):";
