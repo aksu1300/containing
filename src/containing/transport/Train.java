@@ -47,7 +47,7 @@ public class Train extends Node {
         this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
         this.model.setMaterial(material);
         this.attachChild(this.model);
-        System.out.println(wagons);
+     
         
         
     }

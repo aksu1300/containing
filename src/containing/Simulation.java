@@ -47,12 +47,12 @@ public class Simulation extends SimpleApplication {
     private float initialWaterHeight = 0f;
     private Vector3f lightDir = new Vector3f(-4.9f, -1.3f, 5.9f);
     Spatial cargo;
-    ShipCrane shCrane;
+    ArrayList<ShipCrane> shCrane;
     Truck t;
     Train train;
     Truck truck;
     Wagon wagon;
-    public ArrayList<TrainCrane> tCranes = new ArrayList<TrainCrane>();
+    ArrayList<TrainCrane> tCranes = new ArrayList<TrainCrane>();
     Freighter freighter;
     Boat boat;
     Harbor harbor;
@@ -121,24 +121,20 @@ public class Simulation extends SimpleApplication {
             tc.craneDown();
         }
 
-
+        shCrane = harbor.shCranes;
+        shCrane.get(0).moveCrane();
         tCranes = harbor.trainCranes;
         train = harbor.train;
         
         for (Wagon w : train.getWagons()) {
-            w.setCargo(new Container(assetManager, 1.0f));
-            if(tCranes.get(0).idle = true ){
-//                tCranes.get(0).doMove(train.getWagons().get(k));
-                 
-            }
-            
-                    
+            w.setCargo(new Container(assetManager, 1.0f));         
         }
         int k = train.getWagonCount() -1;
         for(TrainCrane tr : harbor.trainCranes){
             tr.doMove(train.getWagons().get(k));
             k-=1; 
         }
+        
 //        for (int j = 0; j < tCranes.size(); j++) {
 //            for (int k = 0; k < train.getWagonCount(); k++) {
 //                if (train.getWagons().get(k).getCargo() != null) {
@@ -148,15 +144,7 @@ public class Simulation extends SimpleApplication {
 //                }
 //            }
 //        }
-
-
-
-
-
-
-
-
-
+        
         int i = 0;
         for (Truck tc : harbor.trucks) {
             tc.truckArrive(harbor.truckCranes.get(i));
