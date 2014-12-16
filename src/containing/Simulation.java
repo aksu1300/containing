@@ -141,6 +141,7 @@ public class Simulation extends SimpleApplication {
         }
         //loopt die door alle cranes heen loopt en vervolgens 
         //door de wagons om te zien welke containjer hij moet hebben
+        //lets try this in the simpleupdate 
 //            tCranes.get(3).doMove(train.getWagons().get(5),train);
 //            tCranes.get(2).doMove(train.getWagons().get(4),train);
      
@@ -162,8 +163,10 @@ public class Simulation extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         if(shCrane.get(0).moving == true){
+           
             if (freighter.getDocked()) {
-                    shCrane.get(0).moveCrane(freighter.containers.get(20).get(3).peek().getLocalTranslation());   
+                //need a for loop to check if crane is available and to loop trough all the stacks to find a container with the right id
+                    shCrane.get(0).moveCrane(freighter.containers.get(2).get(3).peek().getLocalTranslation());   
             }
         }
 //        System.out.println(cam.getLocation().x);

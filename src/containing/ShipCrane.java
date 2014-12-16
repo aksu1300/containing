@@ -78,7 +78,7 @@ public class ShipCrane extends Node {
             craneMotion.add(motionControl);
             this.moving = false;
             c_loc = location;
-
+            System.out.println(c_loc);
 
 
             for (MotionEvent me : craneMotion) {
@@ -107,6 +107,7 @@ public class ShipCrane extends Node {
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
+            
         }
 
         for (MotionEvent me : grabMotion) {
@@ -127,9 +128,10 @@ public class ShipCrane extends Node {
     public void grabberForward() {
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
+            System.out.println(c_loc.z);
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x - c_loc.y, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x + c_loc.z - c_loc.y, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
