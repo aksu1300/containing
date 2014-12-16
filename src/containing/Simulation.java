@@ -119,7 +119,7 @@ public class Simulation extends SimpleApplication {
     public void simpleUpdate(float tpf) {
         ///Update inputlist
         
-        updateCommands();
+        //updateCommands();
         
         ///Send outputlist
     }

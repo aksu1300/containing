@@ -88,6 +88,10 @@ public class Command implements Serializable {
       * @return Object information, such as the command, identifier, orx, ory and orz value in a single string. 
       */
      public String toString() {
-        return command + ":" + identifier  + ":(" + orx + ":" + ory + ":"+ orz + ")";
+        String x = command + ":" + identifier  + ":(" + orx + ":" + ory + ":"+ orz + ")";
+        for (int i = 0; i < contents.size(); i++){
+            x += contents.get(i);
+        }
+        return x;
     }
 }
