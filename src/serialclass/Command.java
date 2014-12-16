@@ -1,17 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package serialclass;
 
 import containing.Container;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- *
- * @author Driving Ghost
- */
 public class Command implements Serializable {
 
     private static final long serialVersionUID = 6529685098267757690L;
@@ -28,7 +20,7 @@ public class Command implements Serializable {
     float dez;
 
     /**
-     * For creating ships, boats, trains
+     * For creating ships, boats, trains.
      * @param command
      * @param identifier
      * @param contents 
@@ -41,7 +33,7 @@ public class Command implements Serializable {
     }
     
     /**
-     * 
+     * For createing AVGs, Trucks.
      * @param command
      * @param identifier
      * @param content 
@@ -53,7 +45,7 @@ public class Command implements Serializable {
     }
     
     /**
-     * 
+     * For creating Containers, Cranes.
      * @param command
      * @param identifier 
      */
@@ -65,7 +57,7 @@ public class Command implements Serializable {
     }
     
     /**
-     * 
+     * For creating ???.
      * @param command
      * @param identifier
      * @param orgin
@@ -84,6 +76,7 @@ public class Command implements Serializable {
         this.dez = dez;
     }
     
+    @Override
      public String toString() {
         return command + ":" + identifier  + ":(" + orx + ":" + ory + ":"+ orz + "):";
     }

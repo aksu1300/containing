@@ -4,6 +4,9 @@ import serialclass.Command;
 import java.util.Stack;
 
 public class Mediator {
+    
+    //buffer.
+    //
 
     public Mediator() {
     }
