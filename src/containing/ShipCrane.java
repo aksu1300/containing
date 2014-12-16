@@ -40,6 +40,8 @@ public class ShipCrane extends Node {
     boolean up = true;
     boolean in = false;
     boolean done = false;
+    public boolean moving = true;
+    Vector3f c_loc;
 
     public ShipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.assetManager = _assetManager;
@@ -63,45 +65,50 @@ public class ShipCrane extends Node {
 
     }
 
-    public void moveCrane(Vector3f location){
-        ArrayList<MotionEvent> craneMotion = new ArrayList<MotionEvent>();
-        for (int i = 1; i < this.children.size(); i++) {
+    public void moveCrane(Vector3f location) {
+        if (this.moving) {
+            ArrayList<MotionEvent> craneMotion = new ArrayList<MotionEvent>();
+
+           
             final MotionPath craneroute = new MotionPath();
             craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z));
-            craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x + location.x , this.getLocalTranslation().y + location.y , this.getLocalTranslation().z + location.z ));
+            craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z - location.x));
 
             MotionEvent motionControl = new MotionEvent(this, craneroute);
             craneMotion.add(motionControl);
-        }
-        
-        for (MotionEvent me : craneMotion) {
-            final MotionPath mp = me.getPath();
-            me.setInitialDuration(10f);
-            me.setSpeed(1);
-            me.play();
+            this.moving = false;
+            c_loc = location;
 
-            mp.addListener(new MotionPathListener() {
-                public void onWayPointReach(MotionEvent control, int wayPointIndex) {
-                    if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                       grabberDown();
-                        
+
+
+            for (MotionEvent me : craneMotion) {
+                final MotionPath mp = me.getPath();
+                me.setInitialDuration(10f);
+                me.setSpeed(1);
+                me.play();
+
+                mp.addListener(new MotionPathListener() {
+                    public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                        if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                       grabberForward();
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
-    
-    public void grabberBackward(){
+
+    public void grabberBackward() {
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x +5, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z ));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x + 5, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
         }
-        
+
         for (MotionEvent me : grabMotion) {
             final MotionPath mp = me.getPath();
             me.setInitialDuration(10f);
@@ -111,24 +118,23 @@ public class ShipCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        
-                        
                     }
                 }
             });
         }
     }
-    public void grabberForward(){
+
+    public void grabberForward() {
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x -5, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z ));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x - c_loc.y, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
         }
-        
+
         for (MotionEvent me : grabMotion) {
             final MotionPath mp = me.getPath();
             me.setInitialDuration(10f);
@@ -138,24 +144,25 @@ public class ShipCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        grabberBackward();
-                        
+//                        grabberBackward();
+
                     }
                 }
             });
         }
     }
-    public void grabberUp(){
+
+    public void grabberUp() {
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x , this.getChild(i).getLocalTranslation().y + 5, this.getChild(i).getLocalTranslation().z  ));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 5, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
         }
-        
+
         for (MotionEvent me : grabMotion) {
             final MotionPath mp = me.getPath();
             me.setInitialDuration(10f);
@@ -171,17 +178,18 @@ public class ShipCrane extends Node {
             });
         }
     }
-    public void grabberDown(){
+
+    public void grabberDown() {
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x , this.getChild(i).getLocalTranslation().y -5, this.getChild(i).getLocalTranslation().z ));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - 5, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
         }
-        
+
         for (MotionEvent me : grabMotion) {
             final MotionPath mp = me.getPath();
             me.setInitialDuration(10f);
@@ -192,13 +200,14 @@ public class ShipCrane extends Node {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
                         grabberUp();
-                       
+
                     }
                 }
             });
         }
     }
     // init Materials
+
     private void initMaterials() {
         material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
         crane.setMaterial(material);

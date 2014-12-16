@@ -5,13 +5,10 @@ import com.jme3.bounding.BoundingVolume;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
-import com.jme3.cinematic.events.MotionTrack;
 import com.jme3.material.Material;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import containing.Harbor;
 import containing.AGV;
 import containing.Container;
 import java.util.ArrayList;
@@ -35,12 +32,11 @@ public class TrainCrane extends Node {
     String id;
     float size;
     boolean idle = true;// its not doing anything, so it can be used
-    boolean status = false; 
+    boolean done = true;
+    boolean motion1 = false;
     BoundingVolume boundGrab;
-    boolean up = true;
-    boolean in = false;
-    boolean done = false;
-    Harbor harbor;
+
+
     
     public TrainCrane(AssetManager assetManager, float size, Vector3f location) {
         this.assetManager = assetManager;
@@ -98,8 +94,8 @@ public class TrainCrane extends Node {
     public void doMove(Wagon wagon,Train train){
             
             setWagon(wagon);
-            System.out.println(wagon.getLocation());
-            System.out.println(train.getLocation());
+//            System.out.println(wagon.getLocation());
+//            System.out.println(wagon.getLocalTranslation());
             moveCrane(wagon.getLocation(),train.getLocation());
     }
     
@@ -183,14 +179,8 @@ public class TrainCrane extends Node {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
                         //crane down when has a container so that it sits on an agv
-                       
+                       setDone(true);
                         
-                        
-                        if(idle == false){
-                            craneDown();
-                        }else{
-                            
-                        }
                     }
                 }
             });
@@ -216,13 +206,13 @@ public class TrainCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        if(idle == false){
+                        if(motion1 == true){
                             releaseWagon();
-                            done = true;
-                            craneLeft();
+                            craneRight();
+                            
                             
                         }else{
-                            craneRight();
+                            craneLeft();
                         }
                         
                     }
@@ -254,17 +244,12 @@ public class TrainCrane extends Node {
             mp.addListener( new MotionPathListener() {
             public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
                 //crane up if picked up container
-                if(idle == false){ 
-                    if(done == true){
-                        setIdle(true);
+                if(motion1 == true){ 
                         releaseContainer();
                         craneUp();
-                    }else{
-                        setContainer(wagon.getCargo());
-                        craneUp();
-                    }
+                    
                 }else{
-
+                   setContainer(wagon.getCargo());
                    craneUp();
                 }
             }
@@ -284,53 +269,6 @@ public class TrainCrane extends Node {
     public Vector3f getLocation() {
         return this.location;
     }
-
-    public void inGrabber(float tpf) {
-        if (this.getChild(1).getLocalTranslation().x < 20) {
-            this.in = false;
-            tpf = tpf * 4;
-            for (int i = 1; i < this.children.size(); i++) {
-                this.getChild(i).move(tpf, 0, 0);
-            }
-        } else {
-            this.in = true;
-        }
-    }
-    
-    public void pullGrabber(float tpf) {
-        if (this.getChild(1).getLocalTranslation().y <= 9) {
-            this.getChild(1).move(0, tpf, 0);
-            this.getChild(2).move(0, tpf, 0);
-            this.getChild(3).move(0, tpf, 0);
-            this.getChild(4).move(0, tpf, 0);
-            if (this.container != null) {
-                //this.getChild(5).move(0, tpf, 0);
-            }
-        } else {
-            this.up = true;
-        }
-    }
-    
-    public void pushGrabber(float tpf) {
-        this.up = true;
-        if (this.getChild(1).getLocalTranslation().y >= -10f) {
-            for (int i = 1; i < this.children.size(); i++) {
-                this.getChild(i).move(0, tpf * -1, 0);
-            }
-
-        } else {
-            
-        }
-
-    }
-    
-    public void grabContainer(Container grabbed) {
-        this.container = grabbed;
-        this.container.rotate(0, (FastMath.PI / 2), 0);
-        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y + 10, this.getChild(1).getLocalTranslation().z);
-        this.attachChild(container);
-    }
-    
     private void initBounding() {
         boundGrab = this.getChild(1).getWorldBound();
     }
@@ -346,6 +284,11 @@ public class TrainCrane extends Node {
     
     public void setIdle(boolean idle){
         this.idle =idle;
+    }
+    
+    public void setDone(boolean done){
+        this.done = done;
+        this.idle = true;
     }
 
     public void setContainer(Container c) {

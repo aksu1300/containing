@@ -59,6 +59,7 @@ public class Simulation extends SimpleApplication {
     MotionPath motionPath;
     MotionPath motionPath1;
     AGVController agvc;
+    int counter = 0;
     //Guid
     private Nifty nifty;
 
@@ -127,24 +128,22 @@ public class Simulation extends SimpleApplication {
         tCranes = harbor.trainCranes;
         train = harbor.train;
         
+        
+        //for loop loopt door alles heen tot ddat die de juiste container heeft
+//        System.out.println(freighter.containers.get(4).get(4).peek().getLocalTranslation());
+//        System.out.println(freighter.getDocked());
+        
+            
+            
+        
         for (Wagon w : train.getWagons()) {
             w.setCargo(new Container(assetManager, 1.0f));         
         }
-            tCranes.get(3).doMove(train.getWagons().get(5),train);
-            tCranes.get(2).doMove(train.getWagons().get(4),train);
-           
-        
-        
-//        for (int j = 0; j < tCranes.size(); j++) {
-//            for (int k = 0; k < train.getWagonCount(); k++) {
-//                if (train.getWagons().get(k).getCargo() != null) {
-//                    tCranes.get(j).doMove(train.getWagons().get(k).getCargo());
-//                } else if ( train.getWagons().get(k).getCargo() == null ) {
-//                    
-//                }
-//            }
-//        }
-        
+        //loopt die door alle cranes heen loopt en vervolgens 
+        //door de wagons om te zien welke containjer hij moet hebben
+//            tCranes.get(3).doMove(train.getWagons().get(5),train);
+//            tCranes.get(2).doMove(train.getWagons().get(4),train);
+     
         int i = 0;
         for (Truck tc : harbor.trucks) {
             tc.truckArrive(harbor.truckCranes.get(i));
@@ -162,7 +161,10 @@ public class Simulation extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        if (freighter.getDocked()) {
+        if(shCrane.get(0).moving == true){
+            if (freighter.getDocked()) {
+                    shCrane.get(0).moveCrane(freighter.containers.get(20).get(3).peek().getLocalTranslation());   
+            }
         }
 //        System.out.println(cam.getLocation().x);
 //        System.out.println(cam.getLocation().y);

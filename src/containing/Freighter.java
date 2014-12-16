@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package containing;
 
 import com.jme3.asset.AssetManager;
@@ -15,7 +11,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 /**
  *
@@ -25,7 +21,7 @@ public class Freighter extends Node {
     
     //private BulletAppState bulletAppState;
     //public Geometry ballGeo;
-    private float size;
+
     private boolean docked = false;
     private Material material;
     private AssetManager assetmanager;
@@ -34,12 +30,11 @@ public class Freighter extends Node {
     //public Geometry ballGeo;
     //public RigidBodyControl ballPhy;
     // A ship has a list of containers 
-    public List<Container> containers;
+    public ArrayList<ArrayList<Stack<Container>>> containers;
        
     public Freighter(AssetManager assetmanager) {
         this.assetmanager = assetmanager;
-        containers = new ArrayList<Container>();
-        
+        containers = new ArrayList<ArrayList<Stack<Container>>>();
         // Init ship 
         initShip();
 
@@ -57,7 +52,7 @@ public class Freighter extends Node {
     public void initShip() {
         shipSpatial = assetmanager.loadModel("Models/high/ship/seaship.j3o");
         shipSpatial.rotate(0, -(FastMath.PI / 2), 0);
-        shipSpatial.scale(0.5f);
+        shipSpatial.scale(0.8f);
     }
 
     public void initMaterial() {
@@ -70,14 +65,16 @@ public class Freighter extends Node {
      * initHold zet de containers op hun plaats op het deck. 
      */
     public void initHold() {
-        for (int i = 0; i < 9; i++) { //aantal decks
-            for (int y = 0; y < 3; y++) { //aantal niveaus
-                for (int z = 0; z < 5; z++) { //aantal per niveau
-                    Container x = new Container(assetmanager, 1.5f);
-                    x.rotate(0, -(FastMath.PI / 2), 0);
-                    x.setLocalTranslation(60-(i*24), size / 2 + 0.1f + (y*4.25f), -10 + (z * 5));
-                    this.attachChild(x);
-                    containers.add(x);
+        for (int x = 0; x < 21; x++){
+            containers.add(new ArrayList<Stack<Container>>());
+            for (int z = 0; z < 10; z++ ){
+                containers.get(x).add(new Stack<Container>());
+                for (int y = 0; y < 4; y++){
+                    Container c = new Container(assetmanager, 1);
+                    containers.get(x).get(z).push(c);
+                    c.rotate(0,FastMath.PI/2,0);
+                    this.attachChild(c);
+                    c.setLocalTranslation(shipSpatial.getLocalTranslation().x+130-(x*18f), y*2.8f, shipSpatial.getLocalTranslation().z +11.5f-(z*2.5f));
                 }
             }
         }
@@ -85,13 +82,7 @@ public class Freighter extends Node {
     
     // Get a container from the boot
     public Container getContainer(int id) {
-        // first deattach the container from the ship
-        this.detachChild(this.containers.get(id));
-
-        // Get the container from the list of containers of the ship
-        // Give the deattached container from the ship back to the caller of the 
-        // Method 
-        return this.containers.get(id);
+        return null;
     }
 
     // Get the spatial
@@ -110,7 +101,7 @@ public class Freighter extends Node {
         route.addListener(new MotionPathListener() {
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 if (route.getNbWayPoints() == wayPointIndex + 1) {
-                    setDocked();
+                    setDocked(true);
                 }
             }
         });
@@ -119,7 +110,7 @@ public class Freighter extends Node {
         return this.docked;
     }
 
-    public void setDocked() {
-        this.docked = !docked;
+    public void setDocked(boolean docked) {
+        this.docked = docked;
     }
 }
