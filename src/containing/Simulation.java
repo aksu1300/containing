@@ -135,7 +135,7 @@ public class Simulation extends SimpleApplication {
         
             
             
-        
+       System.out.println(freighter.getLocalTranslation());
         for (Wagon w : train.getWagons()) {
             w.setCargo(new Container(assetManager, 1.0f));         
         }
@@ -165,8 +165,14 @@ public class Simulation extends SimpleApplication {
         if(shCrane.get(0).moving == true){
            
             if (freighter.getDocked()) {
+//                System.out.println(freighter.containers.get(1).get(2).peek());
+//                System.out.println(freighter.containers.get(0).get(7).get(0).getLocalTranslation());
                 //need a for loop to check if crane is available and to loop trough all the stacks to find a container with the right id
-                    shCrane.get(0).moveCrane(freighter.containers.get(2).get(3).peek().getLocalTranslation());   
+                //1st get = the stack
+                //2nd get is the container row
+                //3rd get is the height of the container is now peek because we always need to top one
+                shCrane.get(0).procesCrane(freighter.containers.get(1).get(2).pop());   
+                System.out.println(freighter.containers.get(1).get(2).peek().getLocalTranslation());
             }
         }
 //        System.out.println(cam.getLocation().x);

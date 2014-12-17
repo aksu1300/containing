@@ -113,4 +113,14 @@ public class Freighter extends Node {
     public void setDocked(boolean docked) {
         this.docked = docked;
     }
+    
+//    public void popFromStack(Container c){
+//        for(int i = 0; i < 21; i++){
+//            for(int j = 0;j < 10;j++){
+//                for(int k = 0;k < 4;k++){
+//                    containers.get(i).get(j).get(k);
+//                }
+//            }
+//        }
+//    }
 }

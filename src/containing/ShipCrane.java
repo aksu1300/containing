@@ -37,11 +37,10 @@ public class ShipCrane extends Node {
     float size;
     boolean status = false; // flase is up, true is down
     BoundingVolume boundGrab;
-    boolean up = true;
-    boolean in = false;
-    boolean done = false;
     public boolean moving = true;
     Vector3f c_loc;
+    boolean idle = true;
+    boolean motion1 = false;
 
     public ShipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.assetManager = _assetManager;
@@ -65,8 +64,16 @@ public class ShipCrane extends Node {
 
     }
 
-    public void moveCrane(Vector3f location) {
+    public void procesCrane(Container container){
         if (this.moving) {
+            this.container = container;
+            location = container.getLocalTranslation();
+            c_loc = location;
+            moveCrane(location);
+        }
+    }
+    public void moveCrane(Vector3f location) {
+        
             ArrayList<MotionEvent> craneMotion = new ArrayList<MotionEvent>();
 
            
@@ -77,8 +84,8 @@ public class ShipCrane extends Node {
             MotionEvent motionControl = new MotionEvent(this, craneroute);
             craneMotion.add(motionControl);
             this.moving = false;
-            c_loc = location;
-            System.out.println(c_loc);
+            
+
 
 
             for (MotionEvent me : craneMotion) {
@@ -90,48 +97,23 @@ public class ShipCrane extends Node {
                 mp.addListener(new MotionPathListener() {
                     public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                         if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                       grabberForward();
+                       grabberMove();
                         }
                     }
                 });
             }
-        }
+        
     }
 
-    public void grabberBackward() {
+    
+
+    public void grabberMove() {
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
-            final MotionPath trainroute = new MotionPath();
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x + 5, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-
-            MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
-            grabMotion.add(motionControl);
             
-        }
-
-        for (MotionEvent me : grabMotion) {
-            final MotionPath mp = me.getPath();
-            me.setInitialDuration(10f);
-            me.setSpeed(1);
-            me.play();
-
-            mp.addListener(new MotionPathListener() {
-                public void onWayPointReach(MotionEvent control, int wayPointIndex) {
-                    if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                    }
-                }
-            });
-        }
-    }
-
-    public void grabberForward() {
-        ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
-        for (int i = 1; i < this.children.size(); i++) {
-            System.out.println(c_loc.z);
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x + c_loc.z - c_loc.y, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x + c_loc.z -7.5f, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
@@ -146,7 +128,7 @@ public class ShipCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-//                        grabberBackward();
+                        grabberDown();
 
                     }
                 }
@@ -174,7 +156,7 @@ public class ShipCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        grabberForward();
+                        
                     }
                 }
             });
@@ -186,7 +168,7 @@ public class ShipCrane extends Node {
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - 5, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - c_loc.z , this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
@@ -201,6 +183,7 @@ public class ShipCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                        setContainer(container);
                         grabberUp();
 
                     }
@@ -244,70 +227,23 @@ public class ShipCrane extends Node {
 
     }
 
-    /**
-     * Grabbing a container
-     */
+    
     public Vector3f getLocation() {
         return this.location;
-    }
-
-    public void inGrabber(float tpf) {
-        if (this.getChild(1).getLocalTranslation().x < 20) {
-            this.in = false;
-            tpf = tpf * 4;
-            for (int i = 1; i < this.children.size(); i++) {
-                this.getChild(i).move(tpf, 0, 0);
-            }
-        } else {
-            this.in = true;
-        }
-    }
-
-    /**
-     * Grabbing a container
-     */
-    public void pullGrabber(float tpf) {
-        if (this.getChild(1).getLocalTranslation().y <= 9) {
-            this.getChild(1).move(0, tpf, 0);
-            this.getChild(2).move(0, tpf, 0);
-            this.getChild(3).move(0, tpf, 0);
-            this.getChild(4).move(0, tpf, 0);
-            if (this.container != null) {
-                //this.getChild(5).move(0, tpf, 0);
-            }
-        } else {
-            this.up = true;
-        }
-    }
-
-    /**
-     * Taking a container
-     */
-    public void pushGrabber(float tpf) {
-        this.up = false;
-        if (this.getChild(1).getLocalTranslation().y >= -10f) {
-            for (int i = 1; i < this.children.size(); i++) {
-                this.getChild(i).move(0, tpf * -1, 0);
-            }
-
-        } else {
-            this.done = true;
-        }
-
-    }
-
-    /**
-     * Grabbing a container
-     */
-    public void grabContainer(Container grabbed) {
-        this.container = grabbed;
-        this.container.rotate(0, (FastMath.PI / 2), 0);
-        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y + 10, this.getChild(1).getLocalTranslation().z);
-        this.attachChild(container);
     }
 
     private void initBounding() {
         boundGrab = this.getChild(1).getWorldBound();
 
+    }
+    
+    private void setContainer(Container c){
+        this.container = c;
+        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y , this.getChild(1).getLocalTranslation().z);
+        this.attachChild(this.container);
+    }
+    
+    private void releaseContainer(){
+        this.detachChild(container);
     }
 }

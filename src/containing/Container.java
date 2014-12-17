@@ -11,9 +11,9 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
- *
  * @author account
  */
+
 public class Container extends Node{
 
     private String id;
@@ -59,5 +59,7 @@ public class Container extends Node{
     private void initBounding(){
         geometry = this.container.getWorldBound();
     }
+    
+    
     
 }
