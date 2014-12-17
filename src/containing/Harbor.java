@@ -48,6 +48,8 @@ public class Harbor extends Node {
     public ArrayList<TruckCrane> truckCranes;
     public ArrayList<TrainCrane> trainCranes;
     public ArrayList<Truck> trucks;
+    public ArrayList<Train> trains;
+
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
         trainCranes = new ArrayList<TrainCrane>();
@@ -60,6 +62,7 @@ public class Harbor extends Node {
         storagesloc = new ArrayList<Vector3f>();
         cranesloc = new ArrayList<Vector3f>();
         trucks = new ArrayList<Truck>();
+        trains = new ArrayList<Train>();
 
         agvRoosterA = new ArrayList<AGV>();
         agvRoosterB = new ArrayList<AGV>();
@@ -74,7 +77,7 @@ public class Harbor extends Node {
         initTruckcranes();
         initTrucks();
         initRails();
-        initTrainCrane();
+        initTrainCranes();
         initTrain();
         //initTest();
     }
@@ -144,24 +147,23 @@ public class Harbor extends Node {
         this.attachChild(geometry);
     }
     
-    public void initTrainCrane() {
-        TrainCrane crane = new TrainCrane(assetmanager, new Vector3f(-100, 10, 250), this);
-        crane.rotate(0, FastMath.PI * 1.5f, 0);
-        crane.setLocalTranslation(crane.getLocation());
-        this.attachChild(crane);
-    }
-    
-    public void initTest() {
-        Wagon wagon = new Wagon("TW1", new Vector3f(-86.8f, 10, 250), assetmanager);
-        wagon.rotate(0, FastMath.PI * 1.5f, 0);
-        wagon.setLocalTranslation(wagon.getLocation());
-        this.attachChild(wagon);
+    public void initTrainCranes() {
+        for (int i = 0; i < 4; i++)
+        {
+            TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(-100 + (i * 18), 10, 500));
+            crane.rotate(0, FastMath.PI * 1.5f, 0);
+            crane.setLocalTranslation(crane.getLocation());
+            trainCranes.add(crane);
+            this.attachChild(crane);
+        }
     }
     
     public void initTrain() {
-        Train train = new Train(new Vector3f(-113, 10, 250), assetmanager, 3);  
+        train = new Train("Train1", new Vector3f(-115, 10.5f, 500), assetmanager,5);
         train.rotate(0, FastMath.PI * 1.5f, 0);
+//        trains.add(train);
         train.setLocalTranslation(train.getLocation());
+        
         this.attachChild(train);
     }
 
