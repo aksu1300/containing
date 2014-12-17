@@ -26,8 +26,7 @@ public class TrainCrane extends Node {
     Material material;
     AssetManager assetmanager;
     BoundingVolume boundGrab;
-	
-    String id;
+
     Vector3f location;
     float speed;
 	

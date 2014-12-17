@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 public class Train extends Node {
     
-    private String Id;
     private Vector3f location;
     private Spatial model;
     private Material material;
@@ -21,15 +20,6 @@ public class Train extends Node {
     private ArrayList<Wagon> wagons;
     private AssetManager assetmanager;
 
-    // Get the id of the train
-    public String getId() {
-        return Id;
-    }
-
-    // Set the id of the train
-    public String setId(String Id) {
-        return this.Id = Id;
-    }
 
    
     // Get containers
@@ -49,6 +39,7 @@ public class Train extends Node {
         this.material = new Material(assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
         this.model.setMaterial(material);
         this.attachChild(this.model);
+        this.setName("Train");
     }
     
     /**

@@ -19,7 +19,6 @@ public class Container extends Node implements Serializable{
 
     private static final long serialVersionUID = 6529685098267757690L;
     
-    private String id;
     private AssetManager assetManager;
     private Spatial container;
     private float size;
@@ -30,7 +29,7 @@ public class Container extends Node implements Serializable{
     public Container(AssetManager _assetManager, float _size) {
         this.assetManager = _assetManager;
         this.size = _size;
-        this.id = "XXX";
+        this.name = "XXX";
         
         //Init Sphere
         initContainer();
@@ -56,8 +55,7 @@ public class Container extends Node implements Serializable{
         container = assetManager.loadModel("Models/high/container/container.j3o");
         container.scale(size);
     }
-    
-    public String getId() {return this.id;}
+
    
     private void initBounding(){
         geometry = this.container.getWorldBound();

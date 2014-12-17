@@ -20,7 +20,6 @@ import java.util.List;
 
 public class Boat extends Node{
     
-    private String Id;
     private AssetManager assetManager;
     private Spatial shipSpatial;
     //private BulletAppState bulletAppState;
@@ -34,16 +33,7 @@ public class Boat extends Node{
     private List<Container> containers;
 
     
-    // Get the ship id
-    public String getId() {
-        return Id;
-    }
 
-    // Set the ship id
-    public void setId(String Id) {
-        this.Id = Id;
-    }
-    
     // Get the list of the containers
     public List<Container> getContainers() {
         return containers;
@@ -61,7 +51,17 @@ public class Boat extends Node{
         initShip();
         initMaterial();
         this.attachChild(shipSpatial);
-    }    
+    }
+    
+    public Boat(String id, Vector3f vector3f,AssetManager assetManager) {
+        this.assetManager = assetManager;
+        this.setName(id);
+        containers = new ArrayList<Container>();
+        initHold();
+        initShip();
+        initMaterial();
+        this.attachChild(shipSpatial);
+    }   
     
     //  Init ship
     public void initShip() {

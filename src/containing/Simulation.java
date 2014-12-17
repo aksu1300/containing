@@ -350,30 +350,35 @@ public class Simulation extends SimpleApplication {
            // The createShip command is recvied so create a ship
            Boat ship = new Boat(assetManager);
            ship.setContainers(cmd.getContents());
-           ship.setId(cmd.getIdentifier());
+           ship.setName(cmd.getIdentifier());
            
            // attach the boat to the rootNode
            rootNode.attachChild(ship);        
-           
-           // 
-           System.out.println("We recieved a createShip sheize :" + ship.getContainers().size());
        }
        
        if(cmd.getCommand() == "createFreighter"){
+           // create Freighter
+           Freighter freighter = new Freighter(assetManager);
+           
        }
 
        if(cmd.getCommand() == "createTrain"){
            Train train = new Train(new Vector3f(3,4,5), assetManager);
            train.setContainers(cmd.getContents());
-           train.setId(cmd.getIdentifier());
+           train.setName(cmd.getIdentifier());
            
            // Attach the train to the rootNode
            rootNode.attachChild(train);
-       
        }
        
+       // 
        if(cmd.getCommand() == "createTruck" ){
-       
+           //Create truckt
+           Truck truck = new Truck(cmd.getIdentifier(), new Vector3f(0,0,0), 2, assetManager);
+           truck.setContainer(cmd.getContents().get(0));
+           
+           // Attach the truck to the rootNode
+           rootNode.attachChild(truck);
        } 
         
         
@@ -381,23 +386,23 @@ public class Simulation extends SimpleApplication {
         * The moving commands
         */
        if(cmd.getCommand() == "moveShip"){
-           
+           // Get the ship 
+           Boat ship = (Boat)rootNode.getChild(cmd.getIdentifier());
+           ship.Move(harbor.getDockingroute(), speed);
        }
        
        if(cmd.getCommand() == "moveFreighter"){
-       
-       }
-       
-       if(cmd.getCommand() == "moveShip"){
-           
+           Freighter freighter = (Freighter)rootNode.getChild(cmd.getIdentifier());
+           freighter.Move(harbor.getDockingroute(), speed);
        }
        
        if(cmd.getCommand() == "moveTrain"){
-       
+           Train trian = (Train) rootNode.getChild(cmd.getIdentifier());
        }
        
        if(cmd.getCommand() == "moveTruck" ){
-       
+           Truck truck = (Truck) rootNode.getChild(cmd.getIdentifier());
+           truck.move(lightDir);
        }
     }
     

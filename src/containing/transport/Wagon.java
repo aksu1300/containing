@@ -16,10 +16,9 @@ public class Wagon extends Node {
     private AssetManager assetmanager;
     private Container cargo;
     private float speed;
-    private String id;
     
     public Wagon(String id,Vector3f location , AssetManager assetmanager) {
-        this.id = id;
+        this.setName(id);
         this.location = location;
         this.assetmanager = assetmanager;
         this.model = this.assetmanager.loadModel("Models/high/train/wagon.j3o");

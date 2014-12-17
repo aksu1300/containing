@@ -13,7 +13,7 @@ import containing.Container;
 import containing.TruckCrane;
 
 public class Truck extends Node {
-    String id;
+
     Vector3f loc;
     Spatial model;
     Material material;
@@ -22,7 +22,7 @@ public class Truck extends Node {
     boolean ready = false;
 
     public Truck(String id, Vector3f loc, float speed, AssetManager assetManager) {
-        this.id = id;
+        this.name = id;
         this.loc = loc; 
         this.cargo = null;
         this.speed = speed;
