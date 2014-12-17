@@ -48,7 +48,7 @@ public class Command implements Serializable {
      * For moving units!
      * @param command What to be done with the object in question.
      * @param identifier ID of the object in question. 
-     * @param target the target parameter is used to identify the point or object to move to
+     * @param target the target parameter is used to identify the point or object to move to.
      */
     public Command(String command, String identifier, String target){ //class is incorect!
         
@@ -87,4 +87,72 @@ public class Command implements Serializable {
         }
         return x;
     }
+
+    //gets & sets
+    
+    public ArrayList<Container> getContents() {
+        return contents;
+    }
+
+    public void setContents(ArrayList<Container> contents) {
+        this.contents = contents;
+    }
+
+    public Container getContent() {
+        return content;
+    }
+
+    public void setContent(Container content) {
+        this.content = content;
+    }
+
+    public float getOrx() {
+        return orx;
+    }
+
+    public void setOrx(float orx) {
+        this.orx = orx;
+    }
+
+    public float getOry() {
+        return ory;
+    }
+
+    public void setOry(float ory) {
+        this.ory = ory;
+    }
+
+    public float getOrz() {
+        return orz;
+    }
+
+    public void setOrz(float orz) {
+        this.orz = orz;
+    }
+
+    public float getDex() {
+        return dex;
+    }
+
+    public void setDex(float dex) {
+        this.dex = dex;
+    }
+
+    public float getDey() {
+        return dey;
+    }
+
+    public void setDey(float dey) {
+        this.dey = dey;
+    }
+
+    public float getDez() {
+        return dez;
+    }
+
+    public void setDez(float dez) {
+        this.dez = dez;
+    }
+    
+    
 }

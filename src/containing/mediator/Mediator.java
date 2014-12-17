@@ -5,12 +5,6 @@ import java.util.Stack;
 
 public class Mediator {
     
-    //buffer.
-    //
-
-    public Mediator() {
-    }
-    
     static boolean writing = false;
     static Stack commands = new Stack();
 
