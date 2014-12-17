@@ -67,6 +67,7 @@ public class ShipCrane extends Node {
     public void procesCrane(Container container){
         if (this.moving) {
             this.container = container;
+            
             location = container.getLocalTranslation();
             c_loc = location;
             moveCrane(location);
@@ -183,9 +184,8 @@ public class ShipCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        setContainer(container);
+//                        setContainer();
                         grabberUp();
-
                     }
                 }
             });
@@ -236,11 +236,14 @@ public class ShipCrane extends Node {
         boundGrab = this.getChild(1).getWorldBound();
 
     }
-    
-    private void setContainer(Container c){
-        this.container = c;
-        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y , this.getChild(1).getLocalTranslation().z);
-        this.attachChild(this.container);
+   
+    public void setContainer(Container container){
+        
+//        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x , this.getChild(1).getLocalTranslation().y + 10 , this.getChild(1).getLocalTranslation().z);
+//        this.attachChild(this.container);
+        this.container = container;
+        this.attachChild(container);
+        
     }
     
     private void releaseContainer(){

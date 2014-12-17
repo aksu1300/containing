@@ -127,24 +127,25 @@ public class Simulation extends SimpleApplication {
 //        shCrane.get(0).moveCrane(new Vector3f(0,0,4));
         tCranes = harbor.trainCranes;
         train = harbor.train;
-        
-        
+
+
         //for loop loopt door alles heen tot ddat die de juiste container heeft
 //        System.out.println(freighter.containers.get(4).get(4).peek().getLocalTranslation());
 //        System.out.println(freighter.getDocked());
-        
-            
-            
-       System.out.println(freighter.getLocalTranslation());
+
+
+
+        System.out.println(freighter.getLocalTranslation());
         for (Wagon w : train.getWagons()) {
-            w.setCargo(new Container(assetManager, 1.0f));         
+            w.setCargo(new Container(assetManager, 1.0f));
         }
-        //loopt die door alle cranes heen loopt en vervolgens 
-        //door de wagons om te zien welke containjer hij moet hebben
-        //lets try this in the simpleupdate 
+
 //            tCranes.get(3).doMove(train.getWagons().get(5),train);
 //            tCranes.get(2).doMove(train.getWagons().get(4),train);
-     
+
+
+
+
         int i = 0;
         for (Truck tc : harbor.trucks) {
             tc.truckArrive(harbor.truckCranes.get(i));
@@ -158,23 +159,30 @@ public class Simulation extends SimpleApplication {
 
             }
         }
+
+        for (int k = 1; k < 5; k++) {
+            for (int m = 0; m < 5; m++) {
+                for (int j = 0; j < 5; j++) {
+//                        shCrane.get(0).procesCrane(freighter.containers.get(i).get(j).peek());
+                    shCrane.get(k).setContainer(freighter.getContainer(m, j));
+                    //                System.out.println(freighter.containers.get(1).get(2).peek().getLocalTranslation());
+
+                }
+            }
+        }
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        if(shCrane.get(0).moving == true){
-           
-            if (freighter.getDocked()) {
-//                System.out.println(freighter.containers.get(1).get(2).peek());
-//                System.out.println(freighter.containers.get(0).get(7).get(0).getLocalTranslation());
-                //need a for loop to check if crane is available and to loop trough all the stacks to find a container with the right id
-                //1st get = the stack
-                //2nd get is the container row
-                //3rd get is the height of the container is now peek because we always need to top one
-                shCrane.get(0).procesCrane(freighter.containers.get(1).get(2).pop());   
-                System.out.println(freighter.containers.get(1).get(2).peek().getLocalTranslation());
-            }
+
+
+        if (freighter.getDocked()) {
+            //need a for loop to check if crane is available and to loop trough all the stacks to find a container with the right id
+            //1st get = the stack
+            //2nd get is the container row
+            //3rd get is the height of the container is now peek because we always need to top one
         }
+
 //        System.out.println(cam.getLocation().x);
 //        System.out.println(cam.getLocation().y);
 //        System.out.println(cam.getLocation().z);

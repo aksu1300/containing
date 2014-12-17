@@ -81,8 +81,11 @@ public class Freighter extends Node {
     }
     
     // Get a container from the boot
-    public Container getContainer(int id) {
-        return null;
+    public Container getContainer(int l,int b) {
+        // freighter.containers.get(4).get(5).peek()
+        Container container = containers.get(l).get(b).pop();
+        this.detachChild(container);
+        return container;
     }
 
     // Get the spatial
@@ -118,7 +121,9 @@ public class Freighter extends Node {
 //        for(int i = 0; i < 21; i++){
 //            for(int j = 0;j < 10;j++){
 //                for(int k = 0;k < 4;k++){
-//                    containers.get(i).get(j).get(k);
+//                    if(containers.get(i).get(j).get(k) == c){
+//                        c.detachChild(c);
+//                    }
 //                }
 //            }
 //        }
