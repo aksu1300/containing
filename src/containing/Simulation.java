@@ -327,7 +327,7 @@ public class Simulation extends SimpleApplication {
     
     private void initSockets() {
         try {
-            socket = new Socket("127.0.0.1", 5400);
+            socket = new Socket("141.252.219.27", 5400);
             path = new ArrayList<String>();
         } catch (UnknownHostException e) {
             e.printStackTrace();
