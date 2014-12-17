@@ -46,8 +46,8 @@ public class Command implements Serializable {
     
     /**
      * For creating Containers, Cranes.
-     * @param command
-     * @param identifier 
+     * @param command What to be done with the object in question.
+     * @param identifier ID of the object in question.
      */
     public Command(String command, String identifier){
         
@@ -57,7 +57,7 @@ public class Command implements Serializable {
     }
     
     /**
-     * For creating ???.
+     * For moveing an Object.
      * @param command
      * @param identifier
      * @param orgin
