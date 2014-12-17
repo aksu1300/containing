@@ -1,23 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package serialclass;
 
 import containing.Container;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- *
- * @author Driving Ghost
- */
 public class Command implements Serializable {
 
     private static final long serialVersionUID = 6529685098267757690L;
     
-    String command;
-    String identifier;
+    final String command;
+    final String identifier;
     ArrayList<Container> contents = new ArrayList<Container>();
     Container content;
     float orx;
@@ -28,10 +20,10 @@ public class Command implements Serializable {
     float dez;
 
     /**
-     * For creating ships, boats, trains
-     * @param command
-     * @param identifier
-     * @param contents 
+     * For createing freighter, boats, trains
+     * @param command Use the create string to use this class correctly.
+     * @param identifier Class name of the item you wish to create. Such as boat, freighter or train.
+     * @param contents List of Containers. It holds all the containers in it's cargo hold.
      */
     public Command(String command, String identifier, ArrayList<Container> contents){
         
@@ -41,10 +33,10 @@ public class Command implements Serializable {
     }
     
     /**
-     * 
-     * @param command
-     * @param identifier
-     * @param content 
+     * For createing AVGs, Trucks. 
+     * @param command use the create String to use this class correctly.
+     * @param identifier class name of the object you wish to create.
+     * @param content A single container. 
      */
     public Command(String command, String identifier, Container content){
         this.command = command;
@@ -53,11 +45,12 @@ public class Command implements Serializable {
     }
     
     /**
-     * 
-     * @param command
-     * @param identifier 
+     * For moving units!
+     * @param command What to be done with the object in question.
+     * @param identifier ID of the object in question. 
+     * @param target the target parameter is used to identify the point or object to move to.
      */
-    public Command(String command, String identifier){
+    public Command(String command, String identifier, String target){ //class is incorect!
         
         this.command = command;
         this.identifier = identifier;
@@ -65,20 +58,18 @@ public class Command implements Serializable {
     }
     
     /**
-     * 
-     * @param command
-     * @param identifier
-     * @param orgin
-     * @param destin 
+     * This command is used to move targets to a vector desired by the user.
+     * @param command use the MOVE command to use this correctly
+     * @param identifier the identifier parameter is used to grab the desired object. This can be an AGV or a crane.
+     * @param dex Destination vector x value.
+     * @param dey Destination vector y value.
+     * @param dez Destination vector z value. 
      */
-     public Command(String command, String identifier, float orx, float ory, float orz, float dex, float dey, float dez) {
+     public Command(String command, String identifier, float dex, float dey, float dez) {
 
         this.command = command;
         this.identifier = identifier;
-        this.orx = orx;
-        this.ory = ory;
-        this.orz = orz;
-
+        
         this.dex = dex;
         this.dey = dey;
         this.dez = dez;
@@ -125,6 +116,46 @@ public class Command implements Serializable {
     }
     
      public String toString() {
-        return command + ":" + identifier  + ":(" + orx + ":" + ory + ":"+ orz + "):";
+        String x = command + ":" + identifier  + ":(" + orx + ":" + ory + ":"+ orz + ")";
+        for (int i = 0; i < contents.size(); i++){
+            x += contents.get(i);
+        }
+        return x;
     }
+
+    
+    public void setContents(ArrayList<Container> contents) {
+        this.contents = contents;
+    }
+
+    public void setContent(Container content) {
+        this.content = content;
+    }
+
+    public void setOrx(float orx) {
+        this.orx = orx;
+    }
+
+    public void setOry(float ory) {
+        this.ory = ory;
+    }
+
+
+    public void setOrz(float orz) {
+        this.orz = orz;
+    }
+
+    public void setDex(float dex) {
+        this.dex = dex;
+    }
+
+    public void setDey(float dey) {
+        this.dey = dey;
+    }
+
+    public void setDez(float dez) {
+        this.dez = dez;
+    }
+    
+    
 }

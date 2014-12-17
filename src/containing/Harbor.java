@@ -23,6 +23,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Line;
 import com.jme3.util.SkyFactory;
 import containing.transport.Train;
+import containing.transport.Wagon;
 import containing.transport.Truck;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,16 +38,18 @@ public class Harbor extends Node {
     List<Vector3f> cranesloc;
     List<Storage> storagelines;
     public ArrayList<ShipCrane> shCranes;
-    public ArrayList<ShipCrane> boatCranes;
-    public ArrayList<TruckCrane> truckCranes;
-    public ArrayList<TrainCrane> trainCranes;
+
     public ArrayList<AGV> agvRoosterA;
     public ArrayList<AGV> agvRoosterB;
     private AssetManager assetmanager;
+    public Train train;
+
+    public ArrayList<ShipCrane> boatCranes;
+    public ArrayList<TruckCrane> truckCranes;
+    public ArrayList<TrainCrane> trainCranes;
     public ArrayList<Truck> trucks;
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
-        shCranes = new ArrayList<ShipCrane>();
         trainCranes = new ArrayList<TrainCrane>();
         storagelines = new ArrayList<Storage>();
         truckCranes = new ArrayList<TruckCrane>();
@@ -60,7 +63,7 @@ public class Harbor extends Node {
 
         agvRoosterA = new ArrayList<AGV>();
         agvRoosterB = new ArrayList<AGV>();
-
+        
         this.assetmanager = assetManager;
 
         initPlatform(bulletAppState);
@@ -71,8 +74,42 @@ public class Harbor extends Node {
         initTruckcranes();
         initTrucks();
         initRails();
-        initTrainCranes();
+        initTrainCrane();
         initTrain();
+        //initTest();
+    }
+   
+    /***
+     * initAGV initialises the AGV's on their parking spots. 
+     * 
+     */
+    public void initAGV() {
+        for (Storage s : storagelines) { //STORAGE S IS USED! But foreach looks better than a for loop B^) 
+            for (int i = 0; i < 4; i++) { //BOT4 (A kant)
+                agvRoosterA.add(new AGV(("SAV" + i), assetmanager));
+            }
+            for (int i = 0; i < 4; i++) { //TOP4 (B kant)
+                agvRoosterB.add(new AGV(("SBV" + i), assetmanager));
+            }
+        }
+        float zval = 106; //beginnend Z waarde. 
+        for (int i = 0; i < agvRoosterA.size(); i++) {
+            if(i % 4 == 0){
+                zval -= 24.5f; //na elke 4 agvs wordt de z waarde met 24.5 verlaagt. 
+            }
+            agvRoosterA.get(i).setLocalTranslation(75,10.5f,zval-(i*5));
+            agvRoosterA.get(i).rotate(0, -(FastMath.PI / 2), 0); //goedom zetten.
+            this.attachChild(agvRoosterA.get(i)); //attach to world!
+        }
+        zval = 106;
+        for (int i = 0; i < agvRoosterB.size(); i++) { //onderstaande code werkt hetzelfde als voor roosterA. le copy paste!
+            if(i % 4 == 0){
+                zval -= 24.5f;
+            }
+            agvRoosterB.get(i).setLocalTranslation(-122,10.5f,zval-(i*5));
+            agvRoosterB.get(i).rotate(0, (FastMath.PI / 2), 0);
+            this.attachChild(agvRoosterB.get(i));
+        }
     }
 
     public void initTreinRails() {
@@ -107,20 +144,22 @@ public class Harbor extends Node {
         this.attachChild(geometry);
     }
     
-    public void initTrainCranes() {
-        for (int i = 0; i < 4; i++)
-        {
-            TrainCrane crane = new TrainCrane(assetmanager, new Vector3f(-100 + (i * 20), 10, 500), this);
-            crane.rotate(0, FastMath.PI * 1.5f, 0);
-            crane.setLocalTranslation(crane.getLocation());
-            trainCranes.add(crane);
-            this.attachChild(crane);
-        }
+    public void initTrainCrane() {
+        TrainCrane crane = new TrainCrane(assetmanager, new Vector3f(-100, 10, 250), this);
+        crane.rotate(0, FastMath.PI * 1.5f, 0);
+        crane.setLocalTranslation(crane.getLocation());
+        this.attachChild(crane);
+    }
+    
+    public void initTest() {
+        Wagon wagon = new Wagon("TW1", new Vector3f(-86.8f, 10, 250), assetmanager);
+        wagon.rotate(0, FastMath.PI * 1.5f, 0);
+        wagon.setLocalTranslation(wagon.getLocation());
+        this.attachChild(wagon);
     }
     
     public void initTrain() {
-        //Train train = new Train(new Vector3f(-100, 10, 250), assetmanager, 2);
-        Train train = new Train(new Vector3f(-100, 10.5f, 500), assetmanager);
+        Train train = new Train(new Vector3f(-113, 10, 250), assetmanager, 3);  
         train.rotate(0, FastMath.PI * 1.5f, 0);
         train.setLocalTranslation(train.getLocation());
         this.attachChild(train);

@@ -99,7 +99,8 @@ public class TrainCrane extends Node {
     }
 
     private Wagon calcWagon(Container container) {
-	Train train = new Train(new Vector3f(3,4,4),assetmanager);
+	Train train = this.harbor.train;
+
         for (Wagon wagon : train.getWagons()) {
             if (wagon.getCargo() == container) {
                 return wagon;
