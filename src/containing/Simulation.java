@@ -4,6 +4,7 @@
  */
 package containing;
 
+import serialclass.Command;
 import containing.transport.Train;
 import containing.transport.Truck;
 import containing.transport.Boat;
@@ -11,16 +12,13 @@ import HUD.MyHUD;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
-import containing.storage.Storage;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
@@ -30,9 +28,12 @@ import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Simulation extends SimpleApplication {
 
@@ -45,6 +46,7 @@ public class Simulation extends SimpleApplication {
     private Vector3f lightDir = new Vector3f(-4.9f, -1.3f, 5.9f);
     Spatial cargo;
     ShipCrane shCrane;
+    Truck t;
     Train train;
     Truck truck;
     Freighter freighter;
@@ -52,14 +54,9 @@ public class Simulation extends SimpleApplication {
     Harbor harbor;
     MotionPath motionPath;
     MotionPath motionPath1;
-    boolean pushedtoship = false; //check if grabber is pushed to ship
-    boolean pulledfromship = false; //check if grabber is pulled from ship
-    boolean grabberin = false; // check if grabber is in
-    boolean pushedtoagv = false; // check if grabber is pushed to agv
-    boolean agvgo = false; // check if grabber is pulled from agv
-    boolean pulledfromagv = false;
-    boolean sequence = true; // true means incomplete.
-    boolean agvatc = true;
+    AGVController agvc;
+    Socket socket;
+    ArrayList<String> path;
 
     public Simulation() {
         initSockets();
@@ -79,13 +76,14 @@ public class Simulation extends SimpleApplication {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         harbor = new Harbor(bulletAppState, assetManager);
+        agvc = new AGVController();
 
         //right camera position
         //cam.setLocation(new Vector3f(200, 150, 150));
         //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
         //flyCam.setEnabled(true);
         flyCam.setDragToRotate(true);
-        flyCam.setMoveSpeed(100);
+        flyCam.setMoveSpeed(300);
         cam.setLocation(new Vector3f(30, 100, 30));
         cam.setFrustumFar(9000);
         cam.onFrameChange();
@@ -105,7 +103,6 @@ public class Simulation extends SimpleApplication {
 
         // Adding a ship to the scene
         boat = new Boat(assetManager);
-        //ship.addContainer(new Container(assetManager, 1f));
         boat.Move(harbor.getFreighterDock(), 0.3f);
         rootNode.attachChild(boat);
         //Adding freighter to the harbor
@@ -113,52 +110,20 @@ public class Simulation extends SimpleApplication {
         freighter.Move(harbor.getDockingroute(), 1.2f);
 
         rootNode.attachChild(freighter);
-        
-        harbor.testMotionPaths().enableDebugShape(assetManager, rootNode);
-        harbor.agvRoosterA.get(0).Move(harbor.testMotionPaths(), 1);
-        
+
+        harbor.shCranes.get(0).moveCranes(freighter);
+
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-
+        ///Update inputlist
         
-
-        for (Storage sl : harbor.storagelines) {
-            sl.Getcranes().moveOut(tpf, 0);
-        }
-
-        if (freighter.getDocked()) //ship.detachChild(ship.containers.get(89));
-        {
-//            for (ShipCrane sc : harbor.shCranes) {
-//                if (sc.container == null) {
-//                    //System.out.println("no container!");
-//                    sc.pushGrabber(tpf);
-//                    if (sc.boundGrab.intersects(freighter.containers.get(89).geometry)) {
-//                        System.out.println("it has hit!");
-//                        sc.grabContainer(freighter.containers.get(89));
-//                    }
-//                } else if (sc.in && sc.container != null) {
-//                    sc.pushGrabber(tpf);
-//                } else if (sc.up && sc.container != null) {
-//                    sc.inGrabber(tpf);
-//                } else {
-//                    sc.pullGrabber(tpf);
-//                }
-//                if (sc.done && sc.container != null) {
-//                    agv.setContainer(sc.container);
-//                    sc.container = null;
-//                    sc.detachChildAt(5);
-//                    agv.Move(harbor.fromcranepaths.get(2), 3f);
-//                }
-//            }
-        }
-
-        System.out.println(cam.getLocation().x);
-        System.out.println(cam.getLocation().y);
-        System.out.println(cam.getLocation().z);
+        //updateCommands();
+        
+        ///Send outputlist
     }
-
+    
     private void initHud() {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         Nifty nifty = niftyDisplay.getNifty();
@@ -340,21 +305,29 @@ public class Simulation extends SimpleApplication {
             }
         }.build(nifty));
     }
-
-    private void initSockets() {
-        /*
-         * Open a socket on a given host and port. Open input and output streams.
-         */
+    
+    private void updateCommands(){
         try {
-            clientSocket = new Socket("localhost", 5400);
-            inputLine = new BufferedReader(new InputStreamReader(System.in));
-            is = new DataInputStream(clientSocket.getInputStream());
-
+             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            Command c = (Command) ois.readObject();
+            System.out.println(c.toString());
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void initSockets() {
+        try {
+            socket = new Socket("localhost", 5400);
+            path = new ArrayList<String>();
+            
         } catch (UnknownHostException e) {
-            System.err.println("Don't know about host " + "localhost");
+            e.printStackTrace();
         } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to the host "
-                    + "localhost");
+            e.printStackTrace();
         }
     }
 

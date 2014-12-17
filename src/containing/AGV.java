@@ -2,7 +2,6 @@ package containing;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
-import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.FastMath;
@@ -11,10 +10,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
  * @author Driving Ghost
@@ -34,7 +29,7 @@ public class AGV extends Node {
         this.assetManager = assetManager;
         initModel();
         initMaterial();
-        this.attachChild(model);
+        
     }
 
     public void updateSpeed(float uSpeed) {
@@ -47,6 +42,7 @@ public class AGV extends Node {
     
     void initModel(){
         model = assetManager.loadModel("Models/high/agv/agv.j3o");
+        this.attachChild(model);
     }
     
     void initMaterial(){
@@ -57,21 +53,29 @@ public class AGV extends Node {
     public Vector3f getCurrentloc(){
         return this.getLocalTranslation();
     }
-        
+     
+    public float getSpeed(){
+        if(this.cargo != null){
+            return 0.25f;
+        }
+        else{
+            return 0.5f;
+        }
+    }
     
     public void setContainer(Container cargo){
         this.cargo = cargo; 
-        this.cargo.setLocalTranslation(0,1.5f,0);
+        this.cargo.setLocalTranslation(0,1.2f,0);
         this.attachChild(this.cargo);
-        
     }
     
     public void setLocation(Vector3f newloc){
         this.loc = newloc;
     }
     
-    public Spatial getContainer(){
-        return cargo;
+    public Container getContainer(){
+        this.detachChild(this.cargo);
+        return this.cargo;
     }
     
     public void removeContainer(){

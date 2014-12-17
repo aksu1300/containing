@@ -13,8 +13,10 @@ import com.jme3.math.Vector3f;
 public class Point {
 
     public Vector3f coords;
+    public String id;
 
-    Point(Vector3f coords) {
+    Point(String id, Vector3f coords) {
         this.coords = coords;
+        this.id = id;
     }
 }
