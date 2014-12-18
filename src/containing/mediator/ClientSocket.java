@@ -27,7 +27,7 @@ public class ClientSocket implements Runnable {
     public void run() {
         while(!isConnected) {
             try {            
-                socket = new Socket("141.252.219.27", portNumber);
+                socket = new Socket("127.0.0.1", portNumber);
                 System.out.println("Connection established.");  
                 isConnected = true;
             } catch (UnknownHostException ex) {
@@ -39,8 +39,8 @@ public class ClientSocket implements Runnable {
             
         }
         try{
-        outputStream = new ObjectOutputStream(socket.getOutputStream());
-                inputStream = new ObjectInputStream(socket.getInputStream());
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+                
         }
         catch(IOException ex){
             Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,17 +52,16 @@ public class ClientSocket implements Runnable {
                 } catch (InterruptedException ex) {
                     Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if(inputStream.readObject() != null){
-                    Mediator.sendCommand((Command) inputStream.readObject());
-                }   
-//                System.out.println("SHEIZE WEIZE");
-//                Command c = (Command) inputStream.readObject();
-//                if (c != null){
-//                    Mediator.sendCommand(c);
-//                }
+                inputStream = new ObjectInputStream(socket.getInputStream());
+                System.out.println("SHEIZE WEIZE");
+                Command c = (Command) inputStream.readObject();
+                if (c != null){
+                    Mediator.sendCommand(c);
+                }
                 else{
                     System.out.println("whats up with you nigga");
                 }
+                inputStream.close();
             } catch (IOException ex) {
                 Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
