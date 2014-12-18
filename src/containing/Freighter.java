@@ -15,6 +15,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -48,6 +49,8 @@ public class Freighter extends Node {
         //initHold
         initHold();
 
+        this.setLocalTranslation(100, 11, 16);
+        
         // Attach the model to the 
         this.attachChild(shipSpatial);
     }

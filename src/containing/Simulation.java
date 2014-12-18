@@ -19,6 +19,8 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
+import containing.mediator.ClientSocket;
+import containing.mediator.Mediator;
 import containing.storage.Storage;
 import containing.transport.Wagon;
 import de.lessvoid.nifty.Nifty;
@@ -57,18 +59,18 @@ public class Simulation extends SimpleApplication {
     MotionPath motionPath;
     MotionPath motionPath1;
     AGVController agvc;
-    Socket socket;
     ArrayList<String> path;
+    Mediator m;
 
     public Simulation() {
-        initSockets();
     }
 
     public void startSimulation() {
         if (clientSocket == null) {
+            new Thread(new ClientSocket()).start();
             this.start();
             System.out.println("Cannot start up the application without server connection.\r\nPlease start up the Server first. ");
-            
+
         } else {
             this.start();
         }
@@ -105,29 +107,22 @@ public class Simulation extends SimpleApplication {
         //Attach Platform to rootnode
         rootNode.attachChild(harbor);
 
-        // Adding a ship to the scene
-        boat = new Boat(assetManager);
-        boat.Move(harbor.getFreighterDock(), 0.3f);
-        rootNode.attachChild(boat);
-        //Adding freighter to the harbor
-        freighter = new Freighter(assetManager);
-        freighter.Move(harbor.getDockingroute(), 1.2f);
 
-        rootNode.attachChild(freighter);
-
-        harbor.shCranes.get(0).moveCranes(freighter);
+        //   harbor.shCranes.get(0).moveCranes(freighter);
 
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        ///Update inputlist
-        
-        //updateCommands();
-        
-        ///Send outputlist
+        //
+        if (!Mediator.commands.isEmpty() /* && !Mediator.getWriting()*/) {
+           
+            System.out.println("I've seen the light man! SHEIZE");
+            parseCommand((Command) Mediator.getCommand());
+            Mediator.removeCommand();
+        }
     }
-    
+
     private void initHud() {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         Nifty nifty = niftyDisplay.getNifty();
@@ -309,107 +304,105 @@ public class Simulation extends SimpleApplication {
             }
         }.build(nifty));
     }
-    
-    private void updateCommands(){
-        try {
-             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            Command c = (Command) ois.readObject();
-            // send recieved command to the parser
-            parseCommand(c);
-            System.out.println(c.toString());
-            
-        } catch (IOException ex) {
-            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private void initSockets() {
-        try {
-            socket = new Socket("141.252.219.27", 5400);
-            path = new ArrayList<String>();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    /**
-     * The parseCommand method will parse 
-     * Commands sent to the simulator
-     * @param cmd 
-     */
-    private void parseCommand(Command cmd){
-        
-       /*
-        * The Create commands
-        */
-       if(cmd.getCommand().equals("createShip")){
-           // The createShip command is recvied so create a ship
-           Boat ship = new Boat(assetManager);
-           ship.setContainers(cmd.getContents());
-           ship.setName(cmd.getIdentifier());
-           
-           // attach the boat to the rootNode
-           rootNode.attachChild(ship);        
-       }
-       
-       if(cmd.getCommand() == "createFreighter"){
-           // create Freighter
-           Freighter freighter = new Freighter(assetManager);
-           
-       }
 
-       if(cmd.getCommand() == "createTrain"){
-           Train train = new Train(new Vector3f(3,4,5), assetManager);
-           train.setContainers(cmd.getContents());
-           train.setName(cmd.getIdentifier());
-           
-           // Attach the train to the rootNode
-           rootNode.attachChild(train);
-       }
-       
-       // 
-       if(cmd.getCommand() == "createTruck" ){
-           //Create truckt
-           Truck truck = new Truck(cmd.getIdentifier(), new Vector3f(0,0,0), 2, assetManager);
-           truck.setContainer(cmd.getContents().get(0));
-           
-           // Attach the truck to the rootNode
-           rootNode.attachChild(truck);
-       } 
-        
-        
-       /*
-        * The moving commands
-        */
-       if(cmd.getCommand() == "moveShip"){
-           // Get the ship 
-           Boat ship = (Boat)rootNode.getChild(cmd.getIdentifier());
-           ship.Move(harbor.getDockingroute(), speed);
-       }
-       
-       if(cmd.getCommand() == "moveFreighter"){
-           Freighter freighter = (Freighter)rootNode.getChild(cmd.getIdentifier());
-           freighter.Move(harbor.getDockingroute(), speed);
-       }
-       
-       if(cmd.getCommand() == "moveTrain"){
-           Train trian = (Train) rootNode.getChild(cmd.getIdentifier());
-       }
-       
-       if(cmd.getCommand() == "moveTruck" ){
-           Truck truck = (Truck) rootNode.getChild(cmd.getIdentifier());
-           truck.move(lightDir);
-       }
-    }
-    
+//    private void updateCommands() {
+//        try {
+//            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+//            Command c = (Command) ois.readObject();
+//            // send recieved command to the parser
+//            parseCommand(c);
+//        } catch (IOException ex) {
+//            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+
+//    private void initSockets() {
+//        try {
+//            socket = new Socket("141.252.219.27", 5400);
+//            path = new ArrayList<String>();
+//        } catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     /**
-     * 
-     * 
-     * @param rm 
+     * The parseCommand method will parse Commands sent to the simulator
+     *
+     * @param cmd
+     */
+    private void parseCommand(Command cmd) {
+
+        /*
+         * The Create commands
+         */
+        if (cmd.getCommand().equals("createShip")) {
+            //Adding freighter to the harbor
+            freighter = new Freighter(assetManager);
+            freighter.setName(cmd.getIdentifier());
+            rootNode.attachChild(freighter);
+        }
+
+        if (cmd.getCommand() == "createFreighter") {
+            //Adding freighter to the harbor
+            freighter = new Freighter(assetManager);
+            freighter.Move(harbor.getDockingroute(), 1.2f);
+
+            rootNode.attachChild(freighter);
+
+        }
+
+        if (cmd.getCommand() == "createTrain") {
+            Train train = new Train(new Vector3f(3, 4, 5), assetManager);
+            train.setContainers(cmd.getContents());
+            train.setName(cmd.getIdentifier());
+
+            // Attach the train to the rootNode
+            rootNode.attachChild(train);
+        }
+
+        // 
+        if (cmd.getCommand() == "createTruck") {
+            //Create truckt
+            Truck truck = new Truck(cmd.getIdentifier(), new Vector3f(0, 0, 0), 2, assetManager);
+            truck.setContainer(cmd.getContents().get(0));
+
+            // Attach the truck to the rootNode
+            rootNode.attachChild(truck);
+        }
+
+
+        /*
+         * The moving commands
+         */
+        if (cmd.getCommand() == "moveShip") {
+            // Get the ship 
+            Boat ship = (Boat) rootNode.getChild(cmd.getIdentifier());
+            ship.Move(harbor.getDockingroute(), speed);
+        }
+
+        if (cmd.getCommand() == "moveFreighter") {
+            Freighter freighter = (Freighter) rootNode.getChild(cmd.getIdentifier());
+            freighter.Move(harbor.getDockingroute(), speed);
+        }
+
+        if (cmd.getCommand() == "moveTrain") {
+            Train trian = (Train) rootNode.getChild(cmd.getIdentifier());
+        }
+
+        if (cmd.getCommand() == "moveTruck") {
+            Truck truck = (Truck) rootNode.getChild(cmd.getIdentifier());
+            truck.move(lightDir);
+        }
+    }
+
+    /**
+     *
+     *
+     * @param rm
      */
     @Override
     public void simpleRender(RenderManager rm) {

@@ -5,26 +5,31 @@ import java.util.Stack;
 
 public class Mediator {
     
-    static boolean writing = false;
-    static Stack commands = new Stack();
+    public static boolean writing = false;
+    public static Stack commands = new Stack();
 
-    static void sendCommand(Command input) {
-        commands.add(input);
+    public Mediator(){
     }
     
-    static Boolean getWriting(){
+    public static void sendCommand(Command input) {
+        commands.push(input);
+            
+        System.out.println("Stack size : " + commands.size());
+    }
+    
+    public static Boolean getWriting(){
         return writing;
     }
 
-    static void setWriting(){
+    public static void setWriting(){
         writing = !writing;
     }
 
-    static Command getCommand() {
+    public static Command getCommand() {
         return (Command)commands.peek();
     }
     
-    static void removeCommand(){
+    public static void removeCommand(){
         commands.pop();
     }
 }
