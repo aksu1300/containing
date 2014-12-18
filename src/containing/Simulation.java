@@ -12,6 +12,9 @@ import HUD.MyHUD;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
@@ -19,9 +22,13 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
+<<<<<<< HEAD
 import containing.mediator.ClientSocket;
 import containing.mediator.Mediator;
 import containing.storage.Storage;
+=======
+import containing.transport.TrainCrane;
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 import containing.transport.Wagon;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
@@ -49,10 +56,12 @@ public class Simulation extends SimpleApplication {
     private float initialWaterHeight = 0f;
     private Vector3f lightDir = new Vector3f(-4.9f, -1.3f, 5.9f);
     Spatial cargo;
-    ShipCrane shCrane;
+    ArrayList<ShipCrane> shCrane;
     Truck t;
     Train train;
     Truck truck;
+    Wagon wagon;
+    ArrayList<TrainCrane> tCranes = new ArrayList<TrainCrane>();
     Freighter freighter;
     Boat boat;
     Harbor harbor;
@@ -60,10 +69,17 @@ public class Simulation extends SimpleApplication {
     MotionPath motionPath1;
     AGVController agvc;
     ArrayList<String> path;
+<<<<<<< HEAD
     Mediator m;
 
     public Simulation() {
     }
+=======
+    int counter = 0;
+    //Guid
+    private Nifty nifty;
+
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 
     public void startSimulation() {
         if (clientSocket == null) {
@@ -78,7 +94,6 @@ public class Simulation extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        initHud();
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         harbor = new Harbor(bulletAppState, assetManager);
@@ -87,8 +102,8 @@ public class Simulation extends SimpleApplication {
         //right camera position
         //cam.setLocation(new Vector3f(200, 150, 150));
         //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
-        //flyCam.setEnabled(true);
-        flyCam.setDragToRotate(true);
+        flyCam.setEnabled(true);
+        //flyCam.setDragToRotate(true);
         flyCam.setMoveSpeed(300);
         cam.setLocation(new Vector3f(30, 100, 30));
         cam.setFrustumFar(9000);
@@ -108,12 +123,53 @@ public class Simulation extends SimpleApplication {
         rootNode.attachChild(harbor);
 
 
+<<<<<<< HEAD
         //   harbor.shCranes.get(0).moveCranes(freighter);
+=======
+        rootNode.attachChild(freighter);
 
+        shCrane = harbor.shCranes;
+        //this works 
+        //shCrane.get(0).moveCrane(new Vector3f(0,0,4));
+        tCranes = harbor.trainCranes;
+        train = harbor.train;
+        
+        
+        //for loop loopt door alles heen tot ddat die de juiste container heeft
+        //System.out.println(freighter.containers.get(4).get(4).peek().getLocalTranslation());
+        //System.out.println(freighter.getDocked());
+        
+            
+            
+        
+        for (Wagon w : train.getWagons()) {
+            w.setCargo(new Container(assetManager, 1.0f));         
+        }
+        //loopt die door alle cranes heen loopt en vervolgens 
+        //door de wagons om te zien welke containjer hij moet hebben
+        //lets try this in the simpleupdate 
+        //tCranes.get(3).doMove(train.getWagons().get(5),train);
+        //tCranes.get(2).doMove(train.getWagons().get(4),train);
+     
+        int i = 0;
+        for (Truck tc : harbor.trucks) {
+            tc.truckArrive(harbor.truckCranes.get(i));
+            harbor.truckCranes.get(i).truck = tc;
+            i++;
+        }
+
+        for (TruckCrane tc : harbor.truckCranes) {
+            if (tc.container != null) {
+                tc.craneUp();
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
+
+            }
+        }
     }
 
     @Override
     public void simpleUpdate(float tpf) {
+<<<<<<< HEAD
         //
         if (!Mediator.commands.isEmpty() /* && !Mediator.getWriting()*/) {
            
@@ -122,10 +178,44 @@ public class Simulation extends SimpleApplication {
             Mediator.removeCommand();
         }
     }
+=======
+
+        if(shCrane.get(0).moving == true){
+           
+            if (freighter.getDocked()) {
+                //need a for loop to check if crane is available and to loop trough all the stacks to find a container with the right id
+                    shCrane.get(0).moveCrane(freighter.containers.get(2).get(3).peek().getLocalTranslation());   
+            }
+        }
+//        System.out.println(cam.getLocation().x);
+//        System.out.println(cam.getLocation().y);
+//        System.out.println(cam.getLocation().z);
+    }
+
+    public void initKeys() {
+        inputManager.addMapping("Show", new KeyTrigger(KeyInput.KEY_F10));
+        inputManager.addMapping("Hide", new KeyTrigger(KeyInput.KEY_F9));
+        // Add the names to the action listener.
+        inputManager.addListener(actionListener, "Show", "Hide");
+
+    }
+    private ActionListener actionListener = new ActionListener() {
+        public void onAction(String name, boolean keyPressed, float tpf) {
+            if (name.equals("Show") && !keyPressed) {
+                //show the gui
+                initHud();
+            }
+            if (name.equals("Hide") && !keyPressed) {
+                //and lets hide the gui
+                nifty.exit();
+            }
+        }
+    };
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 
     private void initHud() {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
-        Nifty nifty = niftyDisplay.getNifty();
+        nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
 
 
@@ -304,6 +394,7 @@ public class Simulation extends SimpleApplication {
             }
         }.build(nifty));
     }
+<<<<<<< HEAD
 
 //    private void updateCommands() {
 //        try {
@@ -398,6 +489,8 @@ public class Simulation extends SimpleApplication {
             truck.move(lightDir);
         }
     }
+=======
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 
     /**
      *

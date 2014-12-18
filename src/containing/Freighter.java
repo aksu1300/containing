@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package containing;
 
 import com.jme3.asset.AssetManager;
@@ -76,7 +72,7 @@ public class Freighter extends Node {
             containers.add(new ArrayList<Stack<Container>>());
             for (int z = 0; z < 10; z++ ){
                 containers.get(x).add(new Stack<Container>());
-                for (int y = 0; y < 8; y++){
+                for (int y = 0; y < 4; y++){
                     Container c = new Container(assetmanager, 1);
                     containers.get(x).get(z).push(c);
                     c.rotate(0,FastMath.PI/2,0);
@@ -108,7 +104,7 @@ public class Freighter extends Node {
         route.addListener(new MotionPathListener() {
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 if (route.getNbWayPoints() == wayPointIndex + 1) {
-                    setDocked();
+                    setDocked(true);
                 }
             }
         });
@@ -117,7 +113,7 @@ public class Freighter extends Node {
         return this.docked;
     }
 
-    public void setDocked() {
-        this.docked = !docked;
+    public void setDocked(boolean docked) {
+        this.docked = docked;
     }
 }

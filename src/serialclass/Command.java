@@ -75,6 +75,7 @@ public class Command implements Serializable {
         this.dez = dez;
     }
      
+<<<<<<< HEAD
     public String getCommand() {
         return command;
     }
@@ -115,6 +116,13 @@ public class Command implements Serializable {
         return dez;
     }
     
+=======
+     /**
+      * The toString method allows you to print all the information this object holds. 
+      * @return Object information, such as the command, identifier, orx, ory and orz value in a single string. 
+      */
+    @Override
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
      public String toString() {
         String x = command + ":" + identifier  + ":(" + orx + ":" + ory + ":"+ orz + ")";
         for (int i = 0; i < contents.size(); i++){
@@ -123,36 +131,93 @@ public class Command implements Serializable {
         return x;
     }
 
+<<<<<<< HEAD
     
+=======
+    //gets & sets
+    
+    public ArrayList<Container> getContents() {
+        return contents;
+    }
+
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     public void setContents(ArrayList<Container> contents) {
         this.contents = contents;
     }
 
+<<<<<<< HEAD
+=======
+    public Container getContent() {
+        return content;
+    }
+
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     public void setContent(Container content) {
         this.content = content;
     }
 
+<<<<<<< HEAD
+=======
+    public float getOrx() {
+        return orx;
+    }
+
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     public void setOrx(float orx) {
         this.orx = orx;
     }
 
+<<<<<<< HEAD
+=======
+    public float getOry() {
+        return ory;
+    }
+
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     public void setOry(float ory) {
         this.ory = ory;
     }
 
+<<<<<<< HEAD
+=======
+    public float getOrz() {
+        return orz;
+    }
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 
     public void setOrz(float orz) {
         this.orz = orz;
     }
 
+<<<<<<< HEAD
+=======
+    public float getDex() {
+        return dex;
+    }
+
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     public void setDex(float dex) {
         this.dex = dex;
     }
 
+<<<<<<< HEAD
+=======
+    public float getDey() {
+        return dey;
+    }
+
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     public void setDey(float dey) {
         this.dey = dey;
     }
 
+<<<<<<< HEAD
+=======
+    public float getDez() {
+        return dez;
+    }
+
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     public void setDez(float dez) {
         this.dez = dez;
     }

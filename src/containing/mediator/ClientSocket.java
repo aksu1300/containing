@@ -13,12 +13,19 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+<<<<<<< HEAD
 import serialclass.Command;
+=======
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 
 public class ClientSocket implements Runnable {
     
     private Socket socket = null;
+<<<<<<< HEAD
     private int portNumber = 6200;
+=======
+    private int portNumber = 5400;
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
     private boolean isConnected = false;
@@ -26,15 +33,25 @@ public class ClientSocket implements Runnable {
     @Override
     public void run() {
         while(!isConnected) {
+<<<<<<< HEAD
             try {            
                 socket = new Socket("127.0.0.1", portNumber);
                 System.out.println("Connection established.");  
                 isConnected = true;
+=======
+            try {
+                socket = new Socket("localHost", portNumber);
+                System.out.println("Connection established.");
+                isConnected = true;
+                outputStream = new ObjectOutputStream(socket.getOutputStream());
+                inputStream = new ObjectInputStream(socket.getInputStream());
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
             } catch (UnknownHostException ex) {
                 Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
             }
+<<<<<<< HEAD
             
             
         }
@@ -70,6 +87,9 @@ public class ClientSocket implements Runnable {
             System.out.println("SHEIZE WEIZE end of reading while!");
         }
         
+=======
+        }
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     }
     
     public void sendTest() {

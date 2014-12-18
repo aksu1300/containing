@@ -12,12 +12,18 @@ import java.util.ArrayList;
 
 public class Train extends Node {
     
+    String id;
     private Vector3f location;
     private Spatial model;
     private Material material;
     private float speed;
+<<<<<<< HEAD
     private ArrayList<Container> containers;
     private ArrayList<Wagon> wagons;
+=======
+
+    private ArrayList<Wagon> wagons = new ArrayList<Wagon>();
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     private AssetManager assetmanager;
 
 
@@ -50,7 +56,12 @@ public class Train extends Node {
      * @param assetmanager AssetManager for the train ex:new AssetManager
      * @param wagons Wagons that can be added to the train ex:new Wagon
      */
+<<<<<<< HEAD
     public Train(Vector3f location, AssetManager assetmanager, int nrWagons) {
+=======
+    public Train(String id, Vector3f location, AssetManager assetmanager, int nrWagons) {
+        this.id = id;
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
         this.location = location;
         this.assetmanager = assetmanager;
         this.initWagons(nrWagons);
@@ -66,13 +77,27 @@ public class Train extends Node {
         Wagon wagon1 = new Wagon("TW1", new Vector3f(0.06f, 0f, -13.1f), this.assetmanager);
         wagon1.rotate(0, FastMath.PI, 0);
         wagon1.setLocalTranslation(wagon1.getLocation());
+<<<<<<< HEAD
         this.attachChild(wagon1);
+=======
+
+//        wagon1.setCargo(new Container(this.assetmanager,1.0f));
+        this.wagons.add(wagon1);
+       this.attachChild(wagon1);
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
         
         float transloc = 5.35f;
         for (int i = 2; i < nrWagons + 2; i++) {
             Wagon wagon = new Wagon("TW" + i, new Vector3f(0.06f, 0, transloc + -18.45f * i), this.assetmanager);
             wagon.rotate(0, FastMath.PI, 0);
+<<<<<<< HEAD
             wagon.setLocalTranslation(wagon.getLocation());
+=======
+            
+//          wagon.setCargo(new Container(this.assetmanager,1.0f));
+            wagon.setLocalTranslation(wagon.getLocation());
+            this.wagons.add(wagon);
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
             this.attachChild(wagon);
         }
     }
@@ -106,10 +131,23 @@ public class Train extends Node {
         //adds gravity effects.
     }
     
+<<<<<<< HEAD
     // <editor-fold defaultstate="collapsed" desc="Gets & Sets">
     
+=======
+    /**
+     * lololololol
+     * @return the Cargo of all the wagons.
+     */
+    
+    public String getId(){
+        return this.id;
+    }
+
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
     
     public int getWagonCount() {
+        
         return this.wagons.size();
     }
     
@@ -128,5 +166,4 @@ public class Train extends Node {
     public Vector3f getLocation() {
         return this.location;
     }
-    // </editor-fold>
 }

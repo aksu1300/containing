@@ -10,6 +10,7 @@ import containing.Container;
 import java.util.ArrayList;
 
 public class Wagon extends Node {
+    
     private Vector3f location;
     private Spatial model;
     private Material material;
@@ -17,6 +18,7 @@ public class Wagon extends Node {
     private Container cargo;
     private float speed;
     
+<<<<<<< HEAD
     public Wagon(String id,Vector3f location , AssetManager assetmanager) {
         this.setName(id);
         this.location = location;
@@ -26,6 +28,16 @@ public class Wagon extends Node {
         this.model.setMaterial(material);
         this.attachChild(this.model);
         
+=======
+    public Wagon(String id, Vector3f location , AssetManager assetmanager) {
+        this.id = id;
+        this.location = location;
+        this.assetmanager = assetmanager;
+        this.model = this.assetmanager.loadModel("Models/high/train/wagon.j3o");
+        this.material = new Material(this.assetmanager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        this.model.setMaterial(material);
+        this.attachChild(model);
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
         
     }
     
@@ -47,12 +59,20 @@ public class Wagon extends Node {
     
     // <editor-fold defaultstate="collapsed" desc="Get & Set">
     
+<<<<<<< HEAD
     public void setCargo(Container cargo){
         if (this.cargo == null) {
+=======
+     public void setCargo(Container cargo){
+>>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
             this.cargo = cargo; 
             this.cargo.setLocalTranslation(0,0.6f,0);
             this.attachChild(this.cargo);
-        }
+        
+    }
+    
+    public void resetCargo() {
+        this.cargo = null;
     }
     
     public void resetCargo() {
@@ -76,4 +96,9 @@ public class Wagon extends Node {
     }
     
     // </editor-fold>
+
+    public String getId(){
+        return this.id;
+    }
+    
 }
