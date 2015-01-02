@@ -80,7 +80,7 @@ public class ShipCrane extends Node {
            
             final MotionPath craneroute = new MotionPath();
             craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z));
-            craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z - location.x));
+            craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, location.x));
 
             MotionEvent motionControl = new MotionEvent(this, craneroute);
             craneMotion.add(motionControl);
@@ -185,7 +185,7 @@ public class ShipCrane extends Node {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
 //                        setContainer();
-                        grabberUp();
+//                        grabberUp();
                     }
                 }
             });
