@@ -23,7 +23,6 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Line;
 import com.jme3.util.SkyFactory;
 import containing.transport.Train;
-import containing.transport.Wagon;
 import containing.transport.Truck;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,18 +37,15 @@ public class Harbor extends Node {
     List<Vector3f> cranesloc;
     List<Storage> storagelines;
     public ArrayList<ShipCrane> shCranes;
-
     public ArrayList<AGV> agvRoosterA;
     public ArrayList<AGV> agvRoosterB;
     private AssetManager assetmanager;
     public Train train;
-
     public ArrayList<ShipCrane> boatCranes;
     public ArrayList<TruckCrane> truckCranes;
     public ArrayList<TrainCrane> trainCranes;
     public ArrayList<Truck> trucks;
     public ArrayList<Train> trains;
-
 
     public Harbor(BulletAppState bulletAppState, AssetManager assetManager) {
         trainCranes = new ArrayList<TrainCrane>();
@@ -66,25 +62,26 @@ public class Harbor extends Node {
 
         agvRoosterA = new ArrayList<AGV>();
         agvRoosterB = new ArrayList<AGV>();
-        
+
         this.assetmanager = assetManager;
 
         initPlatform(bulletAppState);
         initSky();
         initStorage();
         initShipcranes();
-        
+
         initTruckcranes();
         initTrucks();
         initRails();
-        initTrainCrane();
+        initTrainCranes();
         initTrain();
         //initTest();
     }
-   
-    /***
-     * initAGV initialises the AGV's on their parking spots. 
-     * 
+
+    /**
+     * *
+     * initAGV initialises the AGV's on their parking spots.
+     *
      */
     public void initAGV() {
         for (Storage s : storagelines) { //STORAGE S IS USED! But foreach looks better than a for loop B^) 
@@ -97,19 +94,19 @@ public class Harbor extends Node {
         }
         float zval = 106; //beginnend Z waarde. 
         for (int i = 0; i < agvRoosterA.size(); i++) {
-            if(i % 4 == 0){
+            if (i % 4 == 0) {
                 zval -= 24.5f; //na elke 4 agvs wordt de z waarde met 24.5 verlaagt. 
             }
-            agvRoosterA.get(i).setLocalTranslation(75,10.5f,zval-(i*5));
+            agvRoosterA.get(i).setLocalTranslation(75, 10.5f, zval - (i * 5));
             agvRoosterA.get(i).rotate(0, -(FastMath.PI / 2), 0); //goedom zetten.
             this.attachChild(agvRoosterA.get(i)); //attach to world!
         }
         zval = 106;
         for (int i = 0; i < agvRoosterB.size(); i++) { //onderstaande code werkt hetzelfde als voor roosterA. le copy paste!
-            if(i % 4 == 0){
+            if (i % 4 == 0) {
                 zval -= 24.5f;
             }
-            agvRoosterB.get(i).setLocalTranslation(-122,10.5f,zval-(i*5));
+            agvRoosterB.get(i).setLocalTranslation(-122, 10.5f, zval - (i * 5));
             agvRoosterB.get(i).rotate(0, (FastMath.PI / 2), 0);
             this.attachChild(agvRoosterB.get(i));
         }
@@ -136,38 +133,37 @@ public class Harbor extends Node {
             this.attachChild(crane);
         }
     }
-    
+
     public void initRails() {
         Line line = new Line(new Vector3f(-100, 10, 500), new Vector3f(-650, 10, 500));
         line.setLineWidth(4);
         Geometry geometry = new Geometry("Bullet", line);
         Material orange = new Material(assetmanager, "Common/MatDefs/Misc/Unshaded.j3md");
         orange.setColor("Color", ColorRGBA.Blue);
-        geometry.setMaterial(orange);                  
+        geometry.setMaterial(orange);
         this.attachChild(geometry);
     }
+
+    /*<<<<<<< HEAD
+     public void initTrainCrane() {
+     TrainCrane crane = new TrainCrane(assetmanager, new Vector3f(-100, 10, 250), this);
+     crane.rotate(0, FastMath.PI * 1.5f, 0);
+     crane.setLocalTranslation(crane.getLocation());
+     this.attachChild(crane);
+     }
     
-<<<<<<< HEAD
-    public void initTrainCrane() {
-        TrainCrane crane = new TrainCrane(assetmanager, new Vector3f(-100, 10, 250), this);
-        crane.rotate(0, FastMath.PI * 1.5f, 0);
-        crane.setLocalTranslation(crane.getLocation());
-        this.attachChild(crane);
-    }
+     public void initTest() {
+     Wagon wagon = new Wagon("TW1", new Vector3f(-86.8f, 10, 250), assetmanager);
+     wagon.rotate(0, FastMath.PI * 1.5f, 0);
+     wagon.setLocalTranslation(wagon.getLocation());
+     this.attachChild(wagon);
+     }
     
-    public void initTest() {
-        Wagon wagon = new Wagon("TW1", new Vector3f(-86.8f, 10, 250), assetmanager);
-        wagon.rotate(0, FastMath.PI * 1.5f, 0);
-        wagon.setLocalTranslation(wagon.getLocation());
-        this.attachChild(wagon);
-    }
-    
-    public void initTrain() {
-        Train train = new Train(new Vector3f(-113, 10, 250), assetmanager, 3);  
-=======
+     public void initTrain() {
+     Train train = new Train(new Vector3f(-113, 10, 250), assetmanager, 3);  
+     ======= */
     public void initTrainCranes() {
-        for (int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             TrainCrane crane = new TrainCrane(assetmanager, 1f, new Vector3f(-100 + (i * 18), 10, 500));
             crane.rotate(0, FastMath.PI * 1.5f, 0);
             crane.setLocalTranslation(crane.getLocation());
@@ -175,14 +171,13 @@ public class Harbor extends Node {
             this.attachChild(crane);
         }
     }
-    
+
     public void initTrain() {
-        train = new Train("Train1", new Vector3f(-115, 10.5f, 500), assetmanager,5);
->>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
+        train = new Train("Train1", new Vector3f(-115, 10.5f, 500), assetmanager, 5);
         train.rotate(0, FastMath.PI * 1.5f, 0);
 //        trains.add(train);
         train.setLocalTranslation(train.getLocation());
-        
+
         this.attachChild(train);
     }
 
@@ -225,7 +220,7 @@ public class Harbor extends Node {
             storagelines.add(new Storage(assetmanager, new StorageCrane(assetmanager, 0.5f, locminus2), locminus, amount, asciivalue)); // beide kanten op.
             asciivalue++;
         }
-        
+
         for (Storage sl : storagelines) {
             this.attachChild(sl);
         }
@@ -244,7 +239,7 @@ public class Harbor extends Node {
         for (int i = 0; i < 20; i++) {
             TruckCrane trCrane = new TruckCrane(assetmanager, new Vector3f(-740, 11, -350 - (i * 13)));
             trCrane.rotate(0, FastMath.PI / 2, 0);
-            
+
             truckCranes.add(trCrane);
         }
         for (TruckCrane tr : truckCranes) {

@@ -22,13 +22,9 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
-<<<<<<< HEAD
 import containing.mediator.ClientSocket;
 import containing.mediator.Mediator;
-import containing.storage.Storage;
-=======
 import containing.transport.TrainCrane;
->>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 import containing.transport.Wagon;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.ImageBuilder;
@@ -38,13 +34,8 @@ import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Simulation extends SimpleApplication {
 
@@ -69,17 +60,10 @@ public class Simulation extends SimpleApplication {
     MotionPath motionPath1;
     AGVController agvc;
     ArrayList<String> path;
-<<<<<<< HEAD
     Mediator m;
-
-    public Simulation() {
-    }
-=======
     int counter = 0;
     //Guid
     private Nifty nifty;
-
->>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 
     public void startSimulation() {
         if (clientSocket == null) {
@@ -122,10 +106,7 @@ public class Simulation extends SimpleApplication {
         //Attach Platform to rootnode
         rootNode.attachChild(harbor);
 
-
-<<<<<<< HEAD
         //   harbor.shCranes.get(0).moveCranes(freighter);
-=======
         rootNode.attachChild(freighter);
 
         shCrane = harbor.shCranes;
@@ -133,24 +114,24 @@ public class Simulation extends SimpleApplication {
         //shCrane.get(0).moveCrane(new Vector3f(0,0,4));
         tCranes = harbor.trainCranes;
         train = harbor.train;
-        
-        
+
+
         //for loop loopt door alles heen tot ddat die de juiste container heeft
         //System.out.println(freighter.containers.get(4).get(4).peek().getLocalTranslation());
         //System.out.println(freighter.getDocked());
-        
-            
-            
-        
+
+
+
+
         for (Wagon w : train.getWagons()) {
-            w.setCargo(new Container(assetManager, 1.0f));         
+            w.setCargo(new Container(assetManager, 1.0f));
         }
         //loopt die door alle cranes heen loopt en vervolgens 
         //door de wagons om te zien welke containjer hij moet hebben
         //lets try this in the simpleupdate 
         //tCranes.get(3).doMove(train.getWagons().get(5),train);
         //tCranes.get(2).doMove(train.getWagons().get(4),train);
-     
+
         int i = 0;
         for (Truck tc : harbor.trucks) {
             tc.truckArrive(harbor.truckCranes.get(i));
@@ -161,7 +142,6 @@ public class Simulation extends SimpleApplication {
         for (TruckCrane tc : harbor.truckCranes) {
             if (tc.container != null) {
                 tc.craneUp();
->>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 
             }
         }
@@ -169,27 +149,21 @@ public class Simulation extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-<<<<<<< HEAD
         //
         if (!Mediator.commands.isEmpty() /* && !Mediator.getWriting()*/) {
-           
+
             System.out.println("I've seen the light man! SHEIZE");
             parseCommand((Command) Mediator.getCommand());
             Mediator.removeCommand();
         }
-    }
-=======
 
-        if(shCrane.get(0).moving == true){
-           
+        if (shCrane.get(0).moving == true) {
+
             if (freighter.getDocked()) {
                 //need a for loop to check if crane is available and to loop trough all the stacks to find a container with the right id
-                    shCrane.get(0).moveCrane(freighter.containers.get(2).get(3).peek().getLocalTranslation());   
+                shCrane.get(0).moveCrane(freighter.containers.get(2).get(3).peek().getLocalTranslation());
             }
         }
-//        System.out.println(cam.getLocation().x);
-//        System.out.println(cam.getLocation().y);
-//        System.out.println(cam.getLocation().z);
     }
 
     public void initKeys() {
@@ -211,7 +185,6 @@ public class Simulation extends SimpleApplication {
             }
         }
     };
->>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 
     private void initHud() {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
@@ -394,7 +367,6 @@ public class Simulation extends SimpleApplication {
             }
         }.build(nifty));
     }
-<<<<<<< HEAD
 
 //    private void updateCommands() {
 //        try {
@@ -408,7 +380,6 @@ public class Simulation extends SimpleApplication {
 //            Logger.getLogger(Simulation.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
-
 //    private void initSockets() {
 //        try {
 //            socket = new Socket("141.252.219.27", 5400);
@@ -419,14 +390,21 @@ public class Simulation extends SimpleApplication {
 //            e.printStackTrace();
 //        }
 //    }
-
     /**
      * The parseCommand method will parse Commands sent to the simulator
      *
      * @param cmd
      */
     private void parseCommand(Command cmd) {
-
+        /**
+         * *********************************
+         */
+        /**
+         * * mag het een switch zijn aub? **
+         */
+        /**
+         * *********************************
+         */
         /*
          * The Create commands
          */
@@ -437,7 +415,7 @@ public class Simulation extends SimpleApplication {
             rootNode.attachChild(freighter);
         }
 
-        if (cmd.getCommand() == "createFreighter") {
+        if (cmd.getCommand().equals("createFreighter")) {
             //Adding freighter to the harbor
             freighter = new Freighter(assetManager);
             freighter.Move(harbor.getDockingroute(), 1.2f);
@@ -446,7 +424,7 @@ public class Simulation extends SimpleApplication {
 
         }
 
-        if (cmd.getCommand() == "createTrain") {
+        if (cmd.getCommand().equals("createTrain")) {
             Train train = new Train(new Vector3f(3, 4, 5), assetManager);
             train.setContainers(cmd.getContents());
             train.setName(cmd.getIdentifier());
@@ -456,7 +434,7 @@ public class Simulation extends SimpleApplication {
         }
 
         // 
-        if (cmd.getCommand() == "createTruck") {
+        if (cmd.getCommand().equals("createTruck")) {
             //Create truckt
             Truck truck = new Truck(cmd.getIdentifier(), new Vector3f(0, 0, 0), 2, assetManager);
             truck.setContainer(cmd.getContents().get(0));
@@ -469,28 +447,26 @@ public class Simulation extends SimpleApplication {
         /*
          * The moving commands
          */
-        if (cmd.getCommand() == "moveShip") {
+        if (cmd.getCommand().equals("moveShip")) {
             // Get the ship 
             Boat ship = (Boat) rootNode.getChild(cmd.getIdentifier());
             ship.Move(harbor.getDockingroute(), speed);
         }
 
-        if (cmd.getCommand() == "moveFreighter") {
+        if (cmd.getCommand().equals("moveFreighter")) {
             Freighter freighter = (Freighter) rootNode.getChild(cmd.getIdentifier());
             freighter.Move(harbor.getDockingroute(), speed);
         }
 
-        if (cmd.getCommand() == "moveTrain") {
-            Train trian = (Train) rootNode.getChild(cmd.getIdentifier());
+        if (cmd.getCommand().equals("moveTrain")) {
+            Train train = (Train) rootNode.getChild(cmd.getIdentifier());
         }
 
-        if (cmd.getCommand() == "moveTruck") {
+        if (cmd.getCommand().equals("moveTruck")) {
             Truck truck = (Truck) rootNode.getChild(cmd.getIdentifier());
             truck.move(lightDir);
         }
     }
-=======
->>>>>>> bcd73466b92e4a90b6286217767bfb1f79ced472
 
     /**
      *
