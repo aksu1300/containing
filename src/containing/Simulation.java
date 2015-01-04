@@ -160,17 +160,6 @@ public class Simulation extends SimpleApplication {
             }
         }
 
-//        for (int k = 1; k < 5; k++) {
-//            for (int m = 0; m < 5; m++) {
-//                for (int j = 0; j < 5; j++) {
-////                        shCrane.get(k).procesCrane(freighter.containers.get(m).get(j).peek());
-//                        shCrane.get(0).setContainer(freighter.getContainer(m, j));
-//                    
-//                    //                System.out.println(freighter.containers.get(1).get(2).peek().getLocalTranslation());
-//
-//                }
-//            }
-//        }
     }
 
     @Override
@@ -178,16 +167,13 @@ public class Simulation extends SimpleApplication {
 
 
         if (freighter.getDocked()) {
-            //need a for loop to check if crane is available and to loop trough all the stacks to find a container with the right id
-            //1st get = the stack
-            //2nd get is the container row
-            //3rd get is the height of the container is now peek because we always need to top one
+            if (shCrane.get(0).getNeedsContainer() == true) {
+                System.out.println(shCrane.get(0).getNeedsContainer());
+                shCrane.get(0).setContainer(freighter.getContainer(0, 1));
+            }
             shCrane.get(1).procesCrane(freighter.containers.get(8).get(8).peek());
         }
 
-//        System.out.println(cam.getLocation().x);
-//        System.out.println(cam.getLocation().y);
-//        System.out.println(cam.getLocation().z);
     }
 
     public void initKeys() {

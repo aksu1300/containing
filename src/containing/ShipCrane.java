@@ -41,6 +41,7 @@ public class ShipCrane extends Node {
     Vector3f c_loc;
     boolean idle = true;
     boolean motion1 = false;
+    boolean needscontainer = false;
 
     public ShipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.assetManager = _assetManager;
@@ -185,7 +186,10 @@ public class ShipCrane extends Node {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
 //                        setContainer();
-//                        grabberUp();
+                        if(needscontainer == false){
+                            grabberUp();
+                        }
+                        setNeedsContainer(true);
                     }
                 }
             });
@@ -239,7 +243,7 @@ public class ShipCrane extends Node {
    
     public void setContainer(Container container){
         
-//        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x , this.getChild(1).getLocalTranslation().y + 10 , this.getChild(1).getLocalTranslation().z);
+        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x , this.getChild(1).getLocalTranslation().y + 10 , this.getChild(1).getLocalTranslation().z);
 //        this.attachChild(this.container);
         this.container = container;
         this.attachChild(container);
@@ -248,5 +252,13 @@ public class ShipCrane extends Node {
     
     private void releaseContainer(){
         this.detachChild(container);
+    }
+    
+    private void setNeedsContainer(boolean inneed){
+        this.needscontainer = inneed;
+    }
+    
+    public boolean getNeedsContainer(){
+        return this.needscontainer;
     }
 }
