@@ -26,6 +26,10 @@ public class Containers  implements java.io.Serializable {
     public Containers() {
     }
 
+    public Containers(int containerId) {
+        this.containerId = containerId;
+    }
+    
     public Containers(int containerId, String aankomstDatum, String aankomstTijd, String vertrekVervoer, String inhoudNaam, String inhoudSoort, String gevaar, String vetrekDatum, String vertrekTijd, String eigenaar, int isoNr, int storageLot) {
        this.containerId = containerId;
        this.aankomstDatum = aankomstDatum;

@@ -6,19 +6,21 @@ package containing.database;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 /**
  *
- * @author Kenneth
+ * @author Kenneth 
  */
 public class containerDbHandler {
     
     private static SessionFactory factory; 
     
+    /**
+     * Database handler for the containers table in the containing database
+     */
     public containerDbHandler(){
         try{
          factory = new Configuration().configure().buildSessionFactory();
@@ -28,6 +30,23 @@ public class containerDbHandler {
         }
     }
     
+    /**
+     * Add the full list of data to the container table
+     * 
+     * @param containerId
+     * @param aankomstDatum
+     * @param aankomstTijd
+     * @param vertrekVervoer
+     * @param inhoudNaam
+     * @param inhoudSoort
+     * @param gevaar
+     * @param vetrekDatum
+     * @param vertrekTijd
+     * @param eigenaar
+     * @param isoNr
+     * @param storageLot
+     * @return the inserted id
+     */
     public Integer addToContainers(int containerId, String aankomstDatum, String aankomstTijd, String vertrekVervoer, String inhoudNaam, String inhoudSoort, String gevaar, String vetrekDatum, String vertrekTijd, String eigenaar, int isoNr, int storageLot){
         Session session = factory.openSession();
         Transaction tx = null;
@@ -47,7 +66,49 @@ public class containerDbHandler {
               
     }
     
+    //let op dat als je een single item wil toevoegen de mapping not-null niet op true meot staan. Dat gezegd, dit geld ook voor de database
+    /**
+     * Add a containerID to the database
+     * 
+     * @param containerId
+     * @return the added id
+     */
+    public Integer addOne(int containerId){
+        Session session = factory.openSession();
+        Transaction tx = null;
+        Integer containerID = null;
+        try{
+           tx = session.beginTransaction();
+           Containers containers = new Containers(containerId);
+           containerID = (Integer) session.save(containers); 
+           tx.commit();
+        }catch (HibernateException e) {
+           if (tx!=null) tx.rollback();
+           System.out.println("It whent wrong here");
+           e.printStackTrace(); 
+        }finally {
+           session.close(); 
+        }
+        return containerID;
+    }
+    
     //update all method. Don't think we wil need this.
+    /**
+     *  Update everything in the containers table
+     * 
+     * @param containerId
+     * @param aankomstDatum
+     * @param aankomstTijd
+     * @param vertrekVervoer
+     * @param inhoudNaam
+     * @param inhoudSoort
+     * @param gevaar
+     * @param vetrekDatum
+     * @param vertrekTijd
+     * @param eigenaar
+     * @param isoNr
+     * @param storageLot
+     */
     public void updateContainers(int containerId, String aankomstDatum, String aankomstTijd, String vertrekVervoer, String inhoudNaam, String inhoudSoort, String gevaar, String vetrekDatum, String vertrekTijd, String eigenaar, int isoNr, int storageLot){
         //working based on the containers numbers that are given in the xml files
         Session session = factory.openSession();

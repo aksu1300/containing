@@ -8,6 +8,7 @@ import containing.transport.Train;
 import containing.transport.Truck;
 import containing.transport.Boat;
 import HUD.MyHUD;
+import containing.database.containerDbHandler;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
@@ -62,6 +63,7 @@ public class Simulation extends SimpleApplication {
     int counter = 0;
     //Guid
     private Nifty nifty;
+    private containerDbHandler cdb;
 
     public Simulation() {
         initSockets();
@@ -134,15 +136,19 @@ public class Simulation extends SimpleApplication {
 //        System.out.println(freighter.getDocked());
 
 
+        //test to see if the database connection works properly
+        cdb = new containerDbHandler();
+        cdb.addOne(1234567);
 
         System.out.println(freighter.getLocalTranslation());
         for (Wagon w : train.getWagons()) {
             w.setCargo(new Container(assetManager, 1.0f));
         }
 
-//            tCranes.get(3).doMove(train.getWagons().get(5),train);
+//            tCranes.get(3).doMove(train.getWagons().get(5),train.getLocation());
 //            tCranes.get(2).doMove(train.getWagons().get(4),train);
 
+        train = harbor.train;
 
 
 
@@ -164,16 +170,30 @@ public class Simulation extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-
-
         if (freighter.getDocked()) {
-            if (shCrane.get(0).getNeedsContainer() == true) {
-                System.out.println(shCrane.get(0).getNeedsContainer());
-                shCrane.get(0).setContainer(freighter.getContainer(0, 1));
-            }
-            shCrane.get(1).procesCrane(freighter.containers.get(8).get(8).peek());
+            processShipCrane();
+//            if(shCrane.get(0).getNeedsContainer() == true){
+//                System.out.println(shCrane.get(0).getNeedsContainer());
+//                
+//            }
+             
         }
+    }
 
+    //just for testing i guess, and it works :)
+    public void processShipCrane() {
+        int i = 0;
+        for (ShipCrane sh : harbor.shCranes) {
+            if (sh.getNeedsContainer() == false) {
+                if (sh.idle == true) {
+                    sh.procesCrane(freighter.containers.get(i).get(1).peek());
+                    i += 1;
+                }
+            }else{
+                sh.setContainer(freighter.getContainer(i, 1));
+                i += 1;
+            }
+        }
     }
 
     public void initKeys() {

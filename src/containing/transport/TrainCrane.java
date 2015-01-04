@@ -19,7 +19,6 @@ public class TrainCrane extends Node {
     Container cargo;
     Material material;
     Wagon wagon;
-    Train train;
     AGV agv;
     Spatial crane;
     Spatial grabbingGear;
@@ -33,7 +32,7 @@ public class TrainCrane extends Node {
     float size;
     boolean idle = true;// its not doing anything, so it can be used
     boolean done = true;
-    boolean motion1 = false;
+    boolean movetoAGV = false;
     BoundingVolume boundGrab;
 
 
@@ -91,12 +90,12 @@ public class TrainCrane extends Node {
         hookRight.scale(size);
 
     }
-    public void doMove(Wagon wagon,Train train){
+    public void doMove(Wagon wagon,Vector3f location){
             
             setWagon(wagon);
 //            System.out.println(wagon.getLocation());
 //            System.out.println(wagon.getLocalTranslation());
-            moveCrane(wagon.getLocation(),train.getLocation());
+            moveCrane(wagon.getLocation(),location);
     }
     
     public void moveCrane(Vector3f location , Vector3f trainloc){
@@ -179,7 +178,11 @@ public class TrainCrane extends Node {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
                         //crane down when has a container so that it sits on an agv
-                       setDone(true);
+                        movetoAGV = true;
+                        if(movetoAGV == true){
+                            craneDown();
+                        }
+                       
                         
                     }
                 }
@@ -206,11 +209,10 @@ public class TrainCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        if(motion1 == true){
+                      
+                        if(movetoAGV == true){
                             releaseWagon();
                             craneRight();
-                            
-                            
                         }else{
                             craneLeft();
                         }
@@ -244,13 +246,16 @@ public class TrainCrane extends Node {
             mp.addListener( new MotionPathListener() {
             public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
                 //crane up if picked up container
-                if(motion1 == true){ 
+                if(movetoAGV == true){ 
                         releaseContainer();
                         craneUp();
+                   
+                        
                     
                 }else{
                    setContainer(wagon.getCargo());
                    craneUp();
+                   
                 }
             }
       });
@@ -283,7 +288,11 @@ public class TrainCrane extends Node {
     }
     
     public void setIdle(boolean idle){
-        this.idle =idle;
+        this.idle = idle;
+    }
+    
+    public boolean getIdel(){
+        return this.idle;
     }
     
     public void setDone(boolean done){
