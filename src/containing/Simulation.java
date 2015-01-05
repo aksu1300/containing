@@ -106,8 +106,6 @@ public class Simulation extends SimpleApplication {
         //Attach Platform to rootnode
         rootNode.attachChild(harbor);
 
-        //   harbor.shCranes.get(0).moveCranes(freighter);
-        rootNode.attachChild(freighter);
 
         shCrane = harbor.shCranes;
         //this works 
@@ -158,10 +156,11 @@ public class Simulation extends SimpleApplication {
         }
 
         if (shCrane.get(0).moving == true) {
-
-            if (freighter.getDocked()) {
-                //need a for loop to check if crane is available and to loop trough all the stacks to find a container with the right id
-                shCrane.get(0).moveCrane(freighter.containers.get(2).get(3).peek().getLocalTranslation());
+            if (freighter != null) {
+                if (freighter.getDocked()) {
+                    //need a for loop to check if crane is available and to loop trough all the stacks to find a container with the right id
+                    shCrane.get(0).moveCrane(freighter.containers.get(2).get(3).peek().getLocalTranslation());
+                }
             }
         }
     }

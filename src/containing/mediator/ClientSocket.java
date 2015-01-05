@@ -1,6 +1,7 @@
 package containing.mediator;
 
 import containing.WayPoints;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,6 +21,8 @@ public class ClientSocket implements Runnable {
 
     @Override
     public void run() {
+        Command com = null;
+        
         while (true) {
             while (!isConnected) {
                 try {
@@ -41,14 +44,16 @@ public class ClientSocket implements Runnable {
                     Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 Command c = (Command) inputStream.readObject();
-                if (c != null) {
+                if (c != null && c != com) {
                     Mediator.sendCommand(c);
+                    com = c;
                 } else {
                     System.out.println("error in ClientSocket:run, sendCommand");
                 }
-                inputStream.close();
+                //inputStream.close();
             } catch (IOException ex) {
                 Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
+                //System.out.println(ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
             }
