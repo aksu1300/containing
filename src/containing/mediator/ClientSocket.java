@@ -44,9 +44,11 @@ public class ClientSocket implements Runnable {
                     Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 Command c = (Command) inputStream.readObject();
+                System.out.println("Command recieved.");
                 if (c != null && c != com) {
                     Mediator.sendCommand(c);
                     com = c;
+                    System.out.println("Command forwarded.");
                 } else {
                     System.out.println("error in ClientSocket:run, sendCommand");
                 }
@@ -87,12 +89,5 @@ public class ClientSocket implements Runnable {
             Logger.getLogger(ClientSocket.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    public void send(Object obj) {
-    }
-
-    public Object read() {
-        return null;
     }
 }

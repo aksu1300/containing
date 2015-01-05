@@ -1,5 +1,6 @@
 package containing.mediator;
 
+import java.util.ArrayList;
 import serialclass.Command;
 import java.util.Stack;
 
@@ -33,7 +34,7 @@ public class Mediator {
      public static void removeCommand(){
      =======*/
     private static boolean writing = false;
-    public static Stack commands = new Stack();
+    public static ArrayList commands = new ArrayList();
 
     public static void sendCommand(Command input) {
         commands.add(input);
@@ -48,10 +49,9 @@ public class Mediator {
     }
 
     public static Command getCommand() {
-        return (Command) commands.peek();
+        Command c = (Command) commands.get(0);
+        commands.remove(0);
+        return  c;
     }
 
-    public static void removeCommand() {
-        commands.pop();
-    }
 }

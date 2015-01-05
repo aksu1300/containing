@@ -152,7 +152,6 @@ public class Simulation extends SimpleApplication {
 
             System.out.println("I've seen the light man! SHEIZE");
             parseCommand((Command) Mediator.getCommand());
-            Mediator.removeCommand();
         }
 
         if (shCrane.get(0).moving == true) {
@@ -407,6 +406,7 @@ public class Simulation extends SimpleApplication {
         /*
          * The Create commands
          */
+        System.out.println(cmd.getCommand());
         if (cmd.getCommand().equals("createShip")) {
             //Adding freighter to the harbor
             freighter = new Freighter(assetManager);
@@ -448,8 +448,10 @@ public class Simulation extends SimpleApplication {
          */
         if (cmd.getCommand().equals("moveShip")) {
             // Get the ship 
+            System.out.println("startMove");
             Boat ship = (Boat) rootNode.getChild(cmd.getIdentifier());
             ship.Move(harbor.getDockingroute(), speed);
+            System.out.println("endMove");
         }
 
         if (cmd.getCommand().equals("moveFreighter")) {
