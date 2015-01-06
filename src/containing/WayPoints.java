@@ -74,6 +74,8 @@ public class WayPoints {
 
     }
 
+    
+    
     private void initPoints() {
         S1A = new Point("S1A", new Vector3f(95, 12, 73));
         S2A = new Point("S2A", new Vector3f(95, 12, 28));
@@ -184,6 +186,8 @@ public class WayPoints {
         wpList.add(E5);
     }
 
+    
+    
     //Storage
     public Vector3f getPoint(String pointid) {
 
