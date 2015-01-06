@@ -1,6 +1,5 @@
 package containing.mediator;
 
-import containing.WayPoints;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -58,35 +57,8 @@ public class ClientSocket implements Runnable {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("SHEIZE WEIZE end of reading while!");
+            System.out.println("End of reading while!");
         }
 
-    }
-
-    public void sendTest() {
-        try {
-            WayPoints obj = new WayPoints();
-            outputStream.writeObject(obj);
-
-
-        } catch (IOException ex) {
-            Logger.getLogger(ClientSocket.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void readTest() {
-        try {
-            Object obj = (Object) inputStream.readObject();
-            System.out.println("Object Received");
-
-
-        } catch (IOException ex) {
-            Logger.getLogger(ClientSocket.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClientSocket.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }
