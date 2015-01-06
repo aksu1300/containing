@@ -1,7 +1,6 @@
 package containing.mediator;
 
 import containing.WayPoints;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,7 +21,7 @@ public class ClientSocket implements Runnable {
     @Override
     public void run() {
         Command com = null;
-        
+
         while (true) {
             while (!isConnected) {
                 try {
