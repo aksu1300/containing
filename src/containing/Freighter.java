@@ -11,7 +11,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
-import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -84,8 +83,11 @@ public class Freighter extends Node {
     }
     
     // Get a container from the boot
-    public Container getContainer(int id) {
-        return null;
+    public Container getContainer(int l,int b) {
+        // freighter.containers.get(4).get(5).peek()
+        Container container = containers.get(l).get(b).pop();
+        this.detachChild(container);
+        return container;
     }
 
     // Get the spatial

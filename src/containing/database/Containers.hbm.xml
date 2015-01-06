@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 18, 2014 11:10:13 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="containing.database.Containers" table="containers" catalog="containing">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="containerId" type="int">
+            <column name="container_id" not-null="true" />
+        </property>
+        <property name="aankomstDatum" type="string">
+            <column name="aankomst_datum" length="355" not-null="false" />
+        </property>
+        <property name="aankomstTijd" type="string">
+            <column name="aankomst_tijd" not-null="false" />
+        </property>
+        <property name="vertrekVervoer" type="string">
+            <column name="vertrek_vervoer" length="355" not-null="false" />
+        </property>
+        <property name="inhoudNaam" type="string">
+            <column name="inhoud_naam" length="355" not-null="false" />
+        </property>
+        <property name="inhoudSoort" type="string">
+            <column name="inhoud_soort" length="355" not-null="false" />
+        </property>
+        <property name="gevaar" type="string">
+            <column name="gevaar" length="355" not-null="false" />
+        </property>
+        <property name="vetrekDatum" type="string">
+            <column name="vetrek_datum" length="355" not-null="false" />
+        </property>
+        <property name="vertrekTijd" type="string">
+            <column name="vertrek_tijd" length="355" not-null="false" />
+        </property>
+        <property name="eigenaar" type="string">
+            <column name="eigenaar" length="355" not-null="false" />
+        </property>
+        <property name="isoNr" type="int">
+            <column name="iso_nr" not-null="false" />
+        </property>
+        <property name="storageLot" type="int">
+            <column name="storage_lot" not-null="false" />
+        </property>
+    </class>
+</hibernate-mapping>

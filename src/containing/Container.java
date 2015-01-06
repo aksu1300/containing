@@ -12,7 +12,6 @@ import com.jme3.scene.Spatial;
 import java.io.Serializable;
 
 /**
- *
  * @author account
  */
 public class Container extends Node implements Serializable{
@@ -60,5 +59,7 @@ public class Container extends Node implements Serializable{
     private void initBounding(){
         geometry = this.container.getWorldBound();
     }
+    
+    
     
 }

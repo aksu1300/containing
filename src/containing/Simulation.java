@@ -9,6 +9,7 @@ import containing.transport.Train;
 import containing.transport.Truck;
 import containing.transport.Boat;
 import HUD.MyHUD;
+import containing.database.containerDbHandler;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.cinematic.MotionPath;
@@ -64,6 +65,7 @@ public class Simulation extends SimpleApplication {
     int counter = 0;
     //Guid
     private Nifty nifty;
+    private containerDbHandler cdb;
 
     public void startSimulation() {
         if (clientSocket == null) {
@@ -83,9 +85,7 @@ public class Simulation extends SimpleApplication {
         harbor = new Harbor(bulletAppState, assetManager);
         agvc = new AGVController();
 
-        //right camera position
-        //cam.setLocation(new Vector3f(200, 150, 150));
-        //cam.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
+        //cam settings
         flyCam.setEnabled(true);
         //flyCam.setDragToRotate(true);
         flyCam.setMoveSpeed(300);
@@ -114,21 +114,23 @@ public class Simulation extends SimpleApplication {
         train = harbor.train;
 
 
-        //for loop loopt door alles heen tot ddat die de juiste container heeft
         //System.out.println(freighter.containers.get(4).get(4).peek().getLocalTranslation());
         //System.out.println(freighter.getDocked());
 
 
+        //test to see if the database connection works properly
+        cdb = new containerDbHandler();
+        cdb.addOne(1234567);
 
-
+        System.out.println(freighter.getLocalTranslation());
         for (Wagon w : train.getWagons()) {
             w.setCargo(new Container(assetManager, 1.0f));
         }
-        //loopt die door alle cranes heen loopt en vervolgens 
-        //door de wagons om te zien welke containjer hij moet hebben
-        //lets try this in the simpleupdate 
-        //tCranes.get(3).doMove(train.getWagons().get(5),train);
+
+        //tCranes.get(3).doMove(train.getWagons().get(5),train.getLocation());
         //tCranes.get(2).doMove(train.getWagons().get(4),train);
+
+        train = harbor.train;
 
         int i = 0;
         for (Truck tc : harbor.trucks) {
@@ -143,23 +145,33 @@ public class Simulation extends SimpleApplication {
 
             }
         }
+
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        //
-        if (!Mediator.commands.isEmpty() /* && !Mediator.getWriting()*/) {
-
-            System.out.println("I've seen the light man! SHEIZE");
-            parseCommand((Command) Mediator.getCommand());
+        if (freighter.getDocked()) {
+            processShipCrane();
+//            if(shCrane.get(0).getNeedsContainer() == true){
+//                System.out.println(shCrane.get(0).getNeedsContainer());
+//                
+//            }
+             
         }
+    }
 
-        if (shCrane.get(0).moving == true) {
-            if (freighter != null) {
-                if (freighter.getDocked()) {
-                    //need a for loop to check if crane is available and to loop trough all the stacks to find a container with the right id
-                    shCrane.get(0).moveCrane(freighter.containers.get(2).get(3).peek().getLocalTranslation());
+    //just for testing i guess, and it works :)
+    public void processShipCrane() {
+        int i = 0;
+        for (ShipCrane sh : harbor.shCranes) {
+            if (sh.getNeedsContainer() == false) {
+                if (sh.idle == true) {
+                    sh.procesCrane(freighter.containers.get(i).get(1).peek());
+                    i += 1;
                 }
+            }else{
+                sh.setContainer(freighter.getContainer(i, 1));
+                i += 1;
             }
         }
     }
