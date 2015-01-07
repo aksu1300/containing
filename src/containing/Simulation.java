@@ -137,8 +137,8 @@ public class Simulation extends SimpleApplication {
 
 
         //test to see if the database connection works properly
-        cdb = new containerDbHandler();
-        cdb.addOne(1234567);
+//        cdb = new containerDbHandler();
+//        cdb.addOne(1234567);
 
         System.out.println(freighter.getLocalTranslation());
         for (Wagon w : train.getWagons()) {
@@ -176,22 +176,30 @@ public class Simulation extends SimpleApplication {
 //                System.out.println(shCrane.get(0).getNeedsContainer());
 //                
 //            }
-             
+
         }
     }
 
     //just for testing i guess, and it works :)
     public void processShipCrane() {
         int i = 0;
+        int k = 0;
         for (ShipCrane sh : harbor.shCranes) {
             if (sh.getNeedsContainer() == false) {
                 if (sh.idle == true) {
-                    sh.procesCrane(freighter.containers.get(i).get(1).peek());
-                    i += 1;
+                    sh.procesCrane(freighter.containers.get(i).get(k).peek());
+                    i+=1;
+                  
+                    System.out.println(sh.movetoAVG);
+                    System.out.println(sh.done);
+                    System.out.println(sh.idle);
+                    System.out.println(sh.getNeedsContainer());
+                    
                 }
-            }else{
-                sh.setContainer(freighter.getContainer(i, 1));
-                i += 1;
+            } else {
+                sh.setContainer(freighter.getContainer(i, k));
+               
+                i+=1;
             }
         }
     }
