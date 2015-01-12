@@ -167,7 +167,7 @@ public class Harbor extends Node {
 
             Vector3f locminus = new Vector3f(-25 - (i * 30), 10.5f, 30);
             Vector3f locminus2 = new Vector3f(-25 - (i * 30), 10.5f, 30);
-            storagelines.add(new Storage(assetmanager, new StorageCrane(assetmanager, 0.5f, locminus2), locminus, amount, asciivalue)); // beide kanten op.
+            storagelines.add(new Storage(assetmanager, new StorageCrane(assetmanager, 1f, locminus2), locminus, amount, asciivalue)); // beide kanten op.
             asciivalue++;
         }
         
