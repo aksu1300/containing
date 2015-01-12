@@ -15,7 +15,7 @@ import com.jme3.scene.shape.Box;
 import containing.AGV;
 import containing.Container;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 /**
  *
@@ -24,19 +24,21 @@ import java.util.List;
 public class Storage extends Node {
 
     private AssetManager assetManager;
-    private List<Container> cargo;
+    public ArrayList<ArrayList<Stack<Container>>> containers;
     private StorageCrane crane;
     private Vector3f loc;
     public ArrayList<AGV> garageA;
     public ArrayList<AGV> garageB;
 
     public Storage(AssetManager assetManager, StorageCrane cr, Vector3f l, int amount, int value) {
+        //this does not work xD
+        containers = new ArrayList<ArrayList<Stack<Container>>>();
         this.garageA = new ArrayList<AGV>();
         this.garageB = new ArrayList<AGV>();
         this.assetManager = assetManager;
         this.loc = l;
         this.crane = cr;
-
+        initHold();
         initLine();
         initAGV(amount, value);
         
@@ -69,16 +71,33 @@ public class Storage extends Node {
         this.attachChild(containerlines_geom);
     }
 
-    public void Storecargo(Container c) {
-        this.cargo.add(c);
-    }
+//    public void Storecargo(Container c) {
+//        this.containers.push(c);
+//    }
+//
+//    public Container Unstorecargo(int id) {
+//        Container c = this.containers.get(id);
+//        this.containers.remove(id);
+//        return c;
+//    }
 
-    public Container Unstorecargo(int id) {
-        Container c = this.cargo.get(id);
-        this.cargo.remove(id);
-        return c;
+    
+    public void initHold() {
+        // this doesnt really work ...
+        for (int x = 0; x < 5; x++){
+            containers.add(new ArrayList<Stack<Container>>());
+            for (int z = 0; z < 6; z++ ){
+                containers.get(x).add(new Stack<Container>());
+                for (int y = 0; y < 6; y++){
+                    Container c = new Container(assetManager, 1);
+                    containers.get(x).get(z).push(c);
+                    
+                    this.attachChild(c);
+                    c.setLocalTranslation(this.loc.x , y * 2.8f, this.loc.z );
+                }
+            }
+        }
     }
-
     public StorageCrane Getcranes() {
         return this.crane;
     }
