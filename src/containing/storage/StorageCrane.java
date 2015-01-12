@@ -5,18 +5,23 @@
 package containing.storage;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bounding.BoundingVolume;
+import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.MotionPathListener;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import containing.Container;
+import java.util.ArrayList;
 
 /**
  *
  * @author Driving Ghost
  */
 public class StorageCrane extends Node {
-    
+
     Vector3f loc;
     Container container;
     Material material;
@@ -30,95 +35,220 @@ public class StorageCrane extends Node {
     float speed;
     String id;
     float size;
-    
-    public StorageCrane(AssetManager _assetManager, float _size, Vector3f location){
-         this.assetManager = _assetManager;
-        
-         this.location = location;
-         
-         //Init Sphere
-        initContainer();
-        
+    BoundingVolume boundGrab;
+
+    public StorageCrane(AssetManager _assetManager, float _size, Vector3f location) {
+        this.assetManager = _assetManager;
+        this.size = _size;
+        this.location = location;
+
+        //Init Sphere
+        initGrabber();
         // Init material of the container
         initMaterials();
-       
+
         // Attach to the root node
         this.attachChild(crane);
-        
+
         this.attachChild(grabbingGear);
         this.attachChild(grabbingGearHolder);
         this.attachChild(hookLeft);
         this.attachChild(hookRight);
-        
+
         this.setLocalTranslation(this.location);
-        
+        initBounding();
+
     }
-    
+
     // init Materials
     private void initMaterials() {
         material = new Material(assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
         crane.setMaterial(material);
-        
+
         grabbingGear.setMaterial(material);
-        
+
         grabbingGearHolder.setMaterial(material);
-        
+
         hookLeft.setMaterial(material);
-        
+
         hookRight.setMaterial(material);
-        
+
     }
 
     // init Container 
-    private void initContainer() {
+    private void initGrabber() {
         // Load the container
         crane = assetManager.loadModel("Models/high/crane/storagecrane/crane.j3o");
-        //crane.scale(1, 0.5f, 1);
-        
+        crane.scale(size);
+
         grabbingGear = assetManager.loadModel("Models/high/crane/storagecrane/grabbingGear.j3o");
         grabbingGear.scale(size);
-        
+
         grabbingGearHolder = assetManager.loadModel("Models/high/crane/storagecrane/grabbingGearHolder.j3o");
         grabbingGearHolder.scale(size);
-        
+
         hookLeft = assetManager.loadModel("Models/high/crane/storagecrane/hookLeft.j3o");
         hookLeft.scale(size);
-        
+
         hookRight = assetManager.loadModel("Models/high/crane/storagecrane/hookRight.j3o");
-        hookRight.scale(size);   
+        hookRight.scale(size);
     }
     
-    public boolean pushGrabber(float tpf){
-        if(this.getChild(1).getLocalTranslation().y >= -10f)
-        {
-            tpf = tpf * 4;
-            for (int i = 1; i < this.children.size(); i++) 
-               this.getChild(i).move(0,  tpf *- 1, 0);
-            return false; // still pushing.
-        }
-        else
-            return true; // max pushed. 
-    }
-    
-    public boolean pullGrabber(float tpf){  
-        if(this.getChild(1).getLocalTranslation().y <= 9.5f)
-        {
-            tpf = tpf * 4;
-            for (int i = 1; i < this.children.size(); i++)
-               this.getChild(i).move(0, tpf, 0);
-            return false; // Grabber is still moving
-        }
-        else
-            return true; // Grabber reached top  
-    }
-    
-    public void moveOut(float tpf, int i){
-        if(this.getChild(1).getLocalTranslation().z <= (55 + (i * 1.5))){
-            for (int j = 0; j < this.children.size(); j++)
-               this.getChild(j).move(0, 0, tpf * 20);
-        }
+    public void procesStorageCrane(Vector3f location){
         
     }
+
+    public void moveCrane() {
+
+        ArrayList<MotionEvent> craneMotion = new ArrayList<MotionEvent>();
+
+
+        final MotionPath craneroute = new MotionPath();
+        craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z));
+        craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z + 10));
+
+        MotionEvent motionControl = new MotionEvent(this, craneroute);
+        craneMotion.add(motionControl);
+
+
+
+
+
+        for (MotionEvent me : craneMotion) {
+            final MotionPath mp = me.getPath();
+            me.setInitialDuration(10f);
+            me.setSpeed(1);
+            me.play();
+
+            mp.addListener(new MotionPathListener() {
+                public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                    if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                    }
+                }
+            });
+        }
+
+    }
+
+    public void craneRight() {
+        ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
+        for (int i = 1; i < this.children.size(); i++) {
+            final MotionPath trainroute = new MotionPath();
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x + 5, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+
+            MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
+            grabMotion.add(motionControl);
+        }
+
+        for (MotionEvent me : grabMotion) {
+            final MotionPath mp = me.getPath();
+            me.setInitialDuration(10f);
+            me.setSpeed(1);
+            me.play();
+
+            mp.addListener(new MotionPathListener() {
+                public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                    if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                        
+
+                    }
+                }
+            });
+        }
+    }
     
+    public void craneLeft(){
+        ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
+        for (int i = 1; i < this.children.size(); i++) {
+            final MotionPath trainroute = new MotionPath();
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x -5, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z ));
+
+            MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
+            grabMotion.add(motionControl);
+        }
+        
+        for (MotionEvent me : grabMotion) {
+            final MotionPath mp = me.getPath();
+            me.setInitialDuration(10f);
+            me.setSpeed(1);
+            me.play();
+
+            mp.addListener(new MotionPathListener() {
+                public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                    if (mp.getNbWayPoints() == wayPointIndex + 1) {
+
+                       
+                        
+                    }
+                }
+            });
+        }
+    }
+    public void craneUp(){
+        ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
+        for (int i = 1; i < this.children.size(); i++) {
+            final MotionPath trainroute = new MotionPath();
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 2.2f, this.getChild(i).getLocalTranslation().z));
+
+            MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
+            grabMotion.add(motionControl);
+        }
+        
+        for (MotionEvent me : grabMotion) {
+            final MotionPath mp = me.getPath();
+            me.setInitialDuration(10f);
+            me.setSpeed(1);
+            me.play();
+
+            mp.addListener(new MotionPathListener() {
+                public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                    if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                      
+                        
+                        
+                    }
+                }
+            });
+        }
+    }
     
+    public void craneDown(){
+        //check for container has to happen 
+        ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
+        for (int i = 1; i < this.children.size(); i++) {
+           
+
+                final MotionPath trainroute = new MotionPath();
+                trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+                trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - 2.2f, this.getChild(i).getLocalTranslation().z));
+
+                MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
+                grabMotion.add(motionControl);
+        }
+        
+        
+        for (MotionEvent me : grabMotion) {
+            final MotionPath mp = me.getPath();
+            me.setInitialDuration(10f);
+            me.setSpeed(1);
+            me.play();
+            
+            mp.addListener( new MotionPathListener() {
+            public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
+                //crane up if picked up container
+             
+            }
+      });
+            
+        }
+        
+//        dockingroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 5, this.getChild(i).getLocalTranslation().z));
+    }
+
+    private void initBounding() {
+        boundGrab = this.getChild(1).getWorldBound();
+    }
 }
