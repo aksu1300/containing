@@ -119,10 +119,8 @@ public class Simulation extends SimpleApplication {
 
 
         //test to see if the database connection works properly
-        cdb = new containerDbHandler();
-        cdb.addOne(1234567);
-
-        System.out.println(freighter.getLocalTranslation());
+        //cdb = new containerDbHandler();
+        //cdb.addOne(1234567);
         for (Wagon w : train.getWagons()) {
             w.setCargo(new Container(assetManager, 1.0f));
         }
@@ -130,7 +128,6 @@ public class Simulation extends SimpleApplication {
         //tCranes.get(3).doMove(train.getWagons().get(5),train.getLocation());
         //tCranes.get(2).doMove(train.getWagons().get(4),train);
 
-        train = harbor.train;
 
         int i = 0;
         for (Truck tc : harbor.trucks) {
@@ -150,7 +147,11 @@ public class Simulation extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        if (freighter.getDocked()) {
+        Command command = Mediator.getCommand();
+        if(command != null) {
+        parseCommand(command);
+        }
+        /*if (freighter.getDocked()) {
             processShipCrane();
 //            if(shCrane.get(0).getNeedsContainer() == true){
 //                System.out.println(shCrane.get(0).getNeedsContainer());
@@ -173,209 +174,12 @@ public class Simulation extends SimpleApplication {
                 sh.setContainer(freighter.getContainer(i, 1));
                 i += 1;
             }
-        }
+        } */
     }
 
     public void initKeys() {
         inputManager.addMapping("Show", new KeyTrigger(KeyInput.KEY_F10));
         inputManager.addMapping("Hide", new KeyTrigger(KeyInput.KEY_F9));
-        // Add the names to the action listener.
-        inputManager.addListener(actionListener, "Show", "Hide");
-
-    }
-    private ActionListener actionListener = new ActionListener() {
-        public void onAction(String name, boolean keyPressed, float tpf) {
-            if (name.equals("Show") && !keyPressed) {
-                //show the gui
-                initHud();
-            }
-            if (name.equals("Hide") && !keyPressed) {
-                //and lets hide the gui
-                nifty.exit();
-            }
-        }
-    };
-
-    private void initHud() {
-        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
-        nifty = niftyDisplay.getNifty();
-        guiViewPort.addProcessor(niftyDisplay);
-
-
-        nifty.loadStyleFile("nifty-default-styles.xml");
-        nifty.loadControlFile("nifty-default-controls.xml");
-
-        // <screen>
-        nifty.addScreen("hud", new ScreenBuilder("hud") {
-            {
-                controller(new MyHUD());
-                layer(new LayerBuilder("background") {
-                    {
-                        childLayoutVertical();
-                        padding("16px,0px,0px,0px");
-                        image(new ImageBuilder() {
-                            {
-                                childLayoutVertical();
-                                filename("Interface/top-left2.png");
-                                alignLeft();
-                            }
-                        });
-                    }
-                });
-
-                layer(new LayerBuilder("foreground") {
-                    {
-                        childLayoutVertical();
-
-                        panel(new PanelBuilder("panel_top") {
-                            {
-                                childLayoutCenter();
-                                alignLeft();
-                                height("120px");
-                                width("160px");
-
-                                panel(new PanelBuilder("panel_top_right1") {
-                                    {
-                                        childLayoutCenter();
-                                        alignLeft();
-                                        padding("16px,00px,58px,82px");
-
-                                        image(new ImageBuilder() {
-                                            {
-                                                filename("Interface/settings-button.png");
-                                                valignCenter();
-                                                interactOnClick("switchScreen(config)");
-                                            }
-                                        });
-                                    }
-                                });
-
-                                panel(new PanelBuilder("panel_top_right2") {
-                                    {
-                                        childLayoutCenter();
-                                        alignLeft();
-                                        padding("93px,00px,0px,12px");
-
-                                        image(new ImageBuilder() {
-                                            {
-                                                filename("Interface/play-button.png");
-                                                valignCenter();
-                                                interactOnClick("startSimulatie()");
-                                            }
-                                        });
-                                    }
-                                });
-                                panel(new PanelBuilder("panel_top_right3") {
-                                    {
-                                        childLayoutCenter();
-                                        alignLeft();
-                                        padding("28px,00px,0px,45px");
-
-                                        image(new ImageBuilder() {
-                                            {
-                                                filename("Interface/stop-button.png");
-                                                valignCenter();
-                                                interactOnClick("stopSimulatie()");
-                                            }
-                                        });
-                                    }
-                                });
-                                panel(new PanelBuilder("panel_top_right5") {
-                                    {
-                                        childLayoutCenter();
-                                        alignLeft();
-                                        padding("220px,00px,0px,10px");
-
-                                        image(new ImageBuilder() {
-                                            {
-                                                filename("Interface/ffw1.png");
-                                                valignCenter();
-                                                interactOnClick("stopSimulatie()");
-                                            }
-                                        });
-                                    }
-                                });
-                                panel(new PanelBuilder("panel_top_right6") {
-                                    {
-                                        childLayoutCenter();
-                                        alignLeft();
-                                        padding("330px,00px,0px,10px");
-
-                                        image(new ImageBuilder() {
-                                            {
-                                                filename("Interface/ffw2.png");
-                                                valignCenter();
-                                                interactOnClick("stopSimulatie()");
-                                            }
-                                        });
-                                    }
-                                });
-                                panel(new PanelBuilder("panel_top_right7") {
-                                    {
-                                        childLayoutCenter();
-                                        alignLeft();
-                                        padding("440px,00px,0px,10px");
-
-                                        image(new ImageBuilder() {
-                                            {
-                                                filename("Interface/ffw3.png");
-                                                valignCenter();
-                                                interactOnClick("stopSimulatie()");
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        }.build(nifty));
-        nifty.gotoScreen("hud");
-
-        nifty.addScreen("config", new ScreenBuilder("config") {
-            {
-                controller(new MyHUD());
-
-                layer(new LayerBuilder("foreground") {
-                    {
-                        childLayoutCenter();
-
-                        panel(new PanelBuilder("panel_top_right3") {
-                            {
-                                childLayoutCenter();
-
-                                image(new ImageBuilder() {
-                                    {
-                                        filename("Interface/config.png");
-
-//                                                interactOnClick("switchScreen(hud)");
-                                    }
-                                });
-
-                                panel(new PanelBuilder("panel_top_right3") {
-                                    {
-                                        childLayoutCenter();
-                                        alignRight();
-                                        padding("0px,16px,480px,0px");
-
-                                        control(new ButtonBuilder("StartButton", "X") {
-                                            {
-                                                alignRight();
-                                                height("20px");
-                                                width("50px");
-                                                visibleToMouse(true);
-                                                interactOnClick("switchScreen(hud)");
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        }.build(nifty));
     }
 
 //    private void updateCommands() {
@@ -429,9 +233,10 @@ public class Simulation extends SimpleApplication {
         if (cmd.getCommand().equals("createFreighter")) {
             //Adding freighter to the harbor
             freighter = new Freighter(assetManager);
+            rootNode.attachChild(freighter);
+            System.out.println("Freighter Created");
             freighter.Move(harbor.getDockingroute(), 1.2f);
 
-            rootNode.attachChild(freighter);
 
         }
 

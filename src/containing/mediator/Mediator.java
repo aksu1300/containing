@@ -35,10 +35,12 @@ public class Mediator {
      * @return the 1st Command in the Mediator. 
      */
     public static Command getCommand() {
+        if (!commands.isEmpty()) {
         Command c = (Command) commands.get(0);
         commands.remove(0);
         System.out.println("Forwarded command (" + c.getCommand() + " " + c.getIdentifier() + ").");
         return  c;
+        } else return null;
     }
 
 }
