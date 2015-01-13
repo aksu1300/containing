@@ -14,7 +14,7 @@ import containing.TruckCrane;
 
 public class Truck extends Node {
 
-    Vector3f loc;
+    Vector3f location;
     Spatial model;
     Material material;
     float speed;
@@ -23,7 +23,7 @@ public class Truck extends Node {
 
     public Truck(String id, Vector3f loc, float speed, AssetManager assetManager) {
         this.name = id;
-        this.loc = loc; 
+        this.location = loc; 
         this.cargo = null;
         this.speed = speed;
         
@@ -85,14 +85,14 @@ public class Truck extends Node {
         
     }
     
-    public Vector3f getLoc(){
-        return this.loc;
+    public Vector3f getLocation(){
+        return this.location;
     }
     
     public void setContainer(Container cargo){
         this.cargo = cargo; 
         this.cargo.rotate(0, -FastMath.PI/2, 0);
-        this.cargo.setLocalTranslation(loc.x, loc.y+1.2f, loc.z-0.345f);
+        this.cargo.setLocalTranslation(location.x, location.y+1.2f, location.z-0.345f);
         this.attachChild(this.cargo);
     }
     

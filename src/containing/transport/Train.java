@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Train extends Node {
     
-    String id;
+    private String id;
     private Vector3f location;
     private Spatial model;
     private Material material;
@@ -20,18 +20,7 @@ public class Train extends Node {
     private ArrayList<Container> containers;
     private ArrayList<Wagon> wagons = new ArrayList<Wagon>();
     private AssetManager assetmanager;
-
-
-   
-    // Get containers
-    public ArrayList<Container> getContainers() {
-        return containers;
-    }
-
-    // Set containers
-    public void setContainers(ArrayList<Container> containers) {
-        this.containers = containers;
-    }
+    private boolean docked = false;
     
     public Train(Vector3f location, AssetManager assetmanager) {
         this.location = location;
@@ -92,6 +81,7 @@ public class Train extends Node {
         MotionPath path = new MotionPath();
         path.addWayPoint(station);
         path.addWayPoint(exit);
+        this.docked = false;
     }
     
     /**
@@ -103,20 +93,9 @@ public class Train extends Node {
         MotionPath path = new MotionPath();
         path.addWayPoint(entry);
         path.addWayPoint(station);
+        this.docked = true;
     }
     
-    /**
-     * Add physics (gravity) to the train.
-     */
-    private void initPhysics() {
-        //adds gravity effects.
-    }
-    
-
-    /**
-     * lololololol
-     * @return the Cargo of all the wagons.
-     */
     public String getId(){
         return this.id;
     }
@@ -141,5 +120,17 @@ public class Train extends Node {
     
     public Vector3f getLocation() {
         return this.location;
+    }
+    
+    public ArrayList<Container> getContainers() {
+        return containers;
+    }
+
+    public void setContainers(ArrayList<Container> containers) {
+        this.containers = containers;
+    }
+    
+    public boolean getDocked() {
+        return this.docked;
     }
 }

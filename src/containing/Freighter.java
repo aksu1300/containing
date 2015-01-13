@@ -18,36 +18,25 @@ import java.util.Stack;
  * @author Driving Ghost
  */
 public class Freighter extends Node {
-    
-    //private BulletAppState bulletAppState;
-    //public Geometry ballGeo;
 
     private boolean docked = false;
     private Material material;
     private AssetManager assetmanager;
     private Spatial shipSpatial;
-    //private BulletAppState bulletAppState;
-    //public Geometry ballGeo;
-    //public RigidBodyControl ballPhy;
-    // A ship has a list of containers 
     public ArrayList<ArrayList<Stack<Container>>> containers;
-       
+    private Vector3f location;
+
     public Freighter(AssetManager assetmanager) {
         this.assetmanager = assetmanager;
         containers = new ArrayList<ArrayList<Stack<Container>>>();
-        // Init ship 
-        initShip();
 
-        // Init material of the ship
+        initShip();
         initMaterial();
-        
-        //initHold
         initHold();
 
         this.setLocalTranslation(100, 11, 16);
-        
-        // Attach the model to the 
         this.attachChild(shipSpatial);
+        this.location = new Vector3f(100, 11, 16);
     }
 
     //  Init ship
@@ -64,26 +53,26 @@ public class Freighter extends Node {
     }
 
     /**
-     * initHold zet de containers op hun plaats op het deck. 
+     * initHold zet de containers op hun plaats op het deck.
      */
     public void initHold() {
-        for (int x = 0; x < 21; x++){
+        for (int x = 0; x < 21; x++) {
             containers.add(new ArrayList<Stack<Container>>());
-            for (int z = 0; z < 10; z++ ){
+            for (int z = 0; z < 10; z++) {
                 containers.get(x).add(new Stack<Container>());
-                for (int y = 0; y < 4; y++){
+                for (int y = 0; y < 4; y++) {
                     Container c = new Container(assetmanager, 1);
                     containers.get(x).get(z).push(c);
-                    c.rotate(0,FastMath.PI/2,0);
+                    c.rotate(0, FastMath.PI / 2, 0);
                     this.attachChild(c);
-                    c.setLocalTranslation(shipSpatial.getLocalTranslation().x+130-(x*18f), y*2.8f, shipSpatial.getLocalTranslation().z +11.5f-(z*2.5f));
+                    c.setLocalTranslation(shipSpatial.getLocalTranslation().x + 130 - (x * 18f), y * 2.8f, shipSpatial.getLocalTranslation().z + 11.5f - (z * 2.5f));
                 }
             }
         }
     }
-    
+
     // Get a container from the boot
-    public Container getContainer(int l,int b) {
+    public Container getContainer(int l, int b) {
         // freighter.containers.get(4).get(5).peek()
         Container container = containers.get(l).get(b).pop();
         this.detachChild(container);
@@ -111,11 +100,16 @@ public class Freighter extends Node {
             }
         });
     }
+
     public boolean getDocked() {
         return this.docked;
     }
 
     public void setDocked(boolean docked) {
         this.docked = docked;
+    }
+
+    public Vector3f getLocation() {
+        return this.location;
     }
 }

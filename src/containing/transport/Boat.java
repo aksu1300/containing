@@ -26,7 +26,7 @@ public class Boat extends Node{
     //public Geometry ballGeo;
     private boolean docked = false;
     private Material material;
-    private Vector3f loc;
+    private Vector3f location;
     //public RigidBodyControl ballPhy;
     private Vector3f lastLocation;
     // A ship has a list of containers 
@@ -124,6 +124,10 @@ public class Boat extends Node{
 
     public void setDocked() {
         this.docked = !docked;
+    }
+    
+    public Vector3f getLocation() {
+        return this.location;
     }
 
 }
