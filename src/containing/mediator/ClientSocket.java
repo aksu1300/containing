@@ -61,4 +61,13 @@ public class ClientSocket implements Runnable {
         }
 
     }
+
+    public void commandDone(Command c) {
+        Command cmd = c;
+        try {
+            outputStream.writeObject(Mediator.getCommand());
+        } catch (IOException ex) {
+            Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
