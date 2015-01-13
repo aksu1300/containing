@@ -30,12 +30,14 @@ public class StorageCrane extends Node {
     Spatial grabbingGearHolder;
     Spatial hookLeft;
     Spatial hookRight;
+    Storage s;
     AssetManager assetManager;
     Vector3f location;
     float speed;
     String id;
     float size;
     BoundingVolume boundGrab;
+    public boolean needcontainer = false;
 
     public StorageCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.assetManager = _assetManager;
@@ -94,8 +96,10 @@ public class StorageCrane extends Node {
         hookRight.scale(size);
     }
     
-    public void procesStorageCrane(Vector3f location){
-        
+    public void procesStorageCrane( Storage storage){
+        System.out.println(storage);
+        this.s = storage;
+        craneDown();
     }
 
     public void moveCrane() {
@@ -191,7 +195,7 @@ public class StorageCrane extends Node {
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 2.2f, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 12.2f, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
@@ -206,8 +210,9 @@ public class StorageCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                      
-                        
+                       
+                        needcontainer = false;
+                       
                         
                     }
                 }
@@ -223,7 +228,7 @@ public class StorageCrane extends Node {
 
                 final MotionPath trainroute = new MotionPath();
                 trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-                trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - 2.2f, this.getChild(i).getLocalTranslation().z));
+                trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - 12.2f, this.getChild(i).getLocalTranslation().z));
 
                 MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
                 grabMotion.add(motionControl);
@@ -238,7 +243,15 @@ public class StorageCrane extends Node {
             
             mp.addListener( new MotionPathListener() {
             public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-                //crane up if picked up container
+                if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                      
+                    
+//                    releaseContainer();
+                      needcontainer = true;
+                      
+                      craneUp();
+                    }
+                
              
             }
       });
@@ -250,5 +263,15 @@ public class StorageCrane extends Node {
 
     private void initBounding() {
         boundGrab = this.getChild(1).getWorldBound();
+    }
+    
+    public void setContainer(Container c) {
+        this.container = c;
+        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y + 20.8f , this.getChild(1).getLocalTranslation().z);
+        this.attachChild(this.container);
+    }
+    
+    public void releaseContainer() {
+        this.detachChild(container);
     }
 }
