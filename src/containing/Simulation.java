@@ -215,8 +215,7 @@ public class Simulation extends SimpleApplication {
     }
 
     public void initKeys() {
-        inputManager.addMapping("Show", new KeyTrigger(KeyInput.KEY_F10));
-        inputManager.addMapping("Hide", new KeyTrigger(KeyInput.KEY_F9));
+        inputManager.addMapping("Show", new KeyTrigger(KeyInput.KEY_R));
         // Add the names to the action listener.
         inputManager.addListener(actionListener, "Show", "Hide");
 
@@ -225,7 +224,7 @@ public class Simulation extends SimpleApplication {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("Show") && !keyPressed) {
                 //show the gui
-                initHud();
+                stCranes.get(0).Getcranes().procesStorageCrane(stCranes.get(0),new Vector3f(-5,0,-10));
             }
             if (name.equals("Hide") && !keyPressed) {
                 //and lets hide the gui
