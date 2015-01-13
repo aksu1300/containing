@@ -249,7 +249,6 @@ public class Harbor extends Node {
 
     public void initShipcranes() {
         int ruimte = 30;
-        // Adding a ShipCrane to the harbor
         for (int i = 0; i < 10; i++) {
             if (i == 5) {
                 ruimte *= 2;

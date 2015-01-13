@@ -43,7 +43,7 @@ public class Freighter extends Node {
     public void initShip() {
         shipSpatial = assetmanager.loadModel("Models/high/ship/seaship.j3o");
         shipSpatial.rotate(0, -(FastMath.PI / 2), 0);
-        shipSpatial.scale(0.8f);
+        shipSpatial.scale(1f);
     }
 
     public void initMaterial() {

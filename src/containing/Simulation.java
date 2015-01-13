@@ -143,30 +143,6 @@ public class Simulation extends SimpleApplication {
         if (command != null) {
             parseCommand(command);
         }
-        /*if (freighter.getDocked()) {
-         processShipCrane();
-         //            if(shCrane.get(0).getNeedsContainer() == true){
-         //                System.out.println(shCrane.get(0).getNeedsContainer());
-         //                
-         //            }
-             
-         }
-         }
-
-         //just for testing i guess, and it works :)
-         public void processShipCrane() {
-         int i = 0;
-         for (ShipCrane sh : harbor.shCranes) {
-         if (sh.getNeedsContainer() == false) {
-         if (sh.idle == true) {
-         sh.procesCrane(freighter.containers.get(i).get(1).peek());
-         i += 1;
-         }
-         }else{
-         sh.setContainer(freighter.getContainer(i, 1));
-         i += 1;
-         }
-         } */
     }
 
     public void initKeys() {
@@ -206,7 +182,6 @@ public class Simulation extends SimpleApplication {
         /*
          * The create commands.
          */
-        System.out.println(cmd.getCommand());
         if (cmd.getCommand().equals("createShip")) {
             //Adding freighter to the harbor
             freighter = new Freighter(assetManager);
@@ -220,8 +195,8 @@ public class Simulation extends SimpleApplication {
             freighter = new Freighter(assetManager);
             rootNode.attachChild(freighter);
             System.out.println("New freighter created");
-            freighter.Move(harbor.getDockingroute(), 1.2f);
-            System.out.println("Freighter docked.");
+            //freighter.Move(harbor.getDockingroute(), 1.2f);
+            //System.out.println("Freighter docked.");
         }
 
         if (cmd.getCommand().equals("createTrain")) {
@@ -248,11 +223,10 @@ public class Simulation extends SimpleApplication {
             Boat ship = (Boat) rootNode.getChild(cmd.getIdentifier());
             Vector3f locA = ship.getLocation();
             ship.Move(harbor.getDockingroute(), speed);
-            System.out.println("Moved boat from (" + locA + ") to (" + ship.getLocation() + ")");
+            System.out.println("Moved boat from (" + locA + ") to (" + ship.getLocation() + ").");
         }
 
         if (cmd.getCommand().equals("moveFreighter")) {
-            Freighter freighter = (Freighter) rootNode.getChild(cmd.getIdentifier());
             freighter.Move(harbor.getDockingroute(), speed);
             System.out.println("A freighter docked at the harbor.");
         }
@@ -272,7 +246,16 @@ public class Simulation extends SimpleApplication {
             Truck truck = (Truck) rootNode.getChild(cmd.getIdentifier());
             Vector3f locA = truck.getLocation();
             truck.move(lightDir);
-            System.out.println("A truck moved from (" + locA + ") to (" + truck.getLocation() + ")");
+            System.out.println("A truck moved from (" + locA + ") to (" + truck.getLocation() + ").");
+        }
+
+        /*
+         * Misc commands
+         */
+        if (cmd.getCommand().equals("getContainer")) {
+            ShipCrane shipCrane = (ShipCrane) rootNode.getChild(cmd.getIdentifier());
+            shipCrane.procesCrane(cmd.getContent());
+            System.out.println("A shipcrane got a container of a freighter.");
         }
     }
 
