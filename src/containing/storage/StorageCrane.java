@@ -95,21 +95,23 @@ public class StorageCrane extends Node {
         hookRight = assetManager.loadModel("Models/high/crane/storagecrane/hookRight.j3o");
         hookRight.scale(size);
     }
-    
-    public void procesStorageCrane( Storage storage){
-        System.out.println(storage);
+
+    public void procesStorageCrane(Storage storage, Vector3f location) {
+        this.location = location;
+        this.container = new Container(assetManager, 1f);
         this.s = storage;
-        craneDown();
+        moveCrane(location);
+//        craneDown();
     }
 
-    public void moveCrane() {
+    public void moveCrane(Vector3f location) {
 
         ArrayList<MotionEvent> craneMotion = new ArrayList<MotionEvent>();
 
 
         final MotionPath craneroute = new MotionPath();
         craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z));
-        craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z + 10));
+        craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, location.z));
 
         MotionEvent motionControl = new MotionEvent(this, craneroute);
         craneMotion.add(motionControl);
@@ -127,6 +129,7 @@ public class StorageCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                        craneRight();
                     }
                 }
             });
@@ -139,7 +142,7 @@ public class StorageCrane extends Node {
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x + 5, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(location.x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
@@ -154,25 +157,23 @@ public class StorageCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        
-
                     }
                 }
             });
         }
     }
-    
-    public void craneLeft(){
+
+    public void craneLeft() {
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x -5, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z ));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x - 5, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
         }
-        
+
         for (MotionEvent me : grabMotion) {
             final MotionPath mp = me.getPath();
             me.setInitialDuration(10f);
@@ -182,25 +183,23 @@ public class StorageCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-
-                       
-                        
                     }
                 }
             });
         }
     }
-    public void craneUp(){
+
+    public void craneUp() {
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
             trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 12.2f, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - location.y, this.getChild(i).getLocalTranslation().z));
 
             MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
             grabMotion.add(motionControl);
         }
-        
+
         for (MotionEvent me : grabMotion) {
             final MotionPath mp = me.getPath();
             me.setInitialDuration(10f);
@@ -210,67 +209,60 @@ public class StorageCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
+
                        
-                        needcontainer = false;
-                       
-                        
+
+
                     }
                 }
             });
         }
     }
-    
-    public void craneDown(){
+
+    public void craneDown() {
         //check for container has to happen 
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
-           
 
-                final MotionPath trainroute = new MotionPath();
-                trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-                trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - 12.2f, this.getChild(i).getLocalTranslation().z));
 
-                MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
-                grabMotion.add(motionControl);
+            final MotionPath trainroute = new MotionPath();
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, location.y, this.getChild(i).getLocalTranslation().z));
+
+            MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
+            grabMotion.add(motionControl);
         }
-        
-        
+
+
         for (MotionEvent me : grabMotion) {
             final MotionPath mp = me.getPath();
             me.setInitialDuration(10f);
             me.setSpeed(1);
             me.play();
-            
-            mp.addListener( new MotionPathListener() {
-            public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-                if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                      
-                    
-//                    releaseContainer();
-                      needcontainer = true;
-                      
-                      craneUp();
+
+            mp.addListener(new MotionPathListener() {
+                public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
+                    if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                       s.addContainer(container);
+                        craneUp();
+                        
                     }
-                
-             
-            }
-      });
-            
+                    
+                }
+            });
         }
-        
-//        dockingroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 5, this.getChild(i).getLocalTranslation().z));
     }
 
     private void initBounding() {
         boundGrab = this.getChild(1).getWorldBound();
     }
-    
+
     public void setContainer(Container c) {
         this.container = c;
-        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y + 20.8f , this.getChild(1).getLocalTranslation().z);
+        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y + 20.8f, this.getChild(1).getLocalTranslation().z);
         this.attachChild(this.container);
     }
-    
+
     public void releaseContainer() {
         this.detachChild(container);
     }
