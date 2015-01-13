@@ -29,6 +29,7 @@ public class Storage extends Node {
     private Vector3f loc;
     public ArrayList<AGV> garageA;
     public ArrayList<AGV> garageB;
+    Container container;
 
     public Storage(AssetManager assetManager, StorageCrane cr, Vector3f l, int amount, int value) {
         //this does not work xD
@@ -38,27 +39,28 @@ public class Storage extends Node {
         this.assetManager = assetManager;
         this.loc = l;
         this.crane = cr;
+
         initHold();
         initLine();
         initAGV(amount, value);
-        
+
         this.attachChild(this.crane);
     }
 
     public void initAGV(int amount, int value) {
         for (int i = 0; i < amount; i++) {
-            AGV agv = new AGV("SA"+ Character.toChars(48 + value)+ "V"+i, assetManager);
+            AGV agv = new AGV("SA" + Character.toChars(48 + value) + "V" + i, assetManager);
             garageA.add(agv);
-            agv.setLocalTranslation(loc.x + 8 - (i *5), loc.y,320);
+            agv.setLocalTranslation(loc.x + 8 - (i * 5), loc.y, 320);
             this.attachChild(agv);
         }
         for (int i = 0; i < amount; i++) {
-            AGV agv = new AGV("SB"+ Character.toChars(48 + value)+ "V"+i, assetManager);
+            AGV agv = new AGV("SB" + Character.toChars(48 + value) + "V" + i, assetManager);
             garageB.add(agv);
-            agv.setLocalTranslation(loc.x + 8 - (i *5), loc.y,-260);
+            agv.setLocalTranslation(loc.x + 8 - (i * 5), loc.y, -260);
             agv.rotate(0, -FastMath.PI, 0);
             this.attachChild(agv);
-        } 
+        }
     }
 
     public void initLine() {
@@ -80,24 +82,38 @@ public class Storage extends Node {
 //        this.containers.remove(id);
 //        return c;
 //    }
+    public boolean addContainer(Container c) {
+        for (int x = 0; x < 6; x++) {
+            for (int z = 0; z < 34; z++) {
+                
+                    if (this.containers.get(x).get(z).isEmpty()) {
 
-    
+                        this.containers.get(x).get(z).add(c);
+                        this.attachChild(c);
+                        c.setLocalTranslation(this.loc.x + 5 * x, this.loc.y, this.loc.z + 12.8f * z);
+                        return true;
+                    }
+                
+                
+            }
+            
+        }
+        return false;
+    }
+
     public void initHold() {
         // this doesnt really work ...
-        for (int x = 0; x < 5; x++){
+
+        for (int x = 0; x < 6; x++) {
             containers.add(new ArrayList<Stack<Container>>());
-            for (int z = 0; z < 6; z++ ){
+            for (int z = 0; z < 34; z++) {
                 containers.get(x).add(new Stack<Container>());
-                for (int y = 0; y < 6; y++){
-                    Container c = new Container(assetManager, 1);
-                    containers.get(x).get(z).push(c);
-                    
-                    this.attachChild(c);
-                    c.setLocalTranslation(this.loc.x , y * 2.8f, this.loc.z );
-                }
+
             }
         }
+
     }
+
     public StorageCrane Getcranes() {
         return this.crane;
     }
