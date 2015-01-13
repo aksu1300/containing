@@ -82,23 +82,22 @@ public class Storage extends Node {
 //        this.containers.remove(id);
 //        return c;
 //    }
-    public boolean addContainer(Container c) {
+    public void addContainer(Container c) {
         for (int x = 0; x < 6; x++) {
-            for (int z = 0; z < 34; z++) {
-                
-                    if (this.containers.get(x).get(z).isEmpty()) {
-
-                        this.containers.get(x).get(z).add(c);
+            for (int z = 0; z < 28; z++) {
+                for (int y = 0; y < 2; y++) {
+                    if (this.containers.get(x).get(z).size() < 2) {
+                        this.containers.get(x).get(z).push(c);
                         this.attachChild(c);
-                        c.setLocalTranslation(this.loc.x + 5 * x, this.loc.y, this.loc.z + 12.8f * z);
-                        return true;
+                        c.setLocalTranslation(this.loc.x - 6.5f + 2.8f * x ,this.loc.y + y * 3.8f , this.loc.z + 250 -  7.8f * z); 
+                        return;
                     }
-                
+                }
                 
             }
             
         }
-        return false;
+       
     }
 
     public void initHold() {
