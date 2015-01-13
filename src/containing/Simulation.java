@@ -22,6 +22,7 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
+import containing.storage.Storage;
 import containing.transport.TrainCrane;
 import containing.transport.Wagon;
 import de.lessvoid.nifty.Nifty;
@@ -49,6 +50,7 @@ public class Simulation extends SimpleApplication {
     private Vector3f lightDir = new Vector3f(-4.9f, -1.3f, 5.9f);
     Spatial cargo;
     ArrayList<ShipCrane> shCrane;
+    ArrayList<Storage> stCranes = new ArrayList<Storage>();
     Truck t;
     Train train;
     Truck truck;
@@ -113,10 +115,10 @@ public class Simulation extends SimpleApplication {
         boat.Move(harbor.getFreighterDock(), 0.3f);
         rootNode.attachChild(boat);
         //Adding freighter to the harbor
-        freighter = new Freighter(assetManager);
-        freighter.Move(harbor.getDockingroute(), 1.2f);
+//        freighter = new Freighter(assetManager);
+//        freighter.Move(harbor.getDockingroute(), 1.2f);
 
-        rootNode.attachChild(freighter);
+//        rootNode.attachChild(freighter);
         for (TruckCrane tc : harbor.truckCranes) {
             Container xxx = new Container(assetManager, 1);
             tc.setAGV(new AGV("AAA", assetManager));
@@ -129,24 +131,22 @@ public class Simulation extends SimpleApplication {
 //        shCrane.get(0).moveCrane(new Vector3f(0,0,4));
         tCranes = harbor.trainCranes;
         train = harbor.train;
+        
+//        tCranes.get(0).doMove(train.getWagons().get(5), train.getLocation(), new AGV("TrainAGV1", assetManager));
 
-
-        //for loop loopt door alles heen tot ddat die de juiste container heeft
-//        System.out.println(freighter.containers.get(4).get(4).peek().getLocalTranslation());
-//        System.out.println(freighter.getDocked());
+//        stCranes = harbor.storagelines;
+//        stCranes.get(0).Getcranes().moveCrane();
 
 
         //test to see if the database connection works properly
 //        cdb = new containerDbHandler();
 //        cdb.addOne(1234567);
 
-        System.out.println(freighter.getLocalTranslation());
+//        System.out.println(freighter.getLocalTranslation());
         for (Wagon w : train.getWagons()) {
             w.setCargo(new Container(assetManager, 1.0f));
         }
 
-//            tCranes.get(3).doMove(train.getWagons().get(5),train.getLocation());
-//            tCranes.get(2).doMove(train.getWagons().get(4),train);
 
         train = harbor.train;
 
@@ -165,21 +165,32 @@ public class Simulation extends SimpleApplication {
 
             }
         }
+       
 
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        if (freighter.getDocked()) {
-            processShipCrane();
+        procesStorage();
+//        if (freighter.getDocked()) {
+//            processShipCrane();
 //            if(shCrane.get(0).getNeedsContainer() == true){
 //                System.out.println(shCrane.get(0).getNeedsContainer());
 //                
 //            }
 
-        }
+//        }
     }
 
+    private void procesStorage(){
+        stCranes = harbor.storagelines;
+        if(stCranes.get(0).Getcranes().needcontainer == true){
+                stCranes.get(0).addContainer(new Container(assetManager, 1));
+        }else{
+            stCranes.get(0).Getcranes().procesStorageCrane(stCranes.get(0));
+        }
+        
+    }
     //just for testing i guess, and it works :)
     public void processShipCrane() {
         int i = 0;
@@ -188,13 +199,12 @@ public class Simulation extends SimpleApplication {
             if (sh.getNeedsContainer() == false) {
                 if (sh.idle == true) {
                     sh.procesCrane(freighter.containers.get(i).get(k).peek());
+                    //als de peek leeg is moet die eigenlijk k + 1 doen.
                     i+=1;
-                  
                     System.out.println(sh.movetoAVG);
                     System.out.println(sh.done);
                     System.out.println(sh.idle);
-                    System.out.println(sh.getNeedsContainer());
-                    
+                    System.out.println(sh.getNeedsContainer());  
                 }
             } else {
                 sh.setContainer(freighter.getContainer(i, k));
