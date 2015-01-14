@@ -89,7 +89,7 @@ public class Storage extends Node {
                     if (this.containers.get(x).get(z).size() < 2) {
                         this.containers.get(x).get(z).push(c);
                         this.attachChild(c);
-                        c.setLocalTranslation(this.loc.x - 6.5f + 2.8f * x ,this.loc.y + y * 3.8f , this.loc.z + 250 -  7.8f * z); 
+                        c.setLocalTranslation(this.loc.x - 6.5f + (2.8f * x) ,this.loc.y + (y * 3.8f) , this.loc.z + 250 -  (18.8f * z)); 
                         return;
                     }
                 }
