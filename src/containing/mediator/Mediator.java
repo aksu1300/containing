@@ -3,6 +3,9 @@ package containing.mediator;
 import java.util.ArrayList;
 import serialclass.Command;
 
+/**
+ * DEZE MEDIATOR IS VOOR ONTVANGST COMMANDO'S
+ */
 public class Mediator {
 
     private static boolean writing = false; //Status of the Mediator.
