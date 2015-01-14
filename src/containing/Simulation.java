@@ -22,6 +22,7 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.water.WaterFilter;
+import containing.storage.Storage;
 import containing.transport.TrainCrane;
 import containing.transport.Wagon;
 import de.lessvoid.nifty.Nifty;
@@ -49,6 +50,7 @@ public class Simulation extends SimpleApplication {
     private Vector3f lightDir = new Vector3f(-4.9f, -1.3f, 5.9f);
     Spatial cargo;
     ArrayList<ShipCrane> shCrane;
+    ArrayList<Storage> stCranes = new ArrayList<Storage>();
     Truck t;
     Train train;
     Truck truck;
@@ -60,6 +62,7 @@ public class Simulation extends SimpleApplication {
     MotionPath motionPath;
     MotionPath motionPath1;
     AGVController agvc;
+    AGV agv;
     int counter = 0;
     //Guid
     private Nifty nifty;
@@ -79,7 +82,8 @@ public class Simulation extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        initHud();
+        initKeys();
+       
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         harbor = new Harbor(bulletAppState, assetManager);
@@ -129,27 +133,28 @@ public class Simulation extends SimpleApplication {
 //        shCrane.get(0).moveCrane(new Vector3f(0,0,4));
         tCranes = harbor.trainCranes;
         train = harbor.train;
+        
+//        tCranes.get(0).doMove(train.getWagons().get(5), train.getLocation(), new AGV("TrainAGV1", assetManager));
 
-
-        //for loop loopt door alles heen tot ddat die de juiste container heeft
-//        System.out.println(freighter.containers.get(4).get(4).peek().getLocalTranslation());
-//        System.out.println(freighter.getDocked());
+        stCranes = harbor.storagelines;
+//        stCranes.get(0).Getcranes().moveCrane();
 
 
         //test to see if the database connection works properly
 //        cdb = new containerDbHandler();
 //        cdb.addOne(1234567);
 
-        System.out.println(freighter.getLocalTranslation());
+//        System.out.println(freighter.getLocalTranslation());
         for (Wagon w : train.getWagons()) {
             w.setCargo(new Container(assetManager, 1.0f));
         }
 
-//            tCranes.get(3).doMove(train.getWagons().get(5),train.getLocation());
-//            tCranes.get(2).doMove(train.getWagons().get(4),train);
 
         train = harbor.train;
 
+        agv = new AGV("TestAGV", assetManager);
+        rootNode.attachChild(agv);
+        agv.setLocalTranslation(140, 10.5f, 112);
 
 
         int i = 0;
@@ -165,61 +170,71 @@ public class Simulation extends SimpleApplication {
 
             }
         }
+       
 
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        if (freighter.getDocked()) {
-            processShipCrane();
+//        stCranes.get(0).addContainer(new Container(assetManager, 1f));
+//        procesStorage();
+//        if (freighter.getDocked()) {
+//            processShipCrane();
 //            if(shCrane.get(0).getNeedsContainer() == true){
 //                System.out.println(shCrane.get(0).getNeedsContainer());
 //                
 //            }
-
-        }
+//
+//        }
     }
 
+//    private void procesStorage(){
+//        stCranes = harbor.storagelines;
+//        if(stCranes.get(0).Getcranes().needcontainer == true){
+//                stCranes.get(0).addContainer(new Container(assetManager, 1));
+//        }else{
+//            stCranes.get(0).Getcranes().procesStorageCrane(stCranes.get(0));
+//        }
+//        
+//    }
     //just for testing i guess, and it works :)
-    public void processShipCrane() {
-        int i = 0;
-        int k = 0;
-        for (ShipCrane sh : harbor.shCranes) {
-            if (sh.getNeedsContainer() == false) {
-                if (sh.idle == true) {
-                    sh.procesCrane(freighter.containers.get(i).get(k).peek());
-                    i+=1;
-                  
-                    System.out.println(sh.movetoAVG);
-                    System.out.println(sh.done);
-                    System.out.println(sh.idle);
-                    System.out.println(sh.getNeedsContainer());
-                    
-                }
-            } else {
-                sh.setContainer(freighter.getContainer(i, k));
-               
-                i+=1;
-            }
-        }
-    }
+//    public void processShipCrane() {
+//        int i = 0;
+//        int k = 0;
+//        for (ShipCrane sh : harbor.shCranes) {
+//            if (sh.getNeedsContainer() == false) {
+//                if (sh.idle == true) {
+//                    sh.procesCrane(freighter.containers.get(i).get(k).peek(),freighter);
+//                    //als de peek leeg is moet die eigenlijk k + 1 doen.
+//                    i+=1;
+//                    System.out.println(sh.movetoAVG);
+//                    System.out.println(sh.done);
+//                    System.out.println(sh.idle);
+//                    System.out.println(sh.getNeedsContainer());  
+//                }
+//            } else {
+//                sh.setContainer(freighter.getContainer(i, k));
+//               
+//                i+=1;
+//            }
+//        }
+//    }
 
-    public void initKeys() {
-        inputManager.addMapping("Show", new KeyTrigger(KeyInput.KEY_F10));
-        inputManager.addMapping("Hide", new KeyTrigger(KeyInput.KEY_F9));
-        // Add the names to the action listener.
+     public void initKeys() {
+        inputManager.addMapping("Show", new KeyTrigger(KeyInput.KEY_R));
+        inputManager.addMapping("Hide", new KeyTrigger(KeyInput.KEY_T));
         inputManager.addListener(actionListener, "Show", "Hide");
-
     }
+     
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("Show") && !keyPressed) {
                 //show the gui
-                initHud();
+                stCranes.get(0).Getcranes().procesStorageCrane(stCranes.get(0),new Vector3f(-5,-12,-10));
             }
             if (name.equals("Hide") && !keyPressed) {
-                //and lets hide the gui
-                nifty.exit();
+                
+               shCrane.get(0).procesCrane(freighter.containers.get(1).get(1).peek(),freighter,agv);
             }
         }
     };

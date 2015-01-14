@@ -15,7 +15,7 @@ import com.jme3.scene.shape.Box;
 import containing.AGV;
 import containing.Container;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 /**
  *
@@ -24,39 +24,43 @@ import java.util.List;
 public class Storage extends Node {
 
     private AssetManager assetManager;
-    private List<Container> cargo;
+    public ArrayList<ArrayList<Stack<Container>>> containers;
     private StorageCrane crane;
     private Vector3f loc;
     public ArrayList<AGV> garageA;
     public ArrayList<AGV> garageB;
+    Container container;
 
     public Storage(AssetManager assetManager, StorageCrane cr, Vector3f l, int amount, int value) {
+        //this does not work xD
+        containers = new ArrayList<ArrayList<Stack<Container>>>();
         this.garageA = new ArrayList<AGV>();
         this.garageB = new ArrayList<AGV>();
         this.assetManager = assetManager;
         this.loc = l;
         this.crane = cr;
 
+        initHold();
         initLine();
         initAGV(amount, value);
-        
+
         this.attachChild(this.crane);
     }
 
     public void initAGV(int amount, int value) {
         for (int i = 0; i < amount; i++) {
-            AGV agv = new AGV("SA"+ Character.toChars(48 + value)+ "V"+i, assetManager);
+            AGV agv = new AGV("SA" + Character.toChars(48 + value) + "V" + i, assetManager);
             garageA.add(agv);
-            agv.setLocalTranslation(loc.x + 8 - (i *5), loc.y,320);
+            agv.setLocalTranslation(loc.x + 8 - (i * 5), loc.y, 320);
             this.attachChild(agv);
         }
         for (int i = 0; i < amount; i++) {
-            AGV agv = new AGV("SB"+ Character.toChars(48 + value)+ "V"+i, assetManager);
+            AGV agv = new AGV("SB" + Character.toChars(48 + value) + "V" + i, assetManager);
             garageB.add(agv);
-            agv.setLocalTranslation(loc.x + 8 - (i *5), loc.y,-260);
+            agv.setLocalTranslation(loc.x + 8 - (i * 5), loc.y, -260);
             agv.rotate(0, -FastMath.PI, 0);
             this.attachChild(agv);
-        } 
+        }
     }
 
     public void initLine() {
@@ -69,14 +73,60 @@ public class Storage extends Node {
         this.attachChild(containerlines_geom);
     }
 
-    public void Storecargo(Container c) {
-        this.cargo.add(c);
+//    public void Storecargo(Container c) {
+//        this.containers.push(c);
+//    }
+//
+//    public Container Unstorecargo(int id) {
+//        Container c = this.containers.get(id);
+//        this.containers.remove(id);
+//        return c;
+//    }
+    public void addContainer(Container c) {
+        for (int x = 0; x < 6; x++) {
+            for (int z = 0; z < 5; z++) {
+                for (int y = 0; y <= 2; y++) {
+                    if (this.containers.get(x).get(z).size() < 2) {
+                        this.containers.get(x).get(z).push(c);
+                        this.attachChild(c);
+                        
+                        c.setLocalTranslation(this.loc.x - 6.5f + (2.8f * x) ,this.loc.y + (y * 3.8f) , this.loc.z + 250 -  (18.8f * z)); 
+                        return;
+                    }
+                }
+                
+            }
+            
+        }
+       
+    }
+    
+    public void freeLocation() {
+        for (int x = 0; x < 6; x++) {
+            for (int z = 0; z < 28; z++) {
+                for (int y = 0; y <= 2; y++) {
+                    if (this.containers.get(x).get(z).isEmpty()) {
+                        
+                    }
+                }
+                
+            }
+            
+        }
+       
     }
 
-    public Container Unstorecargo(int id) {
-        Container c = this.cargo.get(id);
-        this.cargo.remove(id);
-        return c;
+    public void initHold() {
+        // this doesnt really work ...
+
+        for (int x = 0; x < 6; x++) {
+            containers.add(new ArrayList<Stack<Container>>());
+            for (int z = 0; z < 34; z++) {
+                containers.get(x).add(new Stack<Container>());
+
+            }
+        }
+
     }
 
     public StorageCrane Getcranes() {

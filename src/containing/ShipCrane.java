@@ -30,6 +30,7 @@ public class ShipCrane extends Node {
     Spatial grabbingGearHolder;
     Spatial hookLeft;
     Spatial hookRight;
+    AGV a;
     AssetManager assetManager;
     Vector3f location;
     float speed;
@@ -43,6 +44,8 @@ public class ShipCrane extends Node {
     boolean done = false;
     boolean movetoAVG = false;// is true after it has a container, this is so the motionpath has something to work with
     boolean needscontainer = false;
+    Freighter f;
+    Node Hook;
 
     public ShipCrane(AssetManager _assetManager, float _size, Vector3f location) {
         this.assetManager = _assetManager;
@@ -57,25 +60,30 @@ public class ShipCrane extends Node {
 
         // Attach to the root node
         this.attachChild(crane);
+        
+        Hook = new Node("hook");
+        Hook.attachChild(grabbingGear);
+        Hook.attachChild(grabbingGearHolder);
+        Hook.attachChild(hookLeft);
+        Hook.attachChild(hookRight);
+        this.attachChild(Hook);
 
-        this.attachChild(grabbingGear);
-        this.attachChild(grabbingGearHolder);
-        this.attachChild(hookLeft);
-        this.attachChild(hookRight);
+      
         initBounding();
 
     }
 
-    public void procesCrane(Container container) {
-        if (this.moving) {
+    public void procesCrane(Container container , Freighter freighter, AGV agv) {
+        
+            this.f = freighter;
             this.container = container;
-            
+            this.a = agv;
             location = container.getLocalTranslation();
             c_loc = location;
             idle = false;
            
             moveCrane(location);
-        }
+        
     }
 
     public void moveCrane(Vector3f location) {
@@ -85,7 +93,7 @@ public class ShipCrane extends Node {
 
         final MotionPath craneroute = new MotionPath();
         craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, this.getLocalTranslation().z));
-        craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, location.x));
+        craneroute.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, location.x  + 1.1f));
 
         MotionEvent motionControl = new MotionEvent(this, craneroute);
         craneMotion.add(motionControl);
@@ -116,10 +124,10 @@ public class ShipCrane extends Node {
         for (int i = 1; i < this.children.size(); i++) {
 
             final MotionPath trainroute = new MotionPath();
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x + c_loc.z -7.5f, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x, this.Hook.getLocalTranslation().y, this.Hook.getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x + c_loc.z - 10.1f, this.Hook.getLocalTranslation().y, this.Hook.getLocalTranslation().z));
 
-            MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
+            MotionEvent motionControl = new MotionEvent(this.Hook, trainroute);
             grabMotion.add(motionControl);
         }
 
@@ -145,10 +153,10 @@ public class ShipCrane extends Node {
         for (int i = 1; i < this.children.size(); i++) {
 
             final MotionPath trainroute = new MotionPath();
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x + 10.5f, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x, this.Hook.getLocalTranslation().y, this.Hook.getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x + 20.5f, this.Hook.getLocalTranslation().y, this.Hook.getLocalTranslation().z));
 
-            MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
+            MotionEvent motionControl = new MotionEvent(this.Hook, trainroute);
             grabMotion.add(motionControl);
         }
 
@@ -161,10 +169,9 @@ public class ShipCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        releaseContainer();
-                        done = true;
-                        idle = true;
-//                        grabberDown();
+                        grabberDownAgain();
+                        
+
                         
                     }
                 }
@@ -176,10 +183,10 @@ public class ShipCrane extends Node {
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y + 7, this.getChild(i).getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x, this.Hook.getLocalTranslation().y, this.Hook.getLocalTranslation().z));
+            trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x, this.Hook.getLocalTranslation().y + 7, this.Hook.getLocalTranslation().z));
 
-            MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
+            MotionEvent motionControl = new MotionEvent(this.Hook, trainroute);
             grabMotion.add(motionControl);
         }
 
@@ -202,19 +209,18 @@ public class ShipCrane extends Node {
             });
         }
     }
-
-    public void grabberDown() {
+    
+    public void grabberDownAgain() {
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
         for (int i = 1; i < this.children.size(); i++) {
             final MotionPath trainroute = new MotionPath();
-            if(movetoAVG == false){
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x , this.getChild(i).getLocalTranslation().y - c_loc.z , this.getChild(i).getLocalTranslation().z ));
-            }else{
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y - 5f, this.getChild(i).getLocalTranslation().z));
-            }
-            MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
+            
+//              nroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x , this.Hook.getLocalTranslation().y - c_loc.z , this.Hook.getLocalTranslation().z ));
+            
+                trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x, this.Hook.getLocalTranslation().y, this.Hook.getLocalTranslation().z));
+                trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x, this.Hook.getLocalTranslation().y - 5f, this.Hook.getLocalTranslation().z));
+            
+            MotionEvent motionControl = new MotionEvent(this.Hook, trainroute);
             grabMotion.add(motionControl);
         }
 
@@ -227,12 +233,47 @@ public class ShipCrane extends Node {
             mp.addListener(new MotionPathListener() {
                 public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                        
+                        a.setContainer(container);
+                    }
+                }
+            });
+        }
+    }
+
+    public void grabberDown() {
+        ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
+        for (int i = 1; i < this.children.size(); i++) {
+            final MotionPath trainroute = new MotionPath();
+            if(movetoAVG == false){
+                trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x, this.Hook.getLocalTranslation().y, this.Hook.getLocalTranslation().z));
+                trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x , this.Hook.getLocalTranslation().y - c_loc.z , this.Hook.getLocalTranslation().z ));
+            }else{
+                trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x, this.Hook.getLocalTranslation().y, this.Hook.getLocalTranslation().z));
+                trainroute.addWayPoint(new Vector3f(this.Hook.getLocalTranslation().x, this.Hook.getLocalTranslation().y - 5f, this.Hook.getLocalTranslation().z));
+            }
+            MotionEvent motionControl = new MotionEvent(this.Hook, trainroute);
+            grabMotion.add(motionControl);
+        }
+
+        for (MotionEvent me : grabMotion) {
+            final MotionPath mp = me.getPath();
+            me.setInitialDuration(10f);
+            me.setSpeed(2);
+            me.play();
+
+            mp.addListener(new MotionPathListener() {
+                public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                    if (mp.getNbWayPoints() == wayPointIndex + 1) {
+                        setContainer(f.getContainer(1, 1));
+                        
                         if (movetoAVG == false) {
                             if (needscontainer == false) {
-                                grabberMoveBackward();
-//                                grabberUp();
+                                
+//                                grabberMoveBackward();
+                                grabberUp();
                             }
-                            setNeedsContainer(true);
+                            
                         }else{
                             //this is were we unload it on the agv
                             releaseContainer();
@@ -291,22 +332,29 @@ public class ShipCrane extends Node {
 
     public void setContainer(Container container) {
         this.container = container;
-        this.container.setLocalTranslation(this.getChild(1).getLocalTranslation().x, this.getChild(1).getLocalTranslation().y + 10.4f, this.getChild(1).getLocalTranslation().z);
+        Hook.attachChild(container);
+        this.container.setLocalTranslation(this.Hook.getLocalTranslation().x + 1 , this.Hook.getLocalTranslation().y + 20 , this.Hook.getLocalTranslation().z);
         this.container.rotate(0f, FastMath.PI / 2, 0f);
         
-        this.attachChild(container);
+        
         setNeedsContainer(false);
+        
     }
+    
+    
 
     private void releaseContainer() {
         this.detachChild(container);
+        
     }
 
     public void setNeedsContainer(boolean inneed) {
         this.needscontainer = inneed;
+        
     }
 
     public boolean getNeedsContainer() {
         return this.needscontainer;
+        
     }
 }

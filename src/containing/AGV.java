@@ -69,7 +69,7 @@ public class AGV extends Node {
     
     public void setContainer(Container cargo){
         this.cargo = cargo; 
-        this.cargo.setLocalTranslation(0,1.2f,0);
+        this.cargo.setLocalTranslation(0f,1.2f,0f);
         this.attachChild(this.cargo);
     }
     

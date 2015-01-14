@@ -90,11 +90,12 @@ public class TrainCrane extends Node {
         hookRight.scale(size);
 
     }
-    public void doMove(Wagon wagon,Vector3f location){
-            
+    //should probarly be called procesCrane
+    public void doMove(Wagon wagon,Vector3f location, AGV agv){
+            // drawn an agv when the crane has a container. 
+        //drop the container on an AGV
+            this.agv = agv;
             setWagon(wagon);
-//            System.out.println(wagon.getLocation());
-//            System.out.println(wagon.getLocalTranslation());
             moveCrane(wagon.getLocation(),location);
     }
     
@@ -211,9 +212,11 @@ public class TrainCrane extends Node {
                     if (mp.getNbWayPoints() == wayPointIndex + 1) {
                       
                         if(movetoAGV == true){
+                            
                             releaseWagon();
                             craneRight();
                         }else{
+                            
                             craneLeft();
                         }
                         
@@ -247,7 +250,10 @@ public class TrainCrane extends Node {
             public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
                 //crane up if picked up container
                 if(movetoAGV == true){ 
+                        setAGV(agv);
+                        agv.setContainer(cargo);
                         releaseContainer();
+                        
                         craneUp();
                    
                         
