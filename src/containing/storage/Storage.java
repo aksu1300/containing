@@ -82,22 +82,42 @@ public class Storage extends Node {
 //        this.containers.remove(id);
 //        return c;
 //    }
-    public void addContainer(Container c) {
+     private Vector3f checkEmpty() {
         for (int x = 0; x < 6; x++) {
-            for (int z = 0; z < 28; z++) {
-                for (int y = 0; y < 2; y++) {
-                    if (this.containers.get(x).get(z).size() < 2) {
-                        this.containers.get(x).get(z).push(c);
-                        this.attachChild(c);
-                        c.setLocalTranslation(this.loc.x - 6.5f + (2.8f * x) ,this.loc.y + (y * 3.8f) , this.loc.z + 250 -  (18.8f * z)); 
-                        return;
+            for (int z = 0; z < 6; z++) {
+                for (int y = 0; y < 4; y++) {
+                    if (this.containers.get(x).get(z).get(y).isEmpty()) {
+                         
+                        System.out.println(x);
+                        System.out.println(z);
+                        System.out.println(y);
+                        System.out.println("divider");
+                        return new Vector3f(x, y, z);
                     }
                 }
-                
+
             }
-            
+
         }
-       
+        return new Vector3f(0, 0, 0);
+    }
+
+    public void addContainer(Container c) {
+        checkEmpty();
+        int x = (int)checkEmpty().x;
+        int z = (int)checkEmpty().z;
+        int y = (int)checkEmpty().y;
+//        System.out.println(x);
+//        System.out.println(z);
+//        System.out.println(y);
+        this.containers.get(x).get(z).get(y).push(c);
+        this.attachChild(c);
+        c.setLocalTranslation(this.loc.x - 6.5f + (2.8f * x), this.loc.y + (2.8f * y), this.loc.z + 250 - (13.8f * z));
+        System.out.println("test agaion");
+        
+
+
+
     }
 
     public void initHold() {
