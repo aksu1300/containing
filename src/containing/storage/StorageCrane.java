@@ -274,46 +274,31 @@ public class StorageCrane extends Node {
         }
     }
 
-    public void craneDown(final Vector3f location) {
+       public void craneDown() {
         //check for container has to happen 
         ArrayList<MotionEvent> grabMotion = new ArrayList<MotionEvent>();
-        for (int i = 1; i < this.children.size(); i++) {
 
+        final MotionPath trainroute = new MotionPath();
+        trainroute.addWayPoint(new Vector3f(hook.getLocalTranslation().x, hook.getLocalTranslation().y, hook.getLocalTranslation().z));
+        trainroute.addWayPoint(new Vector3f(hook.getLocalTranslation().x, -1, hook.getLocalTranslation().z));
 
-            final MotionPath trainroute = new MotionPath();
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, this.getChild(i).getLocalTranslation().y, this.getChild(i).getLocalTranslation().z));
-            trainroute.addWayPoint(new Vector3f(this.getChild(i).getLocalTranslation().x, location.y, this.getChild(i).getLocalTranslation().z));
+        MotionEvent motionControl = new MotionEvent(hook, trainroute);
+        grabMotion.add(motionControl);
 
-            MotionEvent motionControl = new MotionEvent(this.getChild(i), trainroute);
-            grabMotion.add(motionControl);
-        }
+        final MotionPath mp = motionControl.getPath();
+        motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(3);
+        motionControl.play();
 
+        mp.addListener(new MotionPathListener() {
+            public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
+                s.addContainer(container);
+                System.out.println("test how manny times this prints");
+                craneUp();
 
-        for (MotionEvent me : grabMotion) {
-            final MotionPath mp = me.getPath();
-            me.setInitialDuration(10f);
-            me.setSpeed(1);
-            me.play();
+            }
+        });
 
-            mp.addListener(new MotionPathListener() {
-                public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-                    if (mp.getNbWayPoints() == wayPointIndex + 1) {
-                        if (bringtostorage == true) {
-                            //get the agv container here
-                            setContainer(agv.getContainer());
-                            //need a boolean here that tells it what it is doing
-
-                            craneUp(location);
-                        } else if (takefromstorage == true) {
-                        }
-
-                        s.addContainer(container);
-                        craneUp(location);
-                    }
-
-                }
-            });
-        }
     }
 
     private void initBounding() {
